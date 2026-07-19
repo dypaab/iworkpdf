@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<title>Réinitialisation — iWorkPDF</title>
+</head>
+<body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;background:#F7F8FA;color:#1A1A2E">
+<h2>🔄 Réinitialisation d'iWorkPDF…</h2>
+<p id="s" style="color:#555">Suppression des anciens caches…</p>
+<script>
+(async()=>{
+  const s=document.getElementById('s');
+  try{
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()));
+    }
+    if(window.caches){
+      const ks=await caches.keys();
+      await Promise.all(ks.map(k=>caches.delete(k)));
+    }
+    s.textContent='✅ Terminé. Redirection vers le site tout neuf…';
+  }catch(e){
+    s.textContent='Erreur : '+e.message;
+  }
+  setTimeout(()=>{location.replace('/?fresh='+Date.now());},900);
+})();
+</script>
+</body>
+</html>
