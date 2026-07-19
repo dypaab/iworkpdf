@@ -249,9 +249,16 @@ initTheme();
 initTrust();
 initCookieBanner();
 
-// Service worker DÉSACTIVÉ (incidents 'Offline' : proxys/réseaux bloquant les
-// fetch du SW → pages mortes). sw.js est un stub d'auto-nettoyage pour les
-// navigateurs encore infectés. Ne PAS re-register sans refonte testée.
+// PWA : service worker UNIQUEMENT dans l'app installée (mode standalone).
+// Site web classique : aucun SW (proxys/réseaux d'entreprise → incidents 'Offline'),
+// et on désinstalle les SW hérités des anciennes versions.
+if('serviceWorker' in navigator){
+  const isApp=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  window.addEventListener('load',()=>{
+    if(isApp){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+    else{navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
+  });
+}
 
 // Session Supabase (sans ça, l'utilisateur apparaît toujours déconnecté même connecté)
 if(sb)sb.auth.getSession().then(({data:{session}})=>{
