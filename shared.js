@@ -1626,6 +1626,30 @@ function initExtras(){
   }
 }
 
+// ── MENU BURGER MOBILE (≤600px, style iLovePDF) ───────────
+// La nav complète est cachée sur mobile ; le burger ouvre un panneau
+// avec langue, thème, connexion, Pricing, Blog. Injecté par JS → 0 page éditée.
+function injectBurger(){
+  const nav=document.querySelector('nav');
+  if(!nav||document.getElementById('nav-burger'))return;
+  const b=document.createElement('button');
+  b.id='nav-burger';b.setAttribute('aria-label','Menu');b.setAttribute('aria-expanded','false');
+  b.textContent='☰';
+  nav.appendChild(b);
+  const close=()=>{document.body.classList.remove('nav-open');b.textContent='☰';b.setAttribute('aria-expanded','false');};
+  b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const o=document.body.classList.toggle('nav-open');
+    b.textContent=o?'✕':'☰';b.setAttribute('aria-expanded',o?'true':'false');
+  });
+  document.addEventListener('click',e=>{
+    if(!document.body.classList.contains('nav-open'))return;
+    if(e.target===b)return;
+    // clic sur un lien ou le bouton connexion → ferme ; ailleurs hors panneau → ferme
+    if(e.target.closest('.nav-actions a,#auth-btn')||!e.target.closest('.nav-actions'))close();
+  });
+}
+
 // Appelé automatiquement au chargement de chaque page
 (function(){
   try{
@@ -1633,6 +1657,7 @@ function initExtras(){
     // Mise en page des pages outils : barre horizontale + trust-banner en bas
     relocateTrustBanner();
     renderToolsNav();
+    injectBurger();
     initExtras();
     // Grande icône d'en-tête = icône SVG de l'outil (remplace l'emoji)
     const _tid=(location.pathname.match(/\/tools\/([^./]+)/)||[])[1];

@@ -568,4 +568,11 @@ html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
   .merge-pages-grid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}
   .pages-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
   .tool-icon-big{transform:scale(.85)}
+  /* Style iLovePDF : gros bouton de sélection d'abord, pleine largeur */
+  .drop-zone{padding:24px 16px;display:flex;flex-direction:column;gap:10px}
+  .drop-zone .drop-btn{order:-1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:17px 20px;font-size:16px;border-radius:12px}
+  .drop-zone .drop-text{font-size:13px;color:var(--il-tx2);margin:0}
+  .tool-page-head h1{font-size:22px}
+  #tool-sub{font-size:13px}
+  .tool-card-frame{padding:18px 14px}
 }
