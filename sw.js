@@ -29,8 +29,6 @@ const STATIC_ASSETS = [
   '/extract.js',
   '/manifest.json',
   '/logo_seul_sans_fond.png',
-  '/favicon.png',
-  '/apple-touch-icon.png',
   '/icon-192.png',
   '/icon-512.png',
   '/tools/compress.html',
