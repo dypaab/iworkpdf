@@ -1,10 +1,21 @@
-// iWorkPDF Service Worker v4 — cache intelligent (bump = purge des anciens caches)
-// v4 : fix mobile — plus de fausse réponse "/* offline */" pour les CDN
-// (elle remplaçait supabase-js/pdf-lib par du JS vide → crash de shared.js
-// → grille d'outils vide sur téléphone). + précache de supabase-js.
-const CACHE_VERSION = 'iworkpdf-v4';
-const STATIC_CACHE = 'iworkpdf-static-v4';
-const FONT_CACHE = 'iworkpdf-fonts-v4';
+// iWorkPDF Service Worker v5 — cache intelligent (bump = purge des anciens caches)
+// v5 : FIX CRITIQUE "Offline" au clic sur un outil (PC + Android + iOS).
+// Cloudflare Pages redirige /tools/merge.html → /tools/merge (308 "pretty URLs").
+// Une Response avec redirected:true ne PEUT PAS être servie à une navigation
+// (le navigateur la rejette → page morte). On reconstruit donc chaque réponse
+// sans le flag redirected avant de la mettre en cache / de la servir.
+// v4 : suppression de la fausse réponse "/* offline */" des CDN + sb=null géré.
+const CACHE_VERSION = 'iworkpdf-v5';
+const STATIC_CACHE = 'iworkpdf-static-v5';
+const FONT_CACHE = 'iworkpdf-fonts-v5';
+
+// Reconstruit une Response "propre" (sans flag redirected) — sinon le
+// navigateur refuse de l'utiliser pour une navigation.
+async function cleanResponse(resp) {
+  if (!resp || !resp.redirected) return resp;
+  const body = await resp.blob();
+  return new Response(body, { status: resp.status, statusText: resp.statusText, headers: resp.headers });
+}
 
 // Assets statiques à précacher
 const STATIC_ASSETS = [
@@ -60,7 +71,14 @@ self.addEventListener('install', e => {
   e.waitUntil(
     Promise.all([
       caches.open(STATIC_CACHE).then(c =>
-        Promise.allSettled(STATIC_ASSETS.map(url => c.add(url).catch(() => {})))
+        // fetch + cleanResponse au lieu de c.add : Cloudflare redirige les .html
+        // (308) et une réponse redirigée en cache casserait les navigations.
+        Promise.allSettled(STATIC_ASSETS.map(async url => {
+          try {
+            const r = await fetch(url);
+            if (r.ok) await c.put(url, await cleanResponse(r));
+          } catch {}
+        }))
       ),
       caches.open(FONT_CACHE).then(c =>
         Promise.allSettled(CDN_ASSETS.map(url => c.add(url).catch(() => {})))
@@ -126,17 +144,19 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       caches.open(STATIC_CACHE).then(async cache => {
         const cached = await cache.match(e.request);
-        const fetchPromise = fetch(e.request).then(resp => {
+        const fetchPromise = fetch(e.request).then(async resp => {
           if (resp.ok && e.request.method === 'GET') {
-            cache.put(e.request, resp.clone());
+            const clean = await cleanResponse(resp.clone());
+            cache.put(e.request, clean.clone());
           }
           return resp;
         }).catch(() => null);
 
         // Retourne le cache immédiatement si disponible, met à jour en arrière-plan
-        if (cached) return cached;
+        if (cached) return cleanResponse(cached);
         const resp = await fetchPromise; // null si échec réseau
-        return resp || new Response('Offline', {
+        if (resp) return cleanResponse(resp);
+        return new Response('Offline', {
           status: 503,
           headers: { 'Content-Type': 'text/plain' }
         });
