@@ -47,7 +47,16 @@ async function runWatermark(activeFiles, rawText){
   setProgress(50,'Applying…');
   src.getPages().forEach(page=>{
     const{width,height}=page.getSize();
-    page.drawText(txt,{x:width*.08,y:height*.43,size:Math.min(width,height)*.1,font,color:rgb(.6,.6,.6),opacity:.3,rotate:degFn(45)});
+    // Centrage exact : le texte pivoté à 45° s'étend depuis son point de départ
+    // le long de (cos45,sin45). On recule le point de départ pour que le
+    // CENTRE du texte tombe au centre de la page.
+    const size=Math.min(width,height)*.1;
+    const textW=font.widthOfTextAtSize(txt,size);
+    const textH=font.heightAtSize(size);
+    const c=Math.SQRT1_2; // cos45 = sin45
+    const x=width/2-(textW/2)*c+(textH/2)*c;
+    const y=height/2-(textW/2)*c-(textH/2)*c;
+    page.drawText(txt,{x,y,size,font,color:rgb(.6,.6,.6),opacity:.3,rotate:degFn(45)});
   });
   const result=await src.save();
   Security.wipeMemory(buf);

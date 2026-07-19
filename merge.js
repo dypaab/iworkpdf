@@ -208,18 +208,23 @@ async function runMerge(activeFiles, mergePages){
   const merged=await PDFDocument.create();
   // Cache pdfDoc par fileIdx (BUG 2 FIX déjà appliqué ici)
   const docCache={};
+  // ⚠️ Les buffers ne doivent être wipés qu'APRÈS merged.save() : pdf-lib
+  // garde des vues sur ces octets (flux copiés par référence) — les effacer
+  // dans la boucle pouvait produire des pages corrompues/blanches.
+  const bufs=[];
   for(let i=0;i<toMerge.length;i++){
     const pg=toMerge[i];
     setProgress(5+((i+1)/toMerge.length)*80,`Page ${i+1}/${toMerge.length}…`);
     if(!docCache[pg.fileIdx]){
       const buf=await activeFiles[pg.fileIdx].arrayBuffer();
+      bufs.push(buf);
       docCache[pg.fileIdx]=await PDFDocument.load(buf,{ignoreEncryption:true});
-      Security.wipeMemory(buf);
     }
     const[page]=await merged.copyPages(docCache[pg.fileIdx],[pg.pageIdx]);
     merged.addPage(page);
   }
   const result=await merged.save();
+  bufs.forEach(b=>Security.wipeMemory(b));
   const filename='fusion_'+activeFiles.map(f=>f.name.replace('.pdf','')).join('_').substring(0,40)+'.pdf';
   return {result, filename};
 }

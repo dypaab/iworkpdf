@@ -83,9 +83,14 @@ async function runImg2Pdf(activeFiles){
   let result, filename;
   const{PDFDocument}=PDFLib;
       const doc=await PDFDocument.create();
+      // ⚠️ Ne PAS wiper les buffers avant doc.save() : embedJpg/embedPng gardent
+      // des VUES sur ces octets — les effacer dans la boucle produisait des
+      // pages blanches. On les efface après la sérialisation.
+      const bufs=[];
       for(let i=0;i<activeFiles.length;i++){
         setProgress(5+((i+1)/activeFiles.length)*80,`Image ${i+1}/${activeFiles.length}…`);
         const buf=await activeFiles[i].arrayBuffer();
+        bufs.push(buf);
         const ext=activeFiles[i].name.split('.').pop().toLowerCase();
         let img;
         if(['jpg','jpeg'].includes(ext))img=await doc.embedJpg(buf);
@@ -99,8 +104,9 @@ async function runImg2Pdf(activeFiles){
         }
         const page=doc.addPage([img.width,img.height]);
         page.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
-        Security.wipeMemory(buf);
       }
-      result=await doc.save();filename='images_'+activeFiles[0].name.replace(/\.[^.]+$/,'').substring(0,30)+'.pdf';
+      result=await doc.save();
+      bufs.forEach(b=>Security.wipeMemory(b));
+      filename='images_'+activeFiles[0].name.replace(/\.[^.]+$/,'').substring(0,30)+'.pdf';
   return {result, filename};
 }

@@ -14,20 +14,28 @@
 //  inline dans buildUI() (shared.js).
 // ============================================================
 
-const QPDF_VERSION = '0.3.0';
-const QPDF_JS   = `https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@${QPDF_VERSION}/dist/qpdf.js`;
-const QPDF_WASM = `https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@${QPDF_VERSION}/dist/qpdf.wasm`;
+// AUTO-HÉBERGÉ dans /vendor/qpdf/ (plus de dépendance CDN — cohérent avec
+// le "100% local", et le CDN posait 2 problèmes : le dist n'expose PAS
+// window.createModule (il expose window.Module, d'où l'échec systématique
+// "Check your connection"), et certains réseaux bloquent jsdelivr.
+const QPDF_JS   = '/vendor/qpdf/qpdf.js';
+const QPDF_WASM = '/vendor/qpdf/qpdf.wasm';
 
-// Charge le glue-script qpdf.js une seule fois (expose window.createModule).
+// Charge le glue-script qpdf.js une seule fois. Le dist Emscripten (UMD)
+// expose la factory sous window.Module (var top-level du script classique).
 let _qpdfScriptPromise = null;
+let _qpdfFactory = null;
 function loadQpdfScript(){
-  if(window.createModule) return Promise.resolve();
+  if(_qpdfFactory) return Promise.resolve(_qpdfFactory);
   if(_qpdfScriptPromise) return _qpdfScriptPromise;
   _qpdfScriptPromise = new Promise((res, rej)=>{
     const s = document.createElement('script');
     s.src = QPDF_JS;
-    s.onload = ()=> window.createModule ? res()
-      : rej(new Error('qpdf: createModule introuvable après chargement'));
+    s.onload = ()=>{
+      const f = window.createModule || window.Module;
+      if(typeof f === 'function'){ _qpdfFactory = f; res(f); }
+      else rej(new Error('qpdf: factory introuvable après chargement'));
+    };
     s.onerror = ()=> rej(new Error('qpdf: échec du chargement du script'));
     document.head.appendChild(s);
   });
@@ -39,8 +47,8 @@ function loadQpdfScript(){
 // terminé et ne peut pas être réutilisé. On repart donc d'une instance
 // fraîche (le .wasm est déjà en cache HTTP/SW, donc c'est rapide).
 async function createQpdf(onStderr){
-  await loadQpdfScript();
-  return window.createModule({
+  const factory = await loadQpdfScript();
+  return factory({
     locateFile: ()=> QPDF_WASM,
     noInitialRun: true,
     print: ()=>{},
