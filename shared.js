@@ -27,6 +27,10 @@ sb.auth.onAuthStateChange(async(event,session)=>{
   user=session?.user||null;
   _lastUserId=user?.id||null;
   updateAuthUI();
+  if(event==='PASSWORD_RECOVERY'){
+    // L'utilisateur a cliqué le lien de réinitialisation → écran nouveau mot de passe
+    if(typeof openNewPasswordModal==='function') openNewPasswordModal();
+  }
   if(event==='SIGNED_IN'&&user){
     await audit('login',null,{email:user.email});
     closeAuth();
@@ -1479,6 +1483,130 @@ async function trackPageView(toolId){
   }catch{}
 }
 
+// ── COMPTE : mot de passe oublié / suppression / CONTACT ──────
+async function doForgotPassword(){
+  const raw=document.getElementById('l-email')?.value||'';
+  const st=document.getElementById('l-status');
+  try{
+    const email=Security.validateEmail(raw);
+    if(st){st.className='status-box info';st.textContent=lang==='fr'?'Envoi du lien…':'Sending link…';}
+    const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+    if(error)throw new Error(error.message);
+    if(st){st.className='status-box ok';st.textContent=lang==='fr'?'Email de réinitialisation envoyé. Vérifiez votre boîte (et les spams).':'Reset email sent. Check your inbox (and spam).';}
+  }catch(e){ if(st){st.className='status-box err';st.textContent=e.message;} }
+}
+
+// Écran "nouveau mot de passe" après clic sur le lien de récupération.
+function openNewPasswordModal(){
+  if(document.getElementById('np-overlay'))return;
+  const ov=document.createElement('div');
+  ov.id='np-overlay';ov.className='overlay active';ov.setAttribute('role','dialog');
+  ov.innerHTML=`<div class="modal" style="max-width:420px"><div class="modal-head"><h3 class="modal-title">🔑 ${lang==='fr'?'Nouveau mot de passe':'New password'}</h3></div><div class="modal-body"><div class="form-group"><label class="form-label">${lang==='fr'?'Nouveau mot de passe (8 car. min.)':'New password (8 chars min.)'}</label><input class="form-input" type="password" id="np-pwd" autocomplete="new-password" placeholder="••••••••"/></div><div class="status-box" id="np-status"></div><button class="btn-primary full" id="np-save">${lang==='fr'?'Enregistrer':'Save'}</button></div></div>`;
+  document.body.appendChild(ov);
+  document.getElementById('np-save').addEventListener('click',doSetNewPassword);
+}
+async function doSetNewPassword(){
+  const pwd=document.getElementById('np-pwd')?.value||'';
+  const st=document.getElementById('np-status');
+  try{
+    const s=Security.checkPasswordStrength(pwd);
+    if(!s.ok)throw new Error(lang==='fr'?'Mot de passe trop faible (8+ car., majuscule, chiffre).':'Password too weak (8+ chars, uppercase, number).');
+    if(st){st.className='status-box info';st.textContent=lang==='fr'?'Mise à jour…':'Updating…';}
+    const{error}=await sb.auth.updateUser({password:pwd});
+    if(error)throw new Error(error.message);
+    document.getElementById('np-overlay')?.remove();
+    showToast(lang==='fr'?'✅ Mot de passe mis à jour':'✅ Password updated','ok');
+  }catch(e){ if(st){st.className='status-box err';st.textContent=e.message;} }
+}
+
+async function doDeleteAccount(){
+  if(!user)return;
+  const ok=confirm(lang==='fr'
+    ?'Supprimer définitivement votre compte et tous vos fichiers ? Action irréversible.'
+    :'Permanently delete your account and all your files? This cannot be undone.');
+  if(!ok)return;
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    const token=session?.access_token;
+    if(!token)throw new Error(lang==='fr'?'Session expirée.':'Session expired.');
+    const res=await fetch(`${SUPABASE_URL}/functions/v1/delete-account`,{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${token}`,'apikey':SUPABASE_KEY,'Content-Type':'application/json'}
+    });
+    if(!res.ok)throw new Error(lang==='fr'?'Échec de la suppression.':'Deletion failed.');
+    await sb.auth.signOut();
+    closeHistory();
+    showToast(lang==='fr'?'Compte supprimé.':'Account deleted.','ok');
+  }catch(e){ showToast(e.message,'err'); }
+}
+
+function openContact(){
+  if(document.getElementById('ct-overlay')){document.getElementById('ct-overlay').classList.add('active');return;}
+  const ov=document.createElement('div');
+  ov.id='ct-overlay';ov.className='overlay active';ov.setAttribute('role','dialog');
+  ov.innerHTML=`<div class="modal" style="max-width:460px"><div class="modal-head"><h3 class="modal-title">✉️ ${lang==='fr'?'Nous contacter':'Contact us'}</h3><button class="modal-close" id="ct-close" aria-label="Close">✕</button></div><div class="modal-body">
+    <div class="form-group"><label class="form-label">${lang==='fr'?'Nom':'Name'}</label><input class="form-input" id="ct-name" maxlength="80" placeholder="${lang==='fr'?'Votre nom':'Your name'}"/></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="ct-email" maxlength="120" placeholder="you@example.com"/></div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="ct-msg" rows="4" maxlength="4000" placeholder="${lang==='fr'?'Votre message…':'Your message…'}" style="resize:vertical"></textarea></div>
+    <div class="status-box" id="ct-status"></div>
+    <button class="btn-primary full" id="ct-send">${lang==='fr'?'Envoyer':'Send'}</button></div></div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('active');});
+  document.getElementById('ct-close').addEventListener('click',()=>ov.classList.remove('active'));
+  document.getElementById('ct-send').addEventListener('click',sendContact);
+}
+async function sendContact(){
+  const name=document.getElementById('ct-name')?.value||'';
+  const email=document.getElementById('ct-email')?.value||'';
+  const message=document.getElementById('ct-msg')?.value||'';
+  const st=document.getElementById('ct-status');
+  const btn=document.getElementById('ct-send');
+  try{
+    if(message.trim().length<5)throw new Error(lang==='fr'?'Message trop court.':'Message too short.');
+    if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))throw new Error(lang==='fr'?'Email invalide.':'Invalid email.');
+    if(st){st.className='status-box info';st.textContent=lang==='fr'?'Envoi…':'Sending…';}
+    if(btn)btn.disabled=true;
+    const res=await fetch(`${SUPABASE_URL}/functions/v1/contact`,{
+      method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body:JSON.stringify({name,email,message})
+    });
+    if(!res.ok)throw new Error(lang==='fr'?'Échec de l\'envoi. Réessayez plus tard.':'Send failed. Try again later.');
+    if(st){st.className='status-box ok';st.textContent=lang==='fr'?'✅ Message envoyé, merci !':'✅ Message sent, thank you!';}
+    ['ct-name','ct-email','ct-msg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  }catch(e){ if(st){st.className='status-box err';st.textContent=e.message;} }
+  finally{ if(btn)btn.disabled=false; }
+}
+
+// Injecte les éléments manquants sur toutes les pages (sans éditer le HTML).
+function initExtras(){
+  const loginBtn=document.getElementById('login-btn');
+  if(loginBtn && !document.getElementById('forgot-link')){
+    const a=document.createElement('button');
+    a.id='forgot-link';a.type='button';
+    a.style.cssText='background:none;border:none;color:var(--cy);font-size:12px;cursor:pointer;margin-top:12px;text-decoration:underline;font-family:inherit;display:block';
+    a.textContent=lang==='fr'?'Mot de passe oublié ?':'Forgot password?';
+    a.addEventListener('click',doForgotPassword);
+    loginBtn.insertAdjacentElement('afterend',a);
+  }
+  const logoutBtn=document.getElementById('logout-btn');
+  if(logoutBtn && !document.getElementById('del-acct-btn')){
+    const b=document.createElement('button');
+    b.id='del-acct-btn';b.type='button';b.className='btn-ghost full';
+    b.style.cssText='margin-top:8px;color:var(--er);border-color:#EF444455';
+    b.textContent=lang==='fr'?'Supprimer mon compte':'Delete my account';
+    b.addEventListener('click',doDeleteAccount);
+    logoutBtn.insertAdjacentElement('afterend',b);
+  }
+  const fp=document.getElementById('footer-privacy-btn');
+  if(fp && !document.getElementById('contact-link')){
+    const c=document.createElement('button');
+    c.id='contact-link';c.className=fp.className;c.style.cssText=fp.getAttribute('style')||'';
+    c.textContent='Contact';
+    c.addEventListener('click',openContact);
+    fp.insertAdjacentElement('afterend',c);
+  }
+}
+
 // Appelé automatiquement au chargement de chaque page
 (function(){
   try{
@@ -1486,6 +1614,7 @@ async function trackPageView(toolId){
     // Mise en page des pages outils : barre horizontale + trust-banner en bas
     relocateTrustBanner();
     renderToolsNav();
+    initExtras();
     // Grande icône d'en-tête = icône SVG de l'outil (remplace l'emoji)
     const _tid=(location.pathname.match(/\/tools\/([^.]+)\.html/)||[])[1];
     if(_tid){const _big=document.querySelector('.tool-icon-big'); if(_big) _big.innerHTML=toolIconHTML(_tid,64);}
