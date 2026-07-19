@@ -154,8 +154,8 @@ async function runCompress(activeFiles, compQuality, compScan){
         // C'est le DOWNSCALE qui produit les vrais gains (méthode iLovePDF) :
         // un scan 300dpi n'a pas besoin de plus de ~150dpi à l'écran/impression bureau.
         const QPROF={
-          '0.4':{q:0.42,maxDim:1000},   // compression max (~72-100dpi, niveau iLovePDF extrême)
-          '0.75':{q:0.65,maxDim:1600},  // recommandé (~150dpi)
+          '0.4':{q:0.35,maxDim:900},    // compression max (~72dpi, niveau iLovePDF extrême)
+          '0.75':{q:0.62,maxDim:1500},  // recommandé (~150dpi)
           '0.9':{q:0.82,maxDim:2400},   // léger (qualité quasi intacte)
         };
         const prof=QPROF[String(compQuality)]||{q:compQuality,maxDim:1800};

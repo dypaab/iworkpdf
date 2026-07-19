@@ -1,10 +1,15 @@
 // ============================================================
 //  iWorkPDF — merge.js (logique spécifique à l'outil Merge PDFs)
 //  Charger APRÈS security.js et shared.js.
+//
+//  Modèle "1 carte = 1 DOCUMENT" (style iLovePDF) :
+//  - aperçu de la 1re page, ↻ pour pivoter le document, ✕ pour le retirer,
+//    glisser-déposer pour réordonner les documents.
+//  - mergeDocs[i] correspond à activeFiles[i] : {rotation, pages}
 // ============================================================
 
-let mergePages = [];
-let dragSrc = null;
+let mergeDocs = [];
+let dragSrcDoc = null;
 
 function buildMergeUI(){
   const saveBlock=`<p class="form-label" style="margin-bottom:8px">${t('dest')}</p><div class="save-mode"><div class="save-opt active" id="so-local" onclick="setSave('local')"><div class="save-opt-icon">💾</div><div class="save-opt-title">${t('localmode')}</div><div class="save-opt-sub">${t('direct')}</div></div><div class="save-opt" id="so-cloud" onclick="setSave('cloud')"><div class="save-opt-icon">☁️ 🔒</div><div class="save-opt-title">Cloud 48h</div><div class="save-opt-sub">${t('cloudsub')}</div></div></div>`;
@@ -18,210 +23,168 @@ function buildMergeUI(){
     <div class="merge-toolbar" id="merge-toolbar" style="display:none">
       <span class="merge-count" id="merge-count"></span>
       <div style="display:flex;gap:6px">
-        <button class="btn-sm" onclick="mergeSelectAll()">✅ ${lang==='fr'?'Tout inclure':'Include all'}</button>
         <button class="btn-sm" onclick="mergeReset()">🗑 ${lang==='fr'?'Vider':'Clear all'}</button>
       </div>
     </div>
-    <div class="merge-pages-grid" id="merge-grid">
-      <div class="merge-empty">${lang==='fr'?'Ajoutez des PDFs pour voir les pages':'Add PDFs to preview pages'}</div>
+    <div class="pg-card-tip" id="merge-tip" style="display:none">↔️ ${lang==='fr'?'Glissez pour réordonner · ↻ pour pivoter · ✕ pour retirer un document':'Drag to reorder · ↻ to rotate · ✕ to remove a document'}</div>
+    <div class="merge-docs-grid" id="merge-grid">
+      <div class="merge-empty">${lang==='fr'?'Ajoutez des PDFs':'Add PDFs'}</div>
     </div>
     ${saveBlock}${bottom}
     <div class="flex-end"><button class="btn-primary" onclick="run('merge')">${t('merge_btn')}</button></div>`;
 }
 
+// Synchronise mergeDocs avec activeFiles (ajouts en fin de liste).
+function syncMergeDocs(){
+  while(mergeDocs.length<activeFiles.length) mergeDocs.push({rotation:0,pages:0});
+  if(mergeDocs.length>activeFiles.length) mergeDocs.length=activeFiles.length;
+}
+
 async function renderMergePages(){
-  mergePages = [];
-  const grid = document.getElementById('merge-grid');
-  const toolbar = document.getElementById('merge-toolbar');
+  const grid=document.getElementById('merge-grid');
+  const toolbar=document.getElementById('merge-toolbar');
+  const tip=document.getElementById('merge-tip');
   if(!grid) return;
-  grid.innerHTML = `<div class="merge-empty">${lang==='fr'?'Génération des aperçus…':'Generating previews…'}</div>`;
-
-  // BUG 1 FIX: utiliser ensurePdfJs() partagé
-  await ensurePdfJs();
-
-  // Générer les miniatures pour chaque fichier
-  for(let fi=0; fi<activeFiles.length; fi++){
-    const file = activeFiles[fi];
-    const label = file.name.replace('.pdf','').substring(0,15);
-    const buf = await file.arrayBuffer();
-    const pdfDoc = await pdfjsLib.getDocument({data: buf.slice(0)}).promise;
-    for(let pi=0; pi<pdfDoc.numPages; pi++){
-      mergePages.push({fileIdx:fi, pageIdx:pi, fileLabel:label, docLabel:`Doc ${fi+1}`, excluded:false});
-    }
-    Security.wipeMemory(buf);
+  syncMergeDocs();
+  if(!activeFiles.length){
+    grid.innerHTML=`<div class="merge-empty">${lang==='fr'?'Ajoutez des PDFs':'Add PDFs'}</div>`;
+    if(toolbar)toolbar.style.display='none';
+    if(tip)tip.style.display='none';
+    if(typeof syncHasFiles==='function') syncHasFiles();
+    return;
   }
-
-  updateMergeGrid();
-  if(toolbar) toolbar.style.display='flex';
+  await ensurePdfJs();
+  grid.innerHTML='';
+  activeFiles.forEach((f,i)=>{
+    const doc=mergeDocs[i];
+    const card=document.createElement('div');
+    card.className='md-card';
+    card.draggable=true;
+    card.dataset.idx=i;
+    const canvas=document.createElement('canvas');
+    canvas.className='md-thumb';
+    card.appendChild(canvas);
+    // Actions ↻ / ✕
+    const rot=document.createElement('button');
+    rot.className='md-btn md-rotate';
+    rot.innerHTML='↻';
+    rot.title=lang==='fr'?'Pivoter le document (90°)':'Rotate document (90°)';
+    rot.addEventListener('click',e=>{
+      e.stopPropagation();
+      doc.rotation=(doc.rotation+90)%360;
+      renderMergeThumb(canvas,i);
+    });
+    card.appendChild(rot);
+    const del=document.createElement('button');
+    del.className='md-btn md-del';
+    del.innerHTML='✕';
+    del.title=lang==='fr'?'Retirer ce document':'Remove this document';
+    del.addEventListener('click',e=>{
+      e.stopPropagation();
+      activeFiles.splice(i,1);
+      mergeDocs.splice(i,1);
+      renderMergePages();
+    });
+    card.appendChild(del);
+    // Nom + nb pages
+    const foot=document.createElement('div');
+    foot.className='md-name';
+    foot.textContent=f.name;
+    card.appendChild(foot);
+    const meta=document.createElement('div');
+    meta.className='md-meta';
+    meta.id=`md-meta-${i}`;
+    card.appendChild(meta);
+    // Drag & drop réordonnement (documents)
+    card.addEventListener('dragstart',e=>{dragSrcDoc=i;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    card.addEventListener('dragend',()=>{card.classList.remove('dragging');document.querySelectorAll('.md-card').forEach(c=>c.classList.remove('drag-over'));});
+    card.addEventListener('dragover',e=>{e.preventDefault();document.querySelectorAll('.md-card').forEach(c=>c.classList.remove('drag-over'));card.classList.add('drag-over');});
+    card.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(dragSrcDoc===null||dragSrcDoc===i)return;
+      const mf=activeFiles.splice(dragSrcDoc,1)[0];
+      activeFiles.splice(i,0,mf);
+      const md=mergeDocs.splice(dragSrcDoc,1)[0];
+      mergeDocs.splice(i,0,md);
+      dragSrcDoc=null;
+      renderMergePages();
+    });
+    grid.appendChild(card);
+    renderMergeThumb(canvas,i);
+  });
+  updateMergeCount();
+  if(toolbar)toolbar.style.display='flex';
+  if(tip)tip.style.display='block';
   if(typeof syncHasFiles==='function') syncHasFiles();
 }
 
-function updateMergeGrid(){
-  const grid = document.getElementById('merge-grid');
-  if(!grid) return;
-  updateMergeCount();
-  if(!mergePages.length){
-    grid.innerHTML=`<div class="merge-empty">${lang==='fr'?'Aucune page':'No pages'}</div>`;
-    return;
+// Aperçu 1re page du document i, avec la rotation choisie.
+async function renderMergeThumb(canvas,i){
+  try{
+    const buf=await activeFiles[i].arrayBuffer();
+    const pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+    mergeDocs[i].pages=pdfDoc.numPages;
+    const meta=document.getElementById(`md-meta-${i}`);
+    if(meta)meta.textContent=`${pdfDoc.numPages} page${pdfDoc.numPages>1?'s':''}`;
+    updateMergeCount();
+    const page=await pdfDoc.getPage(1);
+    const base=page.getViewport({scale:1});
+    const rotation=(base.rotation+(mergeDocs[i]?mergeDocs[i].rotation:0))%360;
+    const vp0=page.getViewport({scale:1,rotation});
+    const scale=Math.min(220/vp0.width,180/vp0.height);
+    const vp=page.getViewport({scale,rotation});
+    canvas.width=vp.width;canvas.height=vp.height;
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+    Security.wipeMemory(buf);
+  }catch(e){
+    const ctx=canvas.getContext('2d');
+    canvas.width=140;canvas.height=170;
+    ctx.fillStyle='#f5f5f5';ctx.fillRect(0,0,140,170);
+    ctx.fillStyle='#8B9CB6';ctx.font='12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('PDF',70,88);
   }
-  grid.innerHTML='';
-  mergePages.forEach((pg, idx) => {
-    const card = document.createElement('div');
-    card.className = 'mp-card' + (pg.excluded?' excluded':'');
-    card.draggable = true;
-    card.dataset.idx = idx;
-    card.dataset.fileIdx = pg.fileIdx;
-    card.dataset.pageIdx = pg.pageIdx;
-
-    // Canvas miniature
-    const canvas = document.createElement('canvas');
-    canvas.style.cssText='width:100%;height:110px;object-fit:contain;display:block;background:#f5f5f5';
-    card.appendChild(canvas);
-
-    // Badge document
-    const docBadge = document.createElement('div');
-    docBadge.className='mp-doc-sep';
-    docBadge.textContent=pg.docLabel;
-    card.appendChild(docBadge);
-
-    // Footer
-    const footer = document.createElement('div');
-    footer.className='mp-footer';
-    footer.innerHTML=`<span class="mp-label">${Security.escHtml(pg.fileLabel)}</span><span class="mp-num">p.${pg.pageIdx+1}</span>`;
-    card.appendChild(footer);
-
-    // Bouton supprimer
-    const del = document.createElement('button');
-    del.className='mp-del';
-    del.innerHTML='✕';
-    del.title=lang==='fr'?'Exclure cette page':'Exclude this page';
-    del.addEventListener('click', e=>{e.stopPropagation(); toggleMergePage(idx);});
-    card.appendChild(del);
-
-    // Drag & Drop
-    card.addEventListener('dragstart', e=>{
-      dragSrc=idx;
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed='move';
-    });
-    card.addEventListener('dragend', ()=>{
-      card.classList.remove('dragging');
-      document.querySelectorAll('.mp-card').forEach(c=>c.classList.remove('drag-over'));
-    });
-    card.addEventListener('dragover', e=>{
-      e.preventDefault();
-      e.dataTransfer.dropEffect='move';
-      document.querySelectorAll('.mp-card').forEach(c=>c.classList.remove('drag-over'));
-      card.classList.add('drag-over');
-    });
-    card.addEventListener('drop', e=>{
-      e.preventDefault();
-      if(dragSrc===null||dragSrc===idx)return;
-      const moved=mergePages.splice(dragSrc,1)[0];
-      mergePages.splice(idx,0,moved);
-      dragSrc=null;
-      updateMergeGrid();
-      // Re-render thumbnails
-      renderMergeThumbnails();
-    });
-
-    grid.appendChild(card);
-  });
-
-  renderMergeThumbnails();
-}
-
-async function renderMergeThumbnails(){
-  if(!window.pdfjsLib) return;
-  // BUG 2 FIX: cache pdfDoc par fileIdx pour ne pas recharger N fois le même fichier
-  const pdfCache={};
-  const cards=[...document.querySelectorAll('.mp-card')];
-  for(let i=0;i<cards.length;i++){
-    const card=cards[i];
-    const idx=parseInt(card.dataset.idx);
-    if(idx>=mergePages.length) continue;
-    const pg=mergePages[idx];
-    const canvas=card.querySelector('canvas');
-    if(!canvas) continue;
-    try{
-      if(!pdfCache[pg.fileIdx]){
-        const buf=await activeFiles[pg.fileIdx].arrayBuffer();
-        pdfCache[pg.fileIdx]=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
-        Security.wipeMemory(buf);
-      }
-      const pdfDoc=pdfCache[pg.fileIdx];
-      const page=await pdfDoc.getPage(pg.pageIdx+1);
-      const vp=page.getViewport({scale:0.25});
-      canvas.width=vp.width;canvas.height=vp.height;
-      await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
-    }catch(e){
-      const ctx=canvas.getContext('2d');
-      canvas.width=90;canvas.height=110;
-      ctx.fillStyle='#1E2D45';ctx.fillRect(0,0,90,110);
-      ctx.fillStyle='#8B9CB6';ctx.font='10px sans-serif';ctx.textAlign='center';
-      ctx.fillText('PDF',45,58);
-    }
-  }
-}
-
-function toggleMergePage(idx){
-  if(idx>=mergePages.length)return;
-  mergePages[idx].excluded=!mergePages[idx].excluded;
-  const cards=document.querySelectorAll('.mp-card');
-  const card=cards[idx];
-  if(card) card.classList.toggle('excluded', mergePages[idx].excluded);
-  updateMergeCount();
-}
-
-function mergeSelectAll(){
-  mergePages.forEach(p=>p.excluded=false);
-  document.querySelectorAll('.mp-card').forEach(c=>c.classList.remove('excluded'));
-  updateMergeCount();
 }
 
 function mergeReset(){
   activeFiles=[];
-  mergePages=[];
-  const grid=document.getElementById('merge-grid');
-  if(grid) grid.innerHTML=`<div class="merge-empty">${lang==='fr'?'Ajoutez des PDFs pour voir les pages':'Add PDFs to preview pages'}</div>`;
-  const toolbar=document.getElementById('merge-toolbar');
-  if(toolbar) toolbar.style.display='none';
-  if(typeof syncHasFiles==='function') syncHasFiles();
+  mergeDocs=[];
+  renderMergePages();
 }
 
 function updateMergeCount(){
   const el=document.getElementById('merge-count');
   if(!el) return;
-  const total=mergePages.length;
-  const included=mergePages.filter(p=>!p.excluded).length;
+  const nd=activeFiles.length;
+  const np=mergeDocs.reduce((s,d)=>s+(d.pages||0),0);
   el.textContent=lang==='fr'
-    ?`${included}/${total} pages incluses`
-    :`${included}/${total} pages included`;
+    ?`${nd} document${nd>1?'s':''} · ${np} page${np>1?'s':''}`
+    :`${nd} document${nd>1?'s':''} · ${np} page${np>1?'s':''}`;
 }
 
-// runMerge(activeFiles, mergePages) -> {result, filename} | null
-async function runMerge(activeFiles, mergePages){
-  // BUG 12 FIX: lire mergePages directement (source de vérité), pas le DOM
-  const toMerge=mergePages.filter(p=>!p.excluded);
-  if(!toMerge.length){ earlyReturn(t('nofile')); return null; }
+// runMerge(activeFiles, mergeDocs) -> {result, filename} | null
+// Fusionne les documents dans l'ordre affiché, avec la rotation par document.
+async function runMerge(activeFiles, mergeDocs){
+  if(!activeFiles.length){ earlyReturn(t('nofile')); return null; }
   const{PDFDocument}=PDFLib;
+  const degFn=PDFLib.degrees;
   const merged=await PDFDocument.create();
-  // Cache pdfDoc par fileIdx (BUG 2 FIX déjà appliqué ici)
-  const docCache={};
-  // ⚠️ Les buffers ne doivent être wipés qu'APRÈS merged.save() : pdf-lib
-  // garde des vues sur ces octets (flux copiés par référence) — les effacer
-  // dans la boucle pouvait produire des pages corrompues/blanches.
+  // ⚠️ Les buffers ne sont wipés qu'APRÈS merged.save() : pdf-lib garde des
+  // vues sur ces octets (flux copiés par référence).
   const bufs=[];
-  for(let i=0;i<toMerge.length;i++){
-    const pg=toMerge[i];
-    setProgress(5+((i+1)/toMerge.length)*80,`Page ${i+1}/${toMerge.length}…`);
-    if(!docCache[pg.fileIdx]){
-      const buf=await activeFiles[pg.fileIdx].arrayBuffer();
-      bufs.push(buf);
-      docCache[pg.fileIdx]=await PDFDocument.load(buf,{ignoreEncryption:true});
-    }
-    const[page]=await merged.copyPages(docCache[pg.fileIdx],[pg.pageIdx]);
-    merged.addPage(page);
+  for(let i=0;i<activeFiles.length;i++){
+    setProgress(5+((i+1)/activeFiles.length)*80,`Document ${i+1}/${activeFiles.length}…`);
+    const buf=await activeFiles[i].arrayBuffer();
+    bufs.push(buf);
+    const src=await PDFDocument.load(buf,{ignoreEncryption:true});
+    const pages=await merged.copyPages(src,src.getPageIndices());
+    const rot=(mergeDocs[i]&&mergeDocs[i].rotation)||0;
+    pages.forEach(p=>{
+      if(rot){
+        const cur=p.getRotation().angle||0;
+        p.setRotation(degFn(((cur+rot)%360+360)%360));
+      }
+      merged.addPage(p);
+    });
   }
   const result=await merged.save();
   bufs.forEach(b=>Security.wipeMemory(b));

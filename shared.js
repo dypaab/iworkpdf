@@ -513,7 +513,7 @@ function resetToolState(){
   saveMode='local';
   rotateAngle=90;
   secMode='protect';
-  if(typeof mergePages!=='undefined')mergePages=[];
+  if(typeof mergeDocs!=='undefined')mergeDocs=[];
   if(typeof dragSrc!=='undefined')dragSrc=null;
   if(typeof deleteSelectedPages!=='undefined')deleteSelectedPages=new Set();
   if(typeof splitSelectedPages!=='undefined')splitSelectedPages=new Set();
@@ -603,7 +603,27 @@ function setSave(m){
   document.getElementById('so-cloud')?.classList.toggle('active',m==='cloud');
 }
 
+// ── LAYOUT PLEIN ÉCRAN (style iLovePDF) ───────────────────
+// Sépare #tool-body en 2 colonnes : zone de travail à gauche (drop zone,
+// aperçus, grilles) et panneau d'action à droite (options, destination,
+// bouton). Générique : s'applique aux 14 outils sans éditer leurs pages.
+function layoutToolPage(){
+  if(!isToolPage())return;
+  const body=document.getElementById('tool-body');
+  if(!body||body.querySelector(':scope>.tp-left'))return;
+  const LEFT_SEL='#dz,.drop-zone,#fl,.file-list,[id*="preview"],#merge-toolbar,#merge-tip,#merge-grid,#comp-estimate,.pg-card-tip';
+  const left=document.createElement('div');left.className='tp-left';
+  const right=document.createElement('div');right.className='tp-right';
+  [...body.children].forEach(el=>{
+    try{ (el.matches(LEFT_SEL)?left:right).appendChild(el); }
+    catch(_){ right.appendChild(el); }
+  });
+  body.appendChild(left);body.appendChild(right);
+  body.classList.add('tp-split');
+}
+
 function setupDrop(id){
+  layoutToolPage();
   if(id==='pagenums') setTimeout(updatePnPreview, 50);
   if(id==='crop') setTimeout(updateCropPreview, 50);
   if(id==='sign') setTimeout(initSignCanvas, 80);
@@ -1307,7 +1327,7 @@ async function run(id){
   let result=null,filename='output.pdf';
   try{
     if(id==='merge'){
-      const r=await runMerge(activeFiles, mergePages);
+      const r=await runMerge(activeFiles, mergeDocs);
       if(!r)return; // earlyReturn déjà géré dans runMerge
       result=r.result; filename=r.filename;
     }

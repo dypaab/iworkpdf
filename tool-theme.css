@@ -559,6 +559,42 @@ html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
   .result-actions .btn-primary,.result-actions .btn-ghost-lg{width:100%}
 }
 
+/* ── MERGE : cartes documents (style iLovePDF) ───────────── */
+.merge-docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;margin-bottom:16px}
+.md-card{position:relative;background:#fff;border:1px solid var(--il-bd-card);border-radius:12px;padding:14px 12px 10px;cursor:grab;transition:box-shadow .2s;box-shadow:0 2px 10px #00000012;text-align:center}
+.md-card:hover{box-shadow:0 8px 24px #00000022}
+.md-card:active{cursor:grabbing}
+.md-card.dragging{opacity:.4}
+.md-card.drag-over{outline:2px solid var(--il-red)}
+.md-thumb{max-width:100%;height:180px;object-fit:contain;display:block;margin:0 auto;background:#fff}
+.md-btn{position:absolute;top:8px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;background:#ffffffee;box-shadow:0 2px 8px #00000030;color:#333;transition:all .15s;z-index:2}
+.md-rotate{right:46px}
+.md-del{right:8px}
+.md-btn:hover{background:var(--il-red);color:#fff}
+.md-name{font-size:13px;font-weight:600;margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.md-meta{font-size:11.5px;color:var(--tx3)}
+
+/* ── LAYOUT PLEIN ÉCRAN (zone large + panneau d'action à droite) ── */
+@media(min-width:900px){
+  .tool-page{max-width:1200px}
+  .tool-page-head h1{font-size:34px}
+  #tool-sub{font-size:16px}
+  #tool-body.tp-split{background:transparent;border:none;box-shadow:none;padding:0;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start}
+  .tp-left{min-width:0}
+  .tp-right{position:sticky;top:128px;background:var(--il-bg-card,var(--sf));border:1px solid var(--il-bd-card,var(--bd));border-radius:16px;padding:24px;box-shadow:0 10px 30px #00000014}
+  /* Grande typo du panneau (style iLovePDF) */
+  .tp-right .form-label{font-size:15px;font-weight:600}
+  .tp-right .rbn{font-size:14px;padding:10px 16px}
+  .tp-right .form-input{font-size:15px;padding:12px 14px}
+  .tp-right .save-opt-title{font-size:14px}
+  .tp-right .flex-end{margin-top:16px}
+  .tp-right .flex-end .btn-primary{width:100%;padding:17px;font-size:17px;border-radius:12px}
+  /* Drop zone plus généreuse dans la zone large */
+  .tp-split .drop-zone{padding:56px 24px}
+  .tp-split .drop-zone .drop-text{font-size:19px}
+  .tp-split .drop-zone .drop-btn{padding:17px 38px;font-size:17px}
+}
+
 /* ── FIXES MOBILE / TACTILE ─────────────────────────────── */
 @media(hover:none){
   /* Ces boutons n'apparaissaient qu'au survol → invisibles sur tactile */

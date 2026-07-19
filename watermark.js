@@ -47,16 +47,21 @@ async function runWatermark(activeFiles, rawText){
   setProgress(50,'Applying…');
   src.getPages().forEach(page=>{
     const{width,height}=page.getSize();
-    // Centrage exact : le texte pivoté à 45° s'étend depuis son point de départ
-    // le long de (cos45,sin45). On recule le point de départ pour que le
-    // CENTRE du texte tombe au centre de la page.
+    // Certaines pages (scans, exports) portent une rotation /Rotate 90/180/270 :
+    // les coordonnées de dessin restent dans le repère NON pivoté. On ajoute
+    // donc la rotation de la page à l'angle du texte pour qu'il apparaisse
+    // toujours en diagonale 45° À L'ÉCRAN, portrait comme paysage.
+    const pageRot=((page.getRotation().angle||0)%360+360)%360;
+    const angle=45+pageRot;
+    const rad=angle*Math.PI/180;
     const size=Math.min(width,height)*.1;
     const textW=font.widthOfTextAtSize(txt,size);
     const textH=font.heightAtSize(size);
-    const c=Math.SQRT1_2; // cos45 = sin45
-    const x=width/2-(textW/2)*c+(textH/2)*c;
-    const y=height/2-(textW/2)*c-(textH/2)*c;
-    page.drawText(txt,{x,y,size,font,color:rgb(.6,.6,.6),opacity:.3,rotate:degFn(45)});
+    // Centre du bloc de texte = centre de la page (invariant par rotation) :
+    // départ = centre - (L/2)·u - (H/2)·v, avec u=(cosθ,sinθ), v=(-sinθ,cosθ).
+    const x=width/2-(textW/2)*Math.cos(rad)+(textH/2)*Math.sin(rad);
+    const y=height/2-(textW/2)*Math.sin(rad)-(textH/2)*Math.cos(rad);
+    page.drawText(txt,{x,y,size,font,color:rgb(.6,.6,.6),opacity:.3,rotate:degFn(angle)});
   });
   const result=await src.save();
   Security.wipeMemory(buf);

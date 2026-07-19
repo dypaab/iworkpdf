@@ -67,12 +67,14 @@ async function runSecurity(activeFiles, secMode, pwd){
     mod = await createQpdf(s => { stderr += s + '\n'; });
   }catch(e){
     earlyReturn(lang==='fr'
-      ? 'Impossible de charger le module de chiffrement. Vérifiez votre connexion.'
-      : 'Could not load the encryption module. Check your connection.');
+      ? 'Impossible de charger le module de chiffrement (rechargez la page et réessayez).'
+      : 'Could not load the encryption module (reload the page and try again).');
     return null;
   }
+  setProgress(40, lang==='fr' ? 'Module chargé ✓' : 'Module loaded ✓');
 
   const IN = '/in.pdf', OUT = '/out.pdf';
+  setProgress(48, lang==='fr' ? 'Lecture du fichier…' : 'Reading file…');
   const buf = await activeFiles[0].arrayBuffer();
   try{ mod.FS.writeFile(IN, new Uint8Array(buf)); }
   catch(e){ Security.wipeMemory(buf); earlyReturn('FS error: ' + e.message); return null; }
@@ -92,6 +94,7 @@ async function runSecurity(activeFiles, secMode, pwd){
   let code = 0;
   try{ code = mod.callMain(args); }
   catch(e){ code = (e && typeof e.status === 'number') ? e.status : 1; }
+  setProgress(85, lang==='fr' ? 'Finalisation…' : 'Finalizing…');
 
   let out = null;
   try{ out = mod.FS.readFile(OUT); }catch(_){ out = null; }
