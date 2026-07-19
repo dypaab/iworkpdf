@@ -1,7 +1,7 @@
-// iWorkPDF Service Worker v2 — cache intelligent
-const CACHE_VERSION = 'iworkpdf-v2';
-const STATIC_CACHE = 'iworkpdf-static-v2';
-const FONT_CACHE = 'iworkpdf-fonts-v2';
+// iWorkPDF Service Worker v3 — cache intelligent (bump = purge des anciens caches)
+const CACHE_VERSION = 'iworkpdf-v3';
+const STATIC_CACHE = 'iworkpdf-static-v3';
+const FONT_CACHE = 'iworkpdf-fonts-v3';
 
 // Assets statiques à précacher
 const STATIC_ASSETS = [
