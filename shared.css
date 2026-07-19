@@ -389,3 +389,39 @@ body.home-toolsnav .trust-banner{margin-top:110px}
   .tools-nav .tn-link{display:none}
   .tn-all{margin-left:auto}
 }
+
+/* ── FIXES MOBILE (rendu téléphone) ─────────────────────── */
+/* Safari iOS : backdrop-filter nécessite le préfixe -webkit- */
+nav{-webkit-backdrop-filter:blur(20px)}
+.overlay{-webkit-backdrop-filter:blur(8px)}
+
+@media(max-width:600px){
+  /* Nav compacte : tout tient sur une ligne de 360px */
+  .nav-actions{gap:6px}
+  .nav-brand{font-size:16px}
+  .nav-logo img{width:22px;height:22px}
+  .btn-lang{padding:6px 8px;font-size:12px}
+  .btn-auth{padding:7px 12px;font-size:12px}
+  #theme-btn{width:30px!important;height:30px!important;font-size:14px!important}
+  .avatar{width:30px;height:30px;font-size:12px}
+  /* Widgets desktop inutiles / gênants sur mobile */
+  #net-monitor{display:none}
+  .kbd{display:none}
+  #shortcut-hint{display:none}
+  /* Bandeau confiance compact */
+  .trust-banner{gap:8px 16px;padding:10px 14px}
+  .trust-item{font-size:11px;gap:5px}
+  .trust-item .ti-icon{font-size:13px}
+  /* Cartes outils : 2 colonnes serrées */
+  .tool-card{padding:16px 12px}
+  .tool-name{font-size:14px}
+  .tool-badge{top:8px;right:8px}
+}
+@media(max-width:480px){
+  /* Pricing / Blog sortent de la nav (réinjectés au footer par shared.js) */
+  .nav-actions > a{display:none}
+}
+@media(hover:none){
+  /* Pas d'effet hover sur tactile */
+  .tool-card:hover{transform:none;box-shadow:none}
+}

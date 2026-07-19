@@ -558,3 +558,14 @@ html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
   .result-actions{flex-direction:column}
   .result-actions .btn-primary,.result-actions .btn-ghost-lg{width:100%}
 }
+
+/* ── FIXES MOBILE / TACTILE ─────────────────────────────── */
+@media(hover:none){
+  /* Ces boutons n'apparaissaient qu'au survol → invisibles sur tactile */
+  .mp-del{opacity:1}
+}
+@media(max-width:600px){
+  .merge-pages-grid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}
+  .pages-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
+  .tool-icon-big{transform:scale(.85)}
+}

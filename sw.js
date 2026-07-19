@@ -1,7 +1,10 @@
-// iWorkPDF Service Worker v3 — cache intelligent (bump = purge des anciens caches)
-const CACHE_VERSION = 'iworkpdf-v3';
-const STATIC_CACHE = 'iworkpdf-static-v3';
-const FONT_CACHE = 'iworkpdf-fonts-v3';
+// iWorkPDF Service Worker v4 — cache intelligent (bump = purge des anciens caches)
+// v4 : fix mobile — plus de fausse réponse "/* offline */" pour les CDN
+// (elle remplaçait supabase-js/pdf-lib par du JS vide → crash de shared.js
+// → grille d'outils vide sur téléphone). + précache de supabase-js.
+const CACHE_VERSION = 'iworkpdf-v4';
+const STATIC_CACHE = 'iworkpdf-static-v4';
+const FONT_CACHE = 'iworkpdf-fonts-v4';
 
 // Assets statiques à précacher
 const STATIC_ASSETS = [
@@ -49,6 +52,7 @@ const STATIC_ASSETS = [
 
 const CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
 ];
 
 // Install : précache tous les assets statiques
@@ -104,10 +108,14 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       caches.match(e.request).then(cached =>
         cached || fetch(e.request).then(resp => {
-          const clone = resp.clone();
-          caches.open(FONT_CACHE).then(c => c.put(e.request, clone));
+          if (resp.ok) {
+            const clone = resp.clone();
+            caches.open(FONT_CACHE).then(c => c.put(e.request, clone));
+          }
           return resp;
-        }).catch(() => new Response('/* offline */', { headers: { 'Content-Type': 'application/javascript' } }))
+        })
+        // Pas de fausse réponse JS vide : on laisse l'erreur réseau remonter,
+        // shared.js gère l'absence de supabase (sb=null) sans crasher.
       )
     );
     return;
@@ -126,7 +134,9 @@ self.addEventListener('fetch', e => {
         }).catch(() => null);
 
         // Retourne le cache immédiatement si disponible, met à jour en arrière-plan
-        return cached || fetchPromise || new Response('Offline', {
+        if (cached) return cached;
+        const resp = await fetchPromise; // null si échec réseau
+        return resp || new Response('Offline', {
           status: 503,
           headers: { 'Content-Type': 'text/plain' }
         });

@@ -8,7 +8,13 @@
 
 const SUPABASE_URL='https://iispzrdathkixcgriyrr.supabase.co';
 const SUPABASE_KEY='sb_publishable_quzgA4pxNzzzqntQOF6WoQ_3ZnFB36C';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
+// ROBUSTESSE MOBILE : si le CDN supabase-js n'a pas chargé (réseau mobile,
+// data-saver, SW offline), on continue SANS cloud/auth au lieu de crasher
+// tout shared.js (avant : ReferenceError → grille d'outils vide, site mort).
+const sb=(window.supabase&&window.supabase.createClient)
+  ?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}})
+  :null;
+if(!sb)console.warn('[iWorkPDF] supabase-js absent — outils locaux OK, cloud/auth désactivés');
 
 let lang='en',user=null,saveMode='local';
 let activeFiles=[],rotateAngle=90,secMode='protect';
@@ -22,7 +28,7 @@ let privacyMode=false;
 // Listener global d'état d'auth — enregistré une seule fois au chargement de shared.js.
 // Était dans le bloc global non-fonction de l'original → absent lors de la migration
 // → bouton "Création du compte…" bloqué indéfiniment (signUp() ne terminait jamais côté UI).
-sb.auth.onAuthStateChange(async(event,session)=>{
+if(sb)sb.auth.onAuthStateChange(async(event,session)=>{
   const prevUserId=_lastUserId;
   user=session?.user||null;
   _lastUserId=user?.id||null;
@@ -357,6 +363,7 @@ async function doLogin(){
   const st=document.getElementById('l-status');
   const btn=document.getElementById('login-btn');
   try{
+    if(!sb)throw new Error(lang==='fr'?'Connexion indisponible (hors ligne). Les outils PDF restent utilisables.':'Sign-in unavailable (offline). PDF tools still work.');
     const email=Security.validateEmail(rawEmail);
     Security.checkRateLimit(email);
     st.className='status-box info';st.textContent=t('signedin');
@@ -380,6 +387,7 @@ async function doRegister(){
   const st=document.getElementById('r-status');
   const btn=document.getElementById('reg-btn');
   try{
+    if(!sb)throw new Error(lang==='fr'?'Création de compte indisponible (hors ligne).':'Registration unavailable (offline).');
     if(!name)throw new Error(lang==='fr'?'Entrez votre prénom.':'Enter your first name.');
     const email=Security.validateEmail(rawEmail);
     const strength=Security.checkPasswordStrength(pwd);
@@ -394,10 +402,10 @@ async function doRegister(){
   }finally{btn.disabled=false;}
 }
 
-async function doLogout(){await sb.auth.signOut();closeHistory();}
+async function doLogout(){if(sb)await sb.auth.signOut();closeHistory();}
 
 async function audit(action,resourceId=null,meta={}){
-  if(!user)return;
+  if(!user||!sb)return;
   try{await sb.from('audit_logs').insert({user_id:user.id,action,resource_id:resourceId,metadata:{...meta,ua:navigator.userAgent.substring(0,80)}});}
   catch(e){console.warn('Audit:',e.message);}
 }
@@ -1387,6 +1395,7 @@ function convertImgToPng(url){
 }
 
 async function uploadCloud(bytes,filename,toolId){
+  if(!sb){throw new Error(lang==='fr'?'Cloud indisponible (hors ligne).':'Cloud unavailable (offline).');}
   if(!user){throw new Error(lang==='fr'?'Connectez-vous pour utiliser le cloud.':'Sign in to use cloud storage.');}
   if(!user.email_confirmed_at){throw new Error(lang==='fr'?'Vérifiez votre email d\'abord.':'Please verify your email first.');}
   setProgress(92,t('uploading'));
@@ -1469,6 +1478,7 @@ function copyLink(){
 // Stocke uniquement : page URL (sans query), referrer domain, langue, outil.
 // Conforme RGPD sans consentement (donnée non personnelle).
 async function trackPageView(toolId){
+  if(!sb)return;
   try{
     const payload={
       page: window.location.pathname,
@@ -1488,6 +1498,7 @@ async function doForgotPassword(){
   const raw=document.getElementById('l-email')?.value||'';
   const st=document.getElementById('l-status');
   try{
+    if(!sb)throw new Error(lang==='fr'?'Indisponible hors ligne.':'Unavailable offline.');
     const email=Security.validateEmail(raw);
     if(st){st.className='status-box info';st.textContent=lang==='fr'?'Envoi du lien…':'Sending link…';}
     const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
@@ -1509,6 +1520,7 @@ async function doSetNewPassword(){
   const pwd=document.getElementById('np-pwd')?.value||'';
   const st=document.getElementById('np-status');
   try{
+    if(!sb)throw new Error(lang==='fr'?'Indisponible hors ligne.':'Unavailable offline.');
     const s=Security.checkPasswordStrength(pwd);
     if(!s.ok)throw new Error(lang==='fr'?'Mot de passe trop faible (8+ car., majuscule, chiffre).':'Password too weak (8+ chars, uppercase, number).');
     if(st){st.className='status-box info';st.textContent=lang==='fr'?'Mise à jour…':'Updating…';}
@@ -1604,6 +1616,13 @@ function initExtras(){
     c.textContent='Contact';
     c.addEventListener('click',openContact);
     fp.insertAdjacentElement('afterend',c);
+  }
+  // Mobile : Pricing/Blog masqués dans la nav (≤480px) → toujours accessibles au footer
+  if(fp && !document.getElementById('footer-pricing-link')){
+    const mk=(id,href,txt)=>{const a=document.createElement('a');a.id=id;a.href=href;a.textContent=txt;a.style.cssText='margin-left:10px;font-size:12px;color:var(--cy);text-decoration:none';return a;};
+    const last=document.getElementById('contact-link')||fp;
+    last.insertAdjacentElement('afterend',mk('footer-blog-link','/blog/','Blog'));
+    last.insertAdjacentElement('afterend',mk('footer-pricing-link','/pricing.html','Pricing'));
   }
 }
 
