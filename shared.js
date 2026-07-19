@@ -1517,6 +1517,43 @@ async function dlBytes(bytes, filename){
   setTimeout(()=>URL.revokeObjectURL(url),5000);
 }
 
+// ── EXPORT ZIP (sorties multiples → un seul téléchargement) ──
+// Indispensable sur mobile : les navigateurs bloquent souvent les
+// téléchargements multiples successifs.
+async function ensureJSZip(){
+  if(window.JSZip)return;
+  await new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    s.onload=res;s.onerror=()=>rej(new Error('JSZip load failed'));
+    document.head.appendChild(s);
+  });
+}
+// files: [{name, data:Uint8Array}] → un seul .zip
+// STORE (pas de recompression) : PDF/JPG sont déjà compressés.
+async function dlZip(files,zipName){
+  await ensureJSZip();
+  const zip=new JSZip();
+  files.forEach(f=>zip.file(f.name,f.data));
+  const blob=await zip.generateAsync({type:'blob',compression:'STORE'});
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({suggestedName:zipName,types:[{description:'ZIP archive',accept:{'application/zip':['.zip']}}]});
+      const w=await handle.createWritable();
+      await w.write(blob);await w.close();
+      return;
+    }catch(e){
+      if(e.name==='AbortError')throw e;
+      // autre erreur → fallback lien classique
+    }
+  }
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=zipName;a.rel='noopener noreferrer';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+
 function copyLink(){
   navigator.clipboard?.writeText(document.getElementById('share-link-inp')?.value||'').catch(()=>{});
   setStatus(t('linkcopied'),'ok');

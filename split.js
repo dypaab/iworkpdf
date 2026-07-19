@@ -100,39 +100,43 @@ async function runSplit(activeFiles, splitSelectedPages){
       const n=src.getPageCount();
       const indices=pagesToSplit||src.getPageIndices();
       const stem=activeFiles[0].name.replace('.pdf','');
-      let savedCount=0;
+      // Génère tous les PDF en mémoire, puis UN SEUL téléchargement
+      // (ZIP si plusieurs) — les téléchargements multiples sont bloqués
+      // par la plupart des navigateurs mobiles.
+      const outFiles=[];
       for(let i=0;i<indices.length;i++){
         const pageIdx=indices[i];
-        setProgress(5+((i+1)/indices.length)*90,`Page ${pageIdx+1}/${n}…`);
+        setProgress(5+((i+1)/indices.length)*80,`Page ${pageIdx+1}/${n}…`);
         const out=await PDFDocument.create();
         const[p]=await out.copyPages(src,[pageIdx]);
         out.addPage(p);
-        const b=await out.save();
-        try{
-          await dlBytes(b,`${stem}_p${pageIdx+1}.pdf`);
-          savedCount++;
-        }catch(e){
-          // BUG 3 FIX: AbortError = utilisateur a annulé → stopper proprement
-          if(e.name==='AbortError'){
-            Security.wipeMemory(buf);
-            setProgress(100,'⚠️');hideProg();
-            setStatus(`${savedCount} ${lang==='fr'?'fichiers enregistrés (annulé)':'files saved (cancelled)'}`, 'info');
-            isProcessing=false;
-            document.querySelectorAll('#ws-body .btn-primary').forEach(b=>b.disabled=false);
-            return;
-          }
-          throw e;
+        outFiles.push({name:`${stem}_p${pageIdx+1}.pdf`,data:await out.save()});
+      }
+      let savedCount=outFiles.length;
+      try{
+        setProgress(90,lang==='fr'?'Préparation du téléchargement…':'Preparing download…');
+        if(outFiles.length===1)await dlBytes(outFiles[0].data,outFiles[0].name);
+        else await dlZip(outFiles,`${stem}_split.zip`);
+      }catch(e){
+        if(e.name==='AbortError'){
+          Security.wipeMemory(buf);
+          setProgress(100,'⚠️');hideProg();
+          setStatus(lang==='fr'?'Annulé.':'Cancelled.','info');
+          isProcessing=false;
+          document.querySelectorAll('#ws-body .btn-primary').forEach(b=>b.disabled=false);
+          return;
         }
-        await new Promise(r=>setTimeout(r,80));
+        throw e;
       }
       Security.wipeMemory(buf);
       setProgress(100,'✅');hideProg();
-      setStatus(`${savedCount} ${lang==='fr'?'fichiers enregistrés':'files saved'} ✅`,'ok');
-      await audit(id,null,{pages:savedCount});
-      // BUG 10 FIX: stats + recent
-      addRecent(`${activeFiles[0].name} (${savedCount} pages)`,id,activeFiles[0].size);
+      setStatus(`${savedCount} ${lang==='fr'?'pages exportées':'pages exported'} ✅`,'ok');
+      await audit('split',null,{pages:savedCount});
+      addRecent(`${activeFiles[0].name} (${savedCount} pages)`,'split',activeFiles[0].size);
       incrementStats();
-      showToast(`${savedCount} ${lang==='fr'?'fichiers PDF enregistrés':'PDF files saved'}`, 'ok');
+      showToast(outFiles.length===1
+        ?(lang==='fr'?'PDF enregistré':'PDF saved')
+        :`ZIP · ${savedCount} PDF`, 'ok');
       isProcessing=false;
       document.querySelectorAll('#ws-body .btn-primary').forEach(b=>b.disabled=false);
       return;

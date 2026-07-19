@@ -47,39 +47,35 @@ async function runPdf2Jpg(activeFiles, jpgQuality){
       const reverse=document.getElementById('pdf2jpg-reverse')?.checked===true;
       const order=[...Array(n).keys()];
       if(reverse)order.reverse();
+      // Rend toutes les pages en mémoire, puis UN SEUL téléchargement
+      // (ZIP si plusieurs) — fiable sur mobile.
+      const outFiles=[];
       for(let k=0;k<order.length;k++){
         const i=order[k];
-        setProgress(5+((k+1)/n)*90,`Page ${i+1}/${n}…`);
+        setProgress(5+((k+1)/n)*80,`Page ${i+1}/${n}…`);
         const page=await pdfDoc.getPage(i+1);
         const vp=page.getViewport({scale});
         const canvas=document.createElement('canvas');
         canvas.width=vp.width;canvas.height=vp.height;
         await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
-        const jpgFilename=`${stem}_p${i+1}.jpg`;
-        // BUG C FIX: propager AbortError hors de la Promise canvas.toBlob
-        let aborted=false;
-        await new Promise((res,rej)=>{
-          canvas.toBlob(async blob=>{
-            if(!blob){res();return;}
-            try{
-              const ab=await blob.arrayBuffer();
-              await dlJpg(new Uint8Array(ab),jpgFilename);
-              res();
-            }catch(e){
-              if(e.name==='AbortError'){aborted=true;res();}
-              else rej(e);
-            }
-          },'image/jpeg',jpgQuality);
-        });
-        if(aborted){
+        const blob=await new Promise(res=>canvas.toBlob(res,'image/jpeg',jpgQuality));
+        if(blob)outFiles.push({name:`${stem}_p${i+1}.jpg`,data:new Uint8Array(await blob.arrayBuffer())});
+        canvas.width=0;canvas.height=0;
+      }
+      try{
+        setProgress(90,lang==='fr'?'Préparation du téléchargement…':'Preparing download…');
+        if(outFiles.length===1)await dlJpg(outFiles[0].data,outFiles[0].name);
+        else await dlZip(outFiles,`${stem}_jpg.zip`);
+      }catch(e){
+        if(e.name==='AbortError'){
           Security.wipeMemory(buf);
           setProgress(100,'⚠️');hideProg();
-          setStatus(`${k} ${lang==='fr'?'images enregistrées (annulé)':'images saved (cancelled)'}`, 'info');
+          setStatus(lang==='fr'?'Annulé.':'Cancelled.','info');
           isProcessing=false;
           document.querySelectorAll('#ws-body .btn-primary').forEach(b=>b.disabled=false);
           return;
         }
-        await new Promise(r=>setTimeout(r,80));
+        throw e;
       }
       Security.wipeMemory(buf);
       setProgress(100,'✅');hideProg();

@@ -68,7 +68,9 @@ async function runExtract(activeFiles){
     const sm=o.dict.get(PDFName.of('SMask'));
     if(sm)smaskRefs.add(sm.toString());
   });
-  let saved=0,idx=0,aborted=false;
+  let idx=0,aborted=false;
+  // Collecte en mémoire → UN SEUL téléchargement (ZIP si plusieurs)
+  const outFiles=[];
   for(const [ref,obj] of streams){
     idx++;
     if(smaskRefs.has(ref.toString()))continue; // masque de transparence, pas une image
@@ -80,7 +82,7 @@ async function runExtract(activeFiles){
     if(isMask&&isMask.toString()==='true')continue;
     // Trop petit en octets = décoration/masque, pas une photo
     if(obj.contents&&obj.contents.length<3000)continue;
-    setProgress(5+idx/streams.length*90,`Image ${idx}/${streams.length}…`);
+    setProgress(5+idx/streams.length*80,`Image ${idx}/${streams.length}…`);
     const f=dict.get(PDFName.of('Filter'));
     const fs=f?f.toString():'';
     // Les JPEG CMYK sortent inversés/noirs si sauvés bruts → décodage PDF.js
@@ -90,8 +92,7 @@ async function runExtract(activeFiles){
     try{
       if(rawJpgOk&&obj.contents&&obj.contents.length){
         // JPEG natif : octets d'origine, zéro ré-encodage, résolution native
-        await dlJpg(new Uint8Array(obj.contents),`${stem}_img${saved+1}.jpg`);
-        saved++;
+        outFiles.push({name:`${stem}_img${outFiles.length+1}.jpg`,data:new Uint8Array(obj.contents)});
       }else{
         // Autres encodages (Flate/PNG…) : via les pixels décodés par PDF.js
         const list=await getDecoded();
@@ -111,13 +112,21 @@ async function runExtract(activeFiles){
         }else continue;
         const blob=await new Promise(res=>canvas.toBlob(res,'image/jpeg',0.95));
         if(!blob)continue;
-        await dlJpg(new Uint8Array(await blob.arrayBuffer()),`${stem}_img${saved+1}.jpg`);
-        saved++;
+        outFiles.push({name:`${stem}_img${outFiles.length+1}.jpg`,data:new Uint8Array(await blob.arrayBuffer())});
+        canvas.width=0;canvas.height=0;
       }
+    }catch(_){/* image illisible : on continue */}
+  }
+  let saved=outFiles.length;
+  if(saved){
+    try{
+      setProgress(90,lang==='fr'?'Préparation du téléchargement…':'Preparing download…');
+      if(saved===1)await dlJpg(outFiles[0].data,outFiles[0].name);
+      else await dlZip(outFiles,`${stem}_images.zip`);
     }catch(e){
-      if(e.name==='AbortError'){aborted=true;break;}
+      if(e.name==='AbortError'){aborted=true;saved=0;}
+      else throw e;
     }
-    await new Promise(r=>setTimeout(r,60));
   }
   Security.wipeMemory(buf);
   setProgress(100,aborted?'⚠️':'✅');hideProg();
