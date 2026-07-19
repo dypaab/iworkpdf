@@ -444,8 +444,8 @@ nav{-webkit-backdrop-filter:blur(20px)}
 }
 
 /* ── PUCES DE CATÉGORIES (style iLovePDF) ─────────────────── */
-.cat-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 26px;max-width:640px}
-.cat-chip{background:var(--sf);border:1px solid var(--bd);color:var(--tx);padding:11px 20px;border-radius:26px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
+.cat-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 26px}
+.cat-chip{background:var(--sf);border:1px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:26px;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
 .cat-chip:hover{border-color:var(--cy)}
 .cat-chip.active{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 
@@ -464,18 +464,26 @@ nav{-webkit-backdrop-filter:blur(20px)}
   body.nav-open .nav-actions > a{display:block;padding:6px 4px;font-size:14px!important}
   body.nav-open .btn-auth{width:100%;padding:11px}
   body.nav-open .btn-lang{text-align:left}
-  /* Hero compact (widgets desktop masqués) */
+  /* MOBILE = OUTILS D'ABORD (comme iLovePDF) : on voit la grille dès l'entrée */
+  .trust-banner{display:none} /* trop haut sur mobile ; repris par la proof bar */
   .hero .badge{display:none}
   .hero-visual{display:none}
   .sec-badges{display:none}
   .hero-stats{display:none}
-  .hero-ctas{display:none} /* comme iLovePDF : titre + texte puis directement les outils */
-  .hero-illu{display:none} /* mobile : on va droit aux outils */
-  .demo-drop{margin-top:14px;padding:13px 14px;font-size:13px}
-  .hero{padding:88px 20px 30px}
-  .hero h1{font-size:30px;line-height:1.15}
-  #h-sub{font-size:14px;max-width:34ch;margin-left:auto;margin-right:auto}
-  .hero-ctas{margin-top:18px}
+  .hero-ctas{display:none}
+  .hero-illu{display:none}
+  .demo-drop{display:none}
+  .hero{padding:76px 20px 8px}
+  .hero h1{font-size:24px;line-height:1.2}
+  .hero h1 br{display:none} /* titre sur une seule ligne logique */
+  #h-sub{font-size:13px;max-width:38ch;margin:8px auto 0}
+  /* Section outils collée au hero */
+  #tools-section{padding-top:18px}
+  #tools-section .section-label{display:none}
+  #tools-section .section-title{font-size:20px;margin-bottom:2px}
+  #tools-section .section-sub{margin-bottom:14px}
+  .cat-chips{gap:8px;margin-bottom:16px}
+  .cat-chip{padding:9px 14px;font-size:12.5px}
   /* Barre d'outils de l'accueil inutile sur mobile (la grille est juste dessous) */
   .tools-nav--home{display:none}
   body.home-toolsnav .trust-banner{margin-top:64px}
