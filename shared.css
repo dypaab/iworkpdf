@@ -380,7 +380,10 @@ html.light #net-monitor,html.light .toast{box-shadow:0 8px 24px #64748B2E}
 /* Accueil : décaler le contenu sous la barre fixe (nav 64 + barre 46) */
 body.home-toolsnav .trust-banner{margin-top:110px}
 @media(max-width:768px){
-  .tools-nav{padding:0 12px;gap:2px;overflow-x:auto}
+  /* ⚠️ pas d'overflow sur la barre elle-même : le menu déroulant (absolu)
+     serait découpé dans ses 46px de haut. On scrolle les liens à la place. */
+  .tools-nav{padding:0 12px;gap:2px}
+  .tn-links{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .tn-link{padding:7px 9px;font-size:12px}
   .tn-all-btn{padding:7px 12px;font-size:12px}
   .tools-nav--home .tn-links{gap:6px;justify-content:flex-start;flex:0 1 auto}
