@@ -87,10 +87,12 @@ async function runDelete(activeFiles, deleteSelectedPages){
   const keep=src.getPageIndices().filter(i=>!deleteSelectedPages.has(i));
   if(!keep.length){ Security.wipeMemory(buf); earlyReturn(t('alldeleted')); return null; }
   setProgress(50,'Deleting…');
-  const out=await PDFDocument.create();
-  const pages=await out.copyPages(src,keep);
-  pages.forEach(p=>out.addPage(p));
-  const result=await out.save();
+  // Suppression EN PLACE (et non reconstruction par copyPages) : le sommaire
+  // (outline/bookmarks) et les liens internes des pages conservées restent
+  // intacts. Avant : document neuf -> sommaire perdu, liens cassés -> les
+  // visionneuses projetaient tout vers la page 1.
+  [...deleteSelectedPages].sort((a,b)=>b-a).forEach(i=>src.removePage(i));
+  const result=await src.save({useObjectStreams:true});
   Security.wipeMemory(buf);
   const filename=`${activeFiles[0].name.replace('.pdf','')}_edited.pdf`;
   return {result, filename};
