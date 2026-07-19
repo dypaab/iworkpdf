@@ -424,14 +424,11 @@ initTheme();
 initTrust();
 initCookieBanner();
 
-// PWA Service Worker
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/sw.js').catch(()=>{});
-  });
-}
+// Service worker DÉSACTIVÉ (incidents 'Offline' : proxys/réseaux bloquant les
+// fetch du SW → pages mortes). sw.js est un stub d'auto-nettoyage pour les
+// navigateurs encore infectés. Ne PAS re-register sans refonte testée.
 document.getElementById('theme-btn')?.addEventListener('click',toggleTheme);
-sb.auth.getSession().then(({data:{session}})=>{
+if(sb)sb.auth.getSession().then(({data:{session}})=>{
   user=session?.user||null;
   _lastUserId=user?.id||null;
   updateAuthUI();

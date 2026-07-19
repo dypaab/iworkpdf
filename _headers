@@ -8,10 +8,10 @@
   X-XSS-Protection: 1; mode=block
 
 /*.js
-  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=0, must-revalidate
 
 /*.css
-  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=0, must-revalidate
 
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
