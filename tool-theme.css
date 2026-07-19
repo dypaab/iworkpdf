@@ -559,6 +559,13 @@ html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
   .result-actions .btn-primary,.result-actions .btn-ghost-lg{width:100%}
 }
 
+/* ── CASE À COCHER (option ordre, etc.) ──────────────────── */
+.chk-line{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--tx2);margin:12px 0;cursor:pointer;user-select:none}
+.chk-line input{width:18px;height:18px;accent-color:var(--cy);cursor:pointer}
+
+/* ── CROP : aperçu 1re page réelle + cadre ───────────────── */
+.crop-inner{box-shadow:0 0 0 9999px rgba(15,30,60,.4)}
+
 /* ── MERGE : cartes documents (style iLovePDF) ───────────── */
 .merge-docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;margin-bottom:16px}
 .md-card{position:relative;background:#fff;border:1px solid var(--il-bd-card);border-radius:12px;padding:14px 12px 10px;cursor:grab;transition:box-shadow .2s;box-shadow:0 2px 10px #00000012;text-align:center}

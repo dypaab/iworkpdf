@@ -22,6 +22,7 @@ function buildPdf2JpgUI(){
         <button class="rbn" onclick="setJpgQ(this,1.0)">💎 Max</button>
       </div>
     </div>
+    <label class="chk-line"><input type="checkbox" id="pdf2jpg-reverse"/><span>${lang==='fr'?'Ordre inversé (dernière page → première)':'Reverse order (last page → first)'}</span></label>
     ${bottom}
     <div class="flex-end"><button class="btn-primary" onclick="run('pdf2jpg')">${t('pdf2jpg_apply')}</button></div>`;
 }
@@ -42,8 +43,13 @@ async function runPdf2Jpg(activeFiles, jpgQuality){
       // Échelle selon qualité: 0.7→1.5x, 0.9→2x, 1.0→3x
       const scaleMap={0.7:1.5,0.9:2,1.0:3};
       const scale=scaleMap[jpgQuality]||2;
-      for(let i=0;i<n;i++){
-        setProgress(5+((i+1)/n)*90,`Page ${i+1}/${n}…`);
+      // Ordre d'export : premier → dernier, ou inversé si la case est cochée.
+      const reverse=document.getElementById('pdf2jpg-reverse')?.checked===true;
+      const order=[...Array(n).keys()];
+      if(reverse)order.reverse();
+      for(let k=0;k<order.length;k++){
+        const i=order[k];
+        setProgress(5+((k+1)/n)*90,`Page ${i+1}/${n}…`);
         const page=await pdfDoc.getPage(i+1);
         const vp=page.getViewport({scale});
         const canvas=document.createElement('canvas');
@@ -68,7 +74,7 @@ async function runPdf2Jpg(activeFiles, jpgQuality){
         if(aborted){
           Security.wipeMemory(buf);
           setProgress(100,'⚠️');hideProg();
-          setStatus(`${i} ${lang==='fr'?'images enregistrées (annulé)':'images saved (cancelled)'}`, 'info');
+          setStatus(`${k} ${lang==='fr'?'images enregistrées (annulé)':'images saved (cancelled)'}`, 'info');
           isProcessing=false;
           document.querySelectorAll('#ws-body .btn-primary').forEach(b=>b.disabled=false);
           return;

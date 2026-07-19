@@ -22,6 +22,7 @@ function buildImg2PdfUI(){
       </div>
       <div class="img-grid" id="img-grid"></div>
     </div>
+    <label class="chk-line"><input type="checkbox" id="img2pdf-reverse"/><span>${lang==='fr'?'Ordre inversé (dernière image → première)':'Reverse order (last image → first)'}</span></label>
     ${saveBlock}${bottom}
     <div class="flex-end"><button class="btn-primary" onclick="run('img2pdf')">${t('img_btn')}</button></div>`;
 }
@@ -87,16 +88,19 @@ async function runImg2Pdf(activeFiles){
       // des VUES sur ces octets — les effacer dans la boucle produisait des
       // pages blanches. On les efface après la sérialisation.
       const bufs=[];
-      for(let i=0;i<activeFiles.length;i++){
-        setProgress(5+((i+1)/activeFiles.length)*80,`Image ${i+1}/${activeFiles.length}…`);
-        const buf=await activeFiles[i].arrayBuffer();
+      // Ordre : premier → dernier, ou inversé si la case est cochée.
+      const files=(document.getElementById('img2pdf-reverse')?.checked===true)
+        ?[...activeFiles].reverse():activeFiles;
+      for(let i=0;i<files.length;i++){
+        setProgress(5+((i+1)/files.length)*80,`Image ${i+1}/${files.length}…`);
+        const buf=await files[i].arrayBuffer();
         bufs.push(buf);
-        const ext=activeFiles[i].name.split('.').pop().toLowerCase();
+        const ext=files[i].name.split('.').pop().toLowerCase();
         let img;
         if(['jpg','jpeg'].includes(ext))img=await doc.embedJpg(buf);
         else if(ext==='png')img=await doc.embedPng(buf);
         else{
-          const blob=new Blob([buf],{type:`image/${ext==='bmp'?'bmp':'webp'}`});
+          const blob=new Blob([buf],{type:`image/${ext==='bmp'?'bmp':'webp'}`}); /* files[i] */
           const url=URL.createObjectURL(blob);
           const pngBuf=await convertImgToPng(url);
           URL.revokeObjectURL(url);

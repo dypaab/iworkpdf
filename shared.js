@@ -677,6 +677,7 @@ async function handleFiles(files,id){
   else if(id==='rotate')  await renderRotatePreview();
   else if(id==='img2pdf') renderImgGrid();
   else if(id==='compress'){renderFiles();await renderCompressEstimate();}
+  else if(id==='crop'){renderFiles();await renderCropPagePreview();}
   else renderFiles();
   syncHasFiles();
 }
