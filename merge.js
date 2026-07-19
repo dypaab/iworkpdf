@@ -95,6 +95,25 @@ async function renderMergePages(){
     meta.className='md-meta';
     meta.id=`md-meta-${i}`;
     card.appendChild(meta);
+    // Flèches de déplacement — le drag HTML5 ne marche pas au tactile
+    // (affichées uniquement sur écrans tactiles via CSS @media(hover:none))
+    const mv=document.createElement('div');
+    mv.className='md-move';
+    const swap=(a,b)=>{
+      const f=activeFiles.splice(a,1)[0];activeFiles.splice(b,0,f);
+      const d=mergeDocs.splice(a,1)[0];mergeDocs.splice(b,0,d);
+      renderMergePages();
+    };
+    const bl=document.createElement('button');bl.className='md-mv';bl.textContent='‹';
+    bl.setAttribute('aria-label',lang==='fr'?'Déplacer à gauche':'Move left');
+    bl.disabled=i===0;
+    bl.addEventListener('click',e=>{e.stopPropagation();if(i>0)swap(i,i-1);});
+    const br=document.createElement('button');br.className='md-mv';br.textContent='›';
+    br.setAttribute('aria-label',lang==='fr'?'Déplacer à droite':'Move right');
+    br.disabled=i===activeFiles.length-1;
+    br.addEventListener('click',e=>{e.stopPropagation();if(i<activeFiles.length-1)swap(i,i+1);});
+    mv.appendChild(bl);mv.appendChild(br);
+    card.appendChild(mv);
     // Drag & drop réordonnement (documents)
     card.addEventListener('dragstart',e=>{dragSrcDoc=i;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
     card.addEventListener('dragend',()=>{card.classList.remove('dragging');document.querySelectorAll('.md-card').forEach(c=>c.classList.remove('drag-over'));});

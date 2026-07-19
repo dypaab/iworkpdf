@@ -61,6 +61,17 @@ function renderImgGrid(){
     name.className='img-card-name';
     name.textContent=f.name;
     card.appendChild(name);
+    // Flèches tactiles (le drag HTML5 ne marche pas au doigt)
+    const mvL=document.createElement('button');
+    mvL.className='img-mv img-mv-l';mvL.textContent='‹';
+    mvL.disabled=i===0;
+    mvL.addEventListener('click',e=>{e.stopPropagation();if(i>0){const m=activeFiles.splice(i,1)[0];activeFiles.splice(i-1,0,m);renderImgGrid();}});
+    card.appendChild(mvL);
+    const mvR=document.createElement('button');
+    mvR.className='img-mv img-mv-r';mvR.textContent='›';
+    mvR.disabled=i===activeFiles.length-1;
+    mvR.addEventListener('click',e=>{e.stopPropagation();if(i<activeFiles.length-1){const m=activeFiles.splice(i,1)[0];activeFiles.splice(i+1,0,m);renderImgGrid();}});
+    card.appendChild(mvR);
     // Drag
     card.addEventListener('dragstart',e=>{imgDragSrc=i;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
     card.addEventListener('dragend',()=>{card.classList.remove('dragging');document.querySelectorAll('.img-card').forEach(c=>c.classList.remove('drag-over'));});
