@@ -64,25 +64,56 @@
 </div>
 
 <section class="hero">
-  <div class="badge">🔒 <span id="h-badge">Secured &amp; Private</span></div>
-  <h1><span id="h-title1">Your PDFs,</span><br><span class="grad" id="h-title2">secured.</span></h1>
-  <p id="h-sub">Processed locally in your browser — nothing uploaded unless you choose to share. Shared files are automatically deleted after 48h.</p>
-  <div class="hero-ctas">
-    <button class="btn-primary" id="cta-start">🚀 <span id="h-cta1">Get started</span></button>
-    <button class="btn-ghost" id="cta-auth"><span id="h-cta2">Create account</span></button>
-  </div>
-  <div class="sec-badges">
-    <div class="sec-badge"><div class="dot"></div><span id="sb1">Your files stay on your device</span></div>
-    <div class="sec-badge"><div class="dot"></div><span id="sb2">No account required</span></div>
-    <div class="sec-badge"><div class="dot"></div><span id="sb3">No ads · No tracking</span></div>
-    <div class="sec-badge"><div class="dot"></div><span id="sb4">Free forever</span></div>
-    <div class="sec-badge"><div class="dot"></div><span id="sb5">Open & transparent</span></div>
-  </div>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-num" id="stat-tools">12</div><div class="stat-lbl" id="st1">PDF Tools</div></div>
-    <div class="stat"><div class="stat-num">🔒</div><div class="stat-lbl" id="st2">Local by default</div></div>
-    <div class="stat"><div class="stat-num">48h</div><div class="stat-lbl" id="st3">Cloud auto-delete</div></div>
-    <div class="stat"><div class="stat-num" id="stat-count">0</div><div class="stat-lbl" id="st4">Files processed</div></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="badge">🔒 <span id="h-badge">Secured &amp; Private</span></div>
+      <h1><span id="h-title1">Your PDFs,</span><br><span class="grad" id="h-title2">secured.</span></h1>
+      <p id="h-sub">Processed locally in your browser — nothing uploaded unless you choose to share. Shared files are automatically deleted after 48h.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" id="cta-start">🚀 <span id="h-cta1">Get started</span></button>
+        <button class="btn-ghost" id="cta-auth"><span id="h-cta2">Create account</span></button>
+      </div>
+      <label class="demo-drop" id="demo-drop">
+        <input type="file" accept=".pdf" id="demo-file" hidden/>
+        <span aria-hidden="true">📄</span> <span id="demo-drop-txt">Drop a PDF here to try</span>
+      </label>
+    </div>
+    <div class="hero-illu" aria-hidden="true">
+      <!-- Diagramme "100% local" : PDF → traitement local → téléchargement, aucun serveur -->
+      <svg viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <rect x="14" y="10" width="392" height="264" rx="18" stroke="var(--bd)" stroke-width="2" fill="var(--sf)"/>
+        <rect x="14" y="10" width="392" height="36" rx="18" fill="var(--sf2)"/>
+        <circle cx="38" cy="28" r="5" fill="#EF4444"/><circle cx="56" cy="28" r="5" fill="#F59E0B"/><circle cx="74" cy="28" r="5" fill="#10B981"/>
+        <text id="illu-pc" x="210" y="33" text-anchor="middle" font-size="13" font-weight="600" fill="var(--tx2)" font-family="inherit">Your computer</text>
+        <!-- PDF -->
+        <g>
+          <rect x="46" y="96" width="64" height="80" rx="8" fill="#E1483A" fill-opacity=".12" stroke="#E1483A" stroke-width="2"/>
+          <text x="78" y="143" text-anchor="middle" font-size="15" font-weight="700" fill="#E1483A" font-family="inherit">PDF</text>
+        </g>
+        <path class="illu-flow" d="M118 136h44" stroke="var(--cy)" stroke-width="2.5" stroke-dasharray="6 6"/>
+        <path d="M158 130l8 6-8 6" stroke="var(--cy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Traitement local -->
+        <g>
+          <circle cx="210" cy="136" r="34" fill="var(--cy)" fill-opacity=".1" stroke="var(--cy)" stroke-width="2"/>
+          <text x="210" y="145" text-anchor="middle" font-size="26">⚙️</text>
+        </g>
+        <path class="illu-flow" d="M252 136h44" stroke="var(--cy)" stroke-width="2.5" stroke-dasharray="6 6"/>
+        <path d="M292 130l8 6-8 6" stroke="var(--cy)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Téléchargement -->
+        <g>
+          <rect x="312" y="100" width="64" height="72" rx="8" fill="#12965A" fill-opacity=".12" stroke="#12965A" stroke-width="2"/>
+          <path d="M344 118v26M344 144l-9-9M344 144l9-9" stroke="#12965A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <text id="illu-local" x="210" y="200" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--tx2)" font-family="inherit">Local processing</text>
+        <text id="illu-dl" x="344" y="192" text-anchor="middle" font-size="11.5" fill="var(--tx3)" font-family="inherit">Download</text>
+        <!-- Aucun serveur -->
+        <g>
+          <path d="M180 288c0-14 12-24 26-24 3-10 13-17 24-17 14 0 25 10 26 23 10 1 18 9 18 18" stroke="var(--tx3)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="168" y1="296" x2="286" y2="242" stroke="#EF4444" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <text id="illu-nosrv" x="310" y="296" font-size="12.5" font-weight="600" fill="#EF4444" font-family="inherit">No server</text>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -179,8 +210,9 @@
   <span class="nm-count" id="net-count">0 req</span>
 </div>
 
-<!-- PROOF BAR -->
+<!-- POURQUOI iWORKPDF (proof bar) -->
 <div class="section" style="padding-top:0">
+  <h2 class="section-title" style="text-align:center;margin-bottom:32px" id="why-title">Why iWorkPDF?</h2>
   <div class="proof-bar">
     <div class="proof-item">
       <div class="proof-icon">🖥</div>
@@ -208,14 +240,6 @@
       <div class="proof-sub" id="pr5s">No hidden fees, no premium wall</div>
     </div>
   </div>
-</div>
-
-<!-- FAQ -->
-<div class="faq-section" id="faq-section">
-  <p class="section-label" style="text-align:center">— FAQ</p>
-  <h2 class="section-title" style="text-align:center;margin-bottom:8px" id="faq-title">Questions about your privacy</h2>
-  <p style="text-align:center;color:var(--tx2);font-size:14px;margin-bottom:32px" id="faq-sub">Honest answers, no marketing speak</p>
-  <div id="faq-list"></div>
 </div>
 
 <!-- SECTION : COMMENT ÇA MARCHE -->
@@ -271,6 +295,14 @@
     </table>
   </div>
 </section>
+
+<!-- FAQ -->
+<div class="faq-section" id="faq-section">
+  <p class="section-label" style="text-align:center">— FAQ</p>
+  <h2 class="section-title" style="text-align:center;margin-bottom:8px" id="faq-title">Questions about your privacy</h2>
+  <p style="text-align:center;color:var(--tx2);font-size:14px;margin-bottom:32px" id="faq-sub">Honest answers, no marketing speak</p>
+  <div id="faq-list"></div>
+</div>
 
 <!-- PRIVACY MODAL -->
 <div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true">
@@ -392,6 +424,23 @@ document.getElementById('auth-btn').addEventListener('click', openAuth);
 // Hero CTAs
 document.getElementById('cta-start')?.addEventListener('click', scrollToTools);
 document.getElementById('cta-auth')?.addEventListener('click', openAuth);
+
+// Démo interactive : déposer/choisir un PDF → focus sur les outils
+(function(){
+  const dd=document.getElementById('demo-drop'),df=document.getElementById('demo-file');
+  if(!dd||!df)return;
+  const goTools=()=>{
+    dd.classList.remove('dragover');
+    scrollToTools();
+    const g=document.getElementById('tools-grid');
+    g.classList.add('pulse');setTimeout(()=>g.classList.remove('pulse'),1200);
+    if(typeof showToast==='function')showToast(t('demo_pick'),'ok');
+  };
+  dd.addEventListener('dragover',e=>{e.preventDefault();dd.classList.add('dragover');});
+  dd.addEventListener('dragleave',()=>dd.classList.remove('dragover'));
+  dd.addEventListener('drop',e=>{e.preventDefault();goTools();});
+  df.addEventListener('change',()=>{if(df.files.length)goTools();df.value='';});
+})();
 
 // Auth modal
 document.getElementById('auth-close-btn')?.addEventListener('click', closeAuth);
