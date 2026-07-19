@@ -216,8 +216,12 @@ async function runCompress(activeFiles, compQuality, compScan){
               octx.drawImage(srcCanvas,0,0,tw,th);
             }
             // 3) Ré-encoder en JPEG au niveau de qualité du profil.
-            const jpegUrl=outCanvas.toDataURL('image/jpeg',prof.q);
-            const jpegBytes=new Uint8Array(await(await fetch(jpegUrl)).arrayBuffer());
+            // toBlob et non fetch(dataURL) : la CSP connect-src n'autorise pas
+            // data: -> le fetch échouait en silence pour CHAQUE image (cause
+            // racine du "0% de gain" depuis le début).
+            const jpegBlob=await new Promise(res=>outCanvas.toBlob(res,'image/jpeg',prof.q));
+            if(!jpegBlob)continue;
+            const jpegBytes=new Uint8Array(await jpegBlob.arrayBuffer());
             // Ne remplace que si on gagne réellement de la place sur cette image
             const oldLen=obj.contents?obj.contents.length:0;
             if(oldLen && jpegBytes.length>=oldLen)continue;
