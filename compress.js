@@ -21,6 +21,7 @@ function buildCompressUI(){
     <div class="form-group">
       <label class="form-label">${t('comp_quality')}</label>
       <div class="radio-group" id="rg-comp">
+        <button class="rbn" onclick="setCompQ(this,0.2)">🔥 ${lang==='fr'?'Minimale (qualité sacrifiée)':'Minimal (quality sacrificed)'}</button>
         <button class="rbn" onclick="setCompQ(this,0.4)">${t('comp_low')}</button>
         <button class="rbn active" onclick="setCompQ(this,0.75)">${t('comp_med')}</button>
         <button class="rbn" onclick="setCompQ(this,0.9)">${t('comp_high')}</button>
@@ -128,6 +129,9 @@ async function runCompress(activeFiles, compQuality, compScan){
         const imageStreams=_imgStreams;
         let processed=0;
         const total=imageStreams.length||1;
+        // Progression en Ko (style iLovePDF : "x/532 Ko")
+        const totalImgKB=Math.max(1,Math.round(imageStreams.reduce((s,[r,o])=>s+(o.contents?o.contents.length:0),0)/1024));
+        let doneKB=0;
         // Cache des images décodées par PDF.js, indexées par (page,nom) — on doit
         // parcourir les pages pour que PDF.js résolve les objets image dans son
         // propre cache interne (page.objs), point d'entrée fiable de décodage.
@@ -154,6 +158,7 @@ async function runCompress(activeFiles, compQuality, compScan){
         // C'est le DOWNSCALE qui produit les vrais gains (méthode iLovePDF) :
         // un scan 300dpi n'a pas besoin de plus de ~150dpi à l'écran/impression bureau.
         const QPROF={
+          '0.2':{q:0.25,maxDim:700},    // MINIMALE : taille avant tout, qualité sacrifiée
           '0.4':{q:0.35,maxDim:900},    // compression max (~72dpi, niveau iLovePDF extrême)
           '0.75':{q:0.62,maxDim:1500},  // recommandé (~150dpi)
           '0.9':{q:0.82,maxDim:2400},   // léger (qualité quasi intacte)
@@ -165,7 +170,8 @@ async function runCompress(activeFiles, compQuality, compScan){
         const decodedList=[...decodedByRef.values()];
         for(const [ref,obj] of imageStreams){
           processed++;
-          setProgress(5+((processed)/total)*85,`${t('comp_optimizing')} ${processed}/${total}`);
+          doneKB+=Math.round((obj.contents?obj.contents.length:0)/1024);
+          setProgress(5+((processed)/total)*85,`${t('comp_optimizing')} ${Math.min(doneKB,totalImgKB)}/${totalImgKB} Ko`);
           const dict=obj.dict;
           const wObj=dict.get(PDFName.of('Width'));
           const hObj=dict.get(PDFName.of('Height'));

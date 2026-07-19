@@ -31,13 +31,14 @@ function buildSignUI(){
         <input type="range" id="sign-size" min="1" max="8" value="2" style="width:80px"/>
         <label style="font-size:12px;color:var(--tx2)">${lang==='fr'?'Position:':'Position:'}</label>
         <div class="radio-group" id="rg-sign-pos" style="margin:0">
-          <button class="rbn active" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas D':'Bot R'}</button>
-          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas C':'Bot C'}</button>
-          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bl','signpos')">${lang==='fr'?'Bas G':'Bot L'}</button>
+          <button class="rbn active" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas droite':'Bottom right'}</button>
+          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas centre':'Bottom center'}</button>
+          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bl','signpos')">${lang==='fr'?'Bas gauche':'Bottom left'}</button>
         </div>
       </div>
+      <label class="chk-line"><input type="checkbox" id="sign-all-pages"/><span>${lang==='fr'?'Signer toutes les pages':'Sign every page'}</span></label>
       <div style="font-size:11px;color:var(--tx3)">
-        ${lang==='fr'?'La signature sera appliquée sur la dernière page du document.':'Signature will be applied to the last page of the document.'}
+        ${lang==='fr'?'Par défaut, la signature est appliquée sur la dernière page.':'By default, the signature is applied to the last page.'}
       </div>
     </div>
     ${saveBlock}${bottom}
@@ -111,19 +112,22 @@ async function runSign(activeFiles, signPos){
       const pngBase64=pngDataUrl.split(',')[1];
       const pngBytes=Uint8Array.from(atob(pngBase64),c=>c.charCodeAt(0));
       const pngImg=await src.embedPng(pngBytes);
-      // Appliquer sur la dernière page
+      // Dernière page par défaut, ou toutes les pages si la case est cochée
       const pages=src.getPages();
-      const lastPage=pages[pages.length-1];
-      const{width,height}=lastPage.getSize();
-      const sigW=width*0.3, sigH=sigW*(canvas.height/canvas.width);
+      const allPages=document.getElementById('sign-all-pages')?.checked===true;
+      const targets=allPages?pages:[pages[pages.length-1]];
       const margin=20;
-      const posMap={
-        br:{x:width-sigW-margin,y:margin},
-        bc:{x:(width-sigW)/2,y:margin},
-        bl:{x:margin,y:margin},
-      };
-      const sigPos=posMap[signPos]||posMap.br;
-      lastPage.drawImage(pngImg,{x:sigPos.x,y:sigPos.y,width:sigW,height:sigH,opacity:1});
+      targets.forEach(pg=>{
+        const{width}=pg.getSize();
+        const sigW=width*0.3, sigH=sigW*(canvas.height/canvas.width);
+        const posMap={
+          br:{x:width-sigW-margin,y:margin},
+          bc:{x:(width-sigW)/2,y:margin},
+          bl:{x:margin,y:margin},
+        };
+        const p=posMap[signPos]||posMap.br;
+        pg.drawImage(pngImg,{x:p.x,y:p.y,width:sigW,height:sigH,opacity:1});
+      });
       result=await src.save();
       Security.wipeMemory(buf);
       filename=activeFiles[0].name.replace('.pdf','')+'_signed.pdf';
