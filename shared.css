@@ -100,7 +100,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .save-mode{display:flex;gap:10px;margin-bottom:20px}
 .save-opt{flex:1;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;text-align:center}
 .save-opt:hover,.save-opt.active{border-color:var(--cy);background:var(--gs)}
-.save-opt-icon{font-size:22px;margin-bottom:4px}
+.save-opt-icon{font-size:22px;margin-bottom:4px;color:var(--cy)}
+.save-opt-icon svg{display:block;margin:0 auto}
 .save-opt-title{font-size:13px;font-weight:600}
 .save-opt-sub{font-size:11px;color:var(--tx2);margin-top:2px}
 .radio-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -264,7 +265,8 @@ footer a{color:var(--cy);text-decoration:none}
 /* ── TRUST BANNER ────────────────────────────────────────── */
 .trust-banner{background:linear-gradient(135deg,#00B4D808,#0077FF08);border-top:1px solid #00B4D820;border-bottom:1px solid #00B4D820;padding:12px 32px;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:64px}
 .trust-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
-.trust-item .ti-icon{font-size:16px}
+.trust-item .ti-icon{font-size:16px;display:inline-flex;color:var(--cy)}
+.trust-item .ti-icon svg{display:block}
 .trust-item strong{color:var(--tx);font-weight:600}
 
 /* ── NETWORK MONITOR ─────────────────────────────────────── */
@@ -324,7 +326,8 @@ footer a{color:var(--cy);text-decoration:none}
 /* ── PROOF BAR ───────────────────────────────────────────── */
 .proof-bar{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:20px 24px;margin:32px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
 .proof-item{text-align:center}
-.proof-icon{font-size:24px;margin-bottom:6px}
+.proof-icon{font-size:24px;margin-bottom:6px;color:var(--cy)}
+.proof-icon svg{display:block;margin:0 auto}
 .proof-title{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:3px}
 .proof-sub{font-size:11px;color:var(--tx2)}
 
