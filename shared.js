@@ -228,16 +228,41 @@ const TRUST_I18N = {
 
 function t(k){return(T[lang]||T.en)[k]||k;}
 
+// ── PUCES DE CATÉGORIES (style iLovePDF) ──────────────────
+let _catFilter='all';
+const CAT_LABELS={
+  fr:{all:'Tout',org:'Organiser PDF',opt:'Optimiser le PDF',conv:'Convertir PDF',edit:'Modifier PDF',sec:'Sécurité PDF'},
+  en:{all:'All',org:'Organize PDF',opt:'Optimize PDF',conv:'Convert PDF',edit:'Edit PDF',sec:'PDF Security'}
+};
+function renderCatChips(){
+  const grid=document.getElementById('tools-grid');
+  if(!grid)return;
+  document.getElementById('cat-chips')?.remove();
+  const L=CAT_LABELS[lang]||CAT_LABELS.en;
+  const wrap=document.createElement('div');
+  wrap.id='cat-chips';wrap.className='cat-chips';
+  ['all','org','opt','conv','edit','sec'].forEach(cat=>{
+    const b=document.createElement('button');
+    b.className='cat-chip'+(cat===_catFilter?' active':'');
+    b.textContent=L[cat];
+    b.addEventListener('click',()=>{_catFilter=cat;renderCatChips();renderTools();});
+    wrap.appendChild(b);
+  });
+  grid.parentNode.insertBefore(wrap,grid);
+}
+
 function renderTools(){
   const grid=document.getElementById('tools-grid');
   if(!grid)return; // page outil dédiée : pas de grille à rendre ici
+  renderCatChips();
   grid.innerHTML='';
-  TOOLS.forEach((tool,idx)=>{
+  TOOLS.filter(tool=>_catFilter==='all'||TOOL_CAT[tool.id]===_catFilter).forEach((tool,idx)=>{
     const c=document.createElement('div');
     c.className='tool-card';
     c.setAttribute('role','button');
     c.setAttribute('tabindex','0');
-    const kbdNum=idx+1<=9?`<span class="kbd">Ctrl+${idx+1}</span>`:'';
+    const realIdx=TOOLS.indexOf(tool);
+    const kbdNum=realIdx+1<=9?`<span class="kbd">Ctrl+${realIdx+1}</span>`:'';
     c.innerHTML=`${toolIconHTML(tool.id,52)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
     const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
     c.onclick=go;
@@ -311,7 +336,6 @@ function applyLang(){
   if(st4el) st4el.textContent=t('tool_count');
   renderRecent();
   renderToolsNav();
-  renderHeroVisual();
   // Mettre à jour les textes confiance
   if(typeof applyTrustLang==='function') applyTrustLang();
 }
