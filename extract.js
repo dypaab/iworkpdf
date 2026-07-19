@@ -60,20 +60,35 @@ async function runExtract(activeFiles){
     }catch(_){}
     return _decoded;
   }
+  // Les MASQUES DE TRANSPARENCE (SMask) sont eux-mêmes des flux /Image :
+  // exportés tels quels ils donnent des "images noires de 1 Ko". On repère
+  // tous les flux référencés comme SMask pour les exclure.
+  const smaskRefs=new Set();
+  streams.forEach(([r,o])=>{
+    const sm=o.dict.get(PDFName.of('SMask'));
+    if(sm)smaskRefs.add(sm.toString());
+  });
   let saved=0,idx=0,aborted=false;
   for(const [ref,obj] of streams){
     idx++;
+    if(smaskRefs.has(ref.toString()))continue; // masque de transparence, pas une image
     const dict=obj.dict;
     const w=(dict.get(PDFName.of('Width'))?.asNumber?.())||0;
     const h=(dict.get(PDFName.of('Height'))?.asNumber?.())||0;
-    if(w<32||h<32)continue; // icônes/puces : sans intérêt
+    if(w<64||h<64)continue; // icônes/puces/vignettes : sans intérêt
     const isMask=dict.get(PDFName.of('ImageMask'));
     if(isMask&&isMask.toString()==='true')continue;
+    // Trop petit en octets = décoration/masque, pas une photo
+    if(obj.contents&&obj.contents.length<3000)continue;
     setProgress(5+idx/streams.length*90,`Image ${idx}/${streams.length}…`);
     const f=dict.get(PDFName.of('Filter'));
     const fs=f?f.toString():'';
+    // Les JPEG CMYK sortent inversés/noirs si sauvés bruts → décodage PDF.js
+    const cs=dict.get(PDFName.of('ColorSpace'));
+    const csStr=cs?cs.toString():'';
+    const rawJpgOk=fs.indexOf('DCTDecode')!==-1&&csStr.indexOf('CMYK')===-1;
     try{
-      if(fs.indexOf('DCTDecode')!==-1&&obj.contents&&obj.contents.length){
+      if(rawJpgOk&&obj.contents&&obj.contents.length){
         // JPEG natif : octets d'origine, zéro ré-encodage, résolution native
         await dlJpg(new Uint8Array(obj.contents),`${stem}_img${saved+1}.jpg`);
         saved++;
