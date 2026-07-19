@@ -239,7 +239,7 @@ function renderTools(){
     c.setAttribute('tabindex','0');
     const kbdNum=idx+1<=9?`<span class="kbd">Ctrl+${idx+1}</span>`:'';
     c.innerHTML=`${toolIconHTML(tool.id,52)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
-    const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}.html`; } else { openTool(tool.id); } };
+    const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
     c.onclick=go;
     c.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go();};
     grid.appendChild(c);
@@ -251,7 +251,7 @@ function renderTools(){
 // Injectée par JS → aucune édition des 14 pages HTML. Style: .tools-nav (tool-theme.css)
 const FEATURED_TOOLS=['merge','split','compress','img2pdf']; // pages outils : 4 + menu
 const FEATURED_HOME=['merge','split','compress','rotate','delete','watermark','img2pdf','sign']; // accueil : répartis pleine largeur
-function isToolPage(){return /\/tools\/[^/]+\.html/.test(location.pathname);}
+function isToolPage(){return /\/tools\/[^/]+/.test(location.pathname);}
 function isHomePage(){return !isToolPage() && !!document.getElementById('tools-grid');}
 function renderToolsNav(){
   const nav=document.querySelector('nav');
@@ -259,14 +259,14 @@ function renderToolsNav(){
   const home=isHomePage();
   if(!isToolPage() && !home)return;
   document.getElementById('tools-nav')?.remove();
-  const curId=(location.pathname.match(/\/tools\/([^.]+)\.html/)||[])[1]||null;
+  const curId=(location.pathname.match(/\/tools\/([^./]+)/)||[])[1]||null;
   const list=home?FEATURED_HOME:FEATURED_TOOLS;
   const links=list.map(id=>{
     const tl=TOOLS.find(x=>x.id===id);
     if(!tl)return'';
-    return `<a class="tn-link${id===curId?' active':''}" href="/tools/${id}.html">${t(tl.nk)}</a>`;
+    return `<a class="tn-link${id===curId?' active':''}" href="/tools/${id}">${t(tl.nk)}</a>`;
   }).join('');
-  const items=TOOLS.map(tl=>`<a class="tn-item" href="/tools/${tl.id}.html">${toolIconHTML(tl.id,24)}${t(tl.nk)}</a>`).join('');
+  const items=TOOLS.map(tl=>`<a class="tn-item" href="/tools/${tl.id}">${toolIconHTML(tl.id,24)}${t(tl.nk)}</a>`).join('');
   const bar=document.createElement('div');
   bar.id='tools-nav';bar.className='tools-nav'+(home?' tools-nav--home':'');
   bar.innerHTML=`<div class="tn-links">${links}</div>`+
@@ -836,7 +836,7 @@ function incrementStats(){
 function injectJsonLd(toolId, titleEn, descEn){
   const tool = TOOLS.find(t=>t.id===toolId);
   if(!tool) return;
-  const url = `https://iworkpdf.yendyx.com/tools/${toolId}.html`;
+  const url = `https://iworkpdf.yendyx.com/tools/${toolId}`;
   const data = {
     "@context": "https://schema.org",
     "@graph": [
@@ -1622,20 +1622,20 @@ function initExtras(){
     const mk=(id,href,txt)=>{const a=document.createElement('a');a.id=id;a.href=href;a.textContent=txt;a.style.cssText='margin-left:10px;font-size:12px;color:var(--cy);text-decoration:none';return a;};
     const last=document.getElementById('contact-link')||fp;
     last.insertAdjacentElement('afterend',mk('footer-blog-link','/blog/','Blog'));
-    last.insertAdjacentElement('afterend',mk('footer-pricing-link','/pricing.html','Pricing'));
+    last.insertAdjacentElement('afterend',mk('footer-pricing-link','/pricing','Pricing'));
   }
 }
 
 // Appelé automatiquement au chargement de chaque page
 (function(){
   try{
-    const tool = window.location.pathname.match(/\/tools\/([^.]+)\.html/)?.[1]||null;
+    const tool = window.location.pathname.match(/\/tools\/([^./]+)/)?.[1]||null;
     // Mise en page des pages outils : barre horizontale + trust-banner en bas
     relocateTrustBanner();
     renderToolsNav();
     initExtras();
     // Grande icône d'en-tête = icône SVG de l'outil (remplace l'emoji)
-    const _tid=(location.pathname.match(/\/tools\/([^.]+)\.html/)||[])[1];
+    const _tid=(location.pathname.match(/\/tools\/([^./]+)/)||[])[1];
     if(_tid){const _big=document.querySelector('.tool-icon-big'); if(_big) _big.innerHTML=toolIconHTML(_tid,64);}
     // Délai pour ne pas bloquer le rendu
     setTimeout(()=>trackPageView(tool), 500);

@@ -5,9 +5,11 @@
 // (le navigateur la rejette → page morte). On reconstruit donc chaque réponse
 // sans le flag redirected avant de la mettre en cache / de la servir.
 // v4 : suppression de la fausse réponse "/* offline */" des CDN + sb=null géré.
-const CACHE_VERSION = 'iworkpdf-v5';
-const STATIC_CACHE = 'iworkpdf-static-v5';
-const FONT_CACHE = 'iworkpdf-fonts-v5';
+// v6 : liens internes sans .html (plus de 308 Cloudflare du tout) ;
+// précache des deux variantes (/tools/merge et /tools/merge.html).
+const CACHE_VERSION = 'iworkpdf-v6';
+const STATIC_CACHE = 'iworkpdf-static-v6';
+const FONT_CACHE = 'iworkpdf-fonts-v6';
 
 // Reconstruit une Response "propre" (sans flag redirected) — sinon le
 // navigateur refuse de l'utiliser pour une navigation.
@@ -45,20 +47,12 @@ const STATIC_ASSETS = [
   '/logo_seul_sans_fond.png',
   '/icon-192.png',
   '/icon-512.png',
-  '/tools/compress.html',
-  '/tools/merge.html',
-  '/tools/delete.html',
-  '/tools/split.html',
-  '/tools/rotate.html',
-  '/tools/security.html',
-  '/tools/watermark.html',
-  '/tools/img2pdf.html',
-  '/tools/pagenums.html',
-  '/tools/pdf2jpg.html',
-  '/tools/repair.html',
-  '/tools/crop.html',
-  '/tools/sign.html',
-  '/tools/extract.html',
+  '/pricing',
+  // Pages outils : variante canonique sans .html (liens internes)
+  // + variante .html (anciens favoris/liens externes)
+  ...['compress','merge','delete','split','rotate','security','watermark',
+      'img2pdf','pagenums','pdf2jpg','repair','crop','sign','extract']
+    .flatMap(id => [`/tools/${id}`, `/tools/${id}.html`]),
 ];
 
 const CDN_ASSETS = [
