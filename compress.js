@@ -154,9 +154,18 @@ async function runCompress(activeFiles, compQuality, compScan){
             }
           }catch(_){}
         }
-        // Pour chaque XObject Image du document pdf-lib, on tente de retrouver les
-        // pixels décodés correspondants par dimensions (W/H), recompresse en JPEG,
-        // et remplace le flux brut en conservant la même référence d'objet.
+        // Profils de compression : qualité JPEG + résolution max (côté le plus long).
+        // C'est le DOWNSCALE qui produit les vrais gains (méthode iLovePDF) :
+        // un scan 300dpi n'a pas besoin de plus de ~150dpi à l'écran/impression bureau.
+        const QPROF={
+          '0.4':{q:0.5, maxDim:1200},   // compression max (~100-150dpi)
+          '0.75':{q:0.72,maxDim:1800},  // recommandé (~150-200dpi)
+          '0.9':{q:0.85,maxDim:2600},   // léger (qualité quasi intacte)
+        };
+        const prof=QPROF[String(compQuality)]||{q:compQuality,maxDim:1800};
+        // Pour chaque XObject Image du document pdf-lib, on retrouve les pixels
+        // décodés (par dimensions W/H), on REDIMENSIONNE si trop grand, on
+        // recompresse en JPEG, et on remplace le flux en conservant la référence.
         const decodedList=[...decodedByRef.values()];
         for(const [ref,obj] of imageStreams){
           processed++;
@@ -167,38 +176,70 @@ async function runCompress(activeFiles, compQuality, compScan){
           const w=wObj?wObj.asNumber():0;
           const h=hObj?hObj.asNumber():0;
           if(!w||!h)continue;
+          // Les masques (SMask) sont référencés par d'autres images : ne pas les
+          // convertir en JPEG couleur, on les laisse intacts.
+          const isMask=dict.get(PDFName.of('ImageMask'));
+          if(isMask && isMask.toString()==='true')continue;
           const match=decodedList.find(im=>im.width===w && im.height===h);
           if(!match)continue; // pas de correspondance fiable : on laisse l'image telle quelle
           try{
-            const canvas=document.createElement('canvas');
-            canvas.width=w;canvas.height=h;
-            const ctx=canvas.getContext('2d');
-            const imgData=ctx.createImageData(w,h);
-            // match.data peut être RGB (3) ou RGBA (4) selon le type source
-            const src8=match.data;
-            if(src8.length===w*h*4){
-              imgData.data.set(src8);
-            }else if(src8.length===w*h*3){
-              for(let px=0,o=0;px<w*h;px++,o+=3){
-                imgData.data[px*4]=src8[o];imgData.data[px*4+1]=src8[o+1];imgData.data[px*4+2]=src8[o+2];imgData.data[px*4+3]=255;
-              }
+            // 1) Reconstituer les pixels dans un canvas source.
+            //    PDF.js expose soit .data (pixels bruts) soit .bitmap (ImageBitmap,
+            //    cas des JPEG décodés nativement — ignoré avant = 0 gain sur scans !)
+            const srcCanvas=document.createElement('canvas');
+            srcCanvas.width=w;srcCanvas.height=h;
+            const sctx=srcCanvas.getContext('2d');
+            if(match.bitmap){
+              sctx.drawImage(match.bitmap,0,0,w,h);
+            }else if(match.data){
+              const imgData=sctx.createImageData(w,h);
+              const src8=match.data;
+              if(src8.length===w*h*4){
+                imgData.data.set(src8);
+              }else if(src8.length===w*h*3){
+                for(let px=0,o=0;px<w*h;px++,o+=3){
+                  imgData.data[px*4]=src8[o];imgData.data[px*4+1]=src8[o+1];imgData.data[px*4+2]=src8[o+2];imgData.data[px*4+3]=255;
+                }
+              }else{continue;}
+              sctx.putImageData(imgData,0,0);
             }else{continue;}
-            ctx.putImageData(imgData,0,0);
-            const jpegUrl=canvas.toDataURL('image/jpeg',Math.max(compQuality,0.35));
+            // 2) Downscale si l'image dépasse la résolution cible du profil.
+            let tw=w,th=h,outCanvas=srcCanvas;
+            const maxSide=Math.max(w,h);
+            if(maxSide>prof.maxDim){
+              const k=prof.maxDim/maxSide;
+              tw=Math.max(1,Math.round(w*k));th=Math.max(1,Math.round(h*k));
+              outCanvas=document.createElement('canvas');
+              outCanvas.width=tw;outCanvas.height=th;
+              const octx=outCanvas.getContext('2d');
+              octx.imageSmoothingEnabled=true;octx.imageSmoothingQuality='high';
+              octx.drawImage(srcCanvas,0,0,tw,th);
+            }
+            // 3) Ré-encoder en JPEG au niveau de qualité du profil.
+            const jpegUrl=outCanvas.toDataURL('image/jpeg',prof.q);
             const jpegBytes=new Uint8Array(await(await fetch(jpegUrl)).arrayBuffer());
             // Ne remplace que si on gagne réellement de la place sur cette image
             const oldLen=obj.contents?obj.contents.length:0;
             if(oldLen && jpegBytes.length>=oldLen)continue;
-            const newDict=src.context.obj({
+            const newEntries={
               Type:PDFName.of('XObject'),Subtype:PDFName.of('Image'),
-              Width:w,Height:h,ColorSpace:PDFName.of('DeviceRGB'),
+              Width:tw,Height:th,ColorSpace:PDFName.of('DeviceRGB'),
               BitsPerComponent:8,Filter:PDFName.of('DCTDecode'),Length:jpegBytes.length,
-            });
+            };
+            const newDict=src.context.obj(newEntries);
+            // Préserver la transparence : le SMask est indépendant en dimensions
+            // (mappé sur le carré unité), on peut le garder tel quel.
+            const sm=dict.get(PDFName.of('SMask'));
+            if(sm)newDict.set(PDFName.of('SMask'),sm);
             const newStream=PDFRawStream.of(newDict,jpegBytes);
             src.context.assign(ref,newStream);
-            canvas.width=0;canvas.height=0;
+            srcCanvas.width=0;srcCanvas.height=0;
+            if(outCanvas!==srcCanvas){outCanvas.width=0;outCanvas.height=0;}
           }catch(_){/* image individuelle non recompressable : on la laisse intacte */}
         }
+        // Nettoyage sans perte : métadonnées XMP volumineuses.
+        try{src.catalog.delete(PDFName.of('Metadata'));}catch(_){}
+        try{src.catalog.delete(PDFName.of('PieceInfo'));}catch(_){}
         setProgress(92,'Finalizing…');
         result=await src.save({useObjectStreams:true});
       }
