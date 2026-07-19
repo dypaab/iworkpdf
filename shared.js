@@ -1339,12 +1339,12 @@ async function run(id){
       result=r.result; filename=r.filename;
     }
     else if(id==='img2pdf'){
-      const r=await runImg2pdf(activeFiles);
+      const r=await runImg2Pdf(activeFiles);
       result=r.result; filename=r.filename;
     }
 
     else if(id==='pagenums'){
-      const r=await runPagenums(activeFiles, pnPos, pnFmt);
+      const r=await runPageNums(activeFiles, pnPos, pnFmt);
       result=r.result; filename=r.filename;
     }
     else if(id==='pdf2jpg'){
