@@ -449,7 +449,9 @@ nav{-webkit-backdrop-filter:blur(20px)}
   border:1.5px solid color-mix(in srgb,currentColor 22%,transparent);
   border-radius:14px;padding:9px;transition:all .25s;
 }
-.tool-card:hover .tic{background:var(--gr);border-color:transparent;color:#fff}
+/* Hover : teinte approfondie (pas d'icône blanche : les creux var(--sf)
+   deviendraient invisibles sur fond dégradé) */
+.tool-card:hover .tic{background:color-mix(in srgb,currentColor 18%,transparent);border-color:color-mix(in srgb,currentColor 35%,transparent)}
 
 /* ── PUCES DE CATÉGORIES (style iLovePDF) ─────────────────── */
 .cat-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 26px}
