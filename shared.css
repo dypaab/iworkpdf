@@ -443,6 +443,14 @@ nav{-webkit-backdrop-filter:blur(20px)}
   .hero-ctas,.demo-drop{justify-content:center}
 }
 
+/* ── TUILES D'ICÔNES (carré teinté, hover dégradé) ────────── */
+.tool-card .tic{
+  background:color-mix(in srgb,currentColor 9%,transparent);
+  border:1.5px solid color-mix(in srgb,currentColor 22%,transparent);
+  border-radius:14px;padding:9px;transition:all .25s;
+}
+.tool-card:hover .tic{background:var(--gr);border-color:transparent;color:#fff}
+
 /* ── PUCES DE CATÉGORIES (style iLovePDF) ─────────────────── */
 .cat-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 26px}
 .cat-chip{background:var(--sf);border:1px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:26px;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
