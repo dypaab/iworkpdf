@@ -85,16 +85,11 @@ async function renderCompressEstimate(){
       el.innerHTML=`<div class="status-box info">${t('comp_est_none')}</div>`;
       return;
     }
-    // Gain estimé = part des images dans le fichier × (1 - ratio de compression cible)
-    // Qualité basse (0.4) compresse fort → on modélise un facteur de réduction ~0.75 de la part image
-    // Qualité recommandée (0.75) → réduction plus mesurée ~0.5 de la part image
-    const maxGain=Math.round(scan.imgShare*78);
-    const recGain=Math.round(scan.imgShare*52);
+    // Pas de pourcentage prédictif (trop imprécis, cf. retour utilisateur) :
+    // le gain RÉEL s'affiche pendant/après la compression, comme iLovePDF.
     el.innerHTML=`
-      <div class="status-box info" style="line-height:1.7">
-        <strong>${t('comp_est_title')}</strong> — ${scan.imgCount} ${t('comp_est_images')}<br/>
-        🗜 ${t('comp_est_max')}: <strong style="color:var(--ok)">~${maxGain}%</strong>&nbsp;&nbsp;
-        ✅ ${t('comp_est_rec')}: <strong style="color:var(--ok)">~${recGain}%</strong>
+      <div class="status-box info">
+        ${scan.imgCount} ${t('comp_est_images')} — ${lang==='fr'?'le gain réel s\'affichera pendant la compression.':'actual savings will be shown during compression.'}
       </div>`;
   }catch(e){
     el.innerHTML='';
@@ -110,7 +105,14 @@ async function runCompress(activeFiles, compQuality, compScan){
       const buf=await activeFiles[0].arrayBuffer();
       const{PDFDocument,PDFName,PDFRawStream,PDFNumber}=PDFLib;
       const src=await PDFDocument.load(buf,{ignoreEncryption:true,updateMetadata:false});
-      const hasImages=compScan && compScan.imgCount>0 && compScan.imgShare>=0.05;
+      // Décision sur les FLUX RÉELS du document (le scan heuristique sous-estimait)
+      const _indirect=[...src.context.enumerateIndirectObjects()];
+      const _imgStreams=_indirect.filter(([ref,obj])=>{
+        if(!(obj instanceof PDFRawStream))return false;
+        const st=obj.dict.get(PDFName.of('Subtype'));
+        return st && st.toString()==='/Image';
+      });
+      const hasImages=_imgStreams.length>0;
       if(!hasImages){
         // Pas d'images significatives : optimisation de structure seule, sans perte.
         setProgress(50,'Optimizing…');
@@ -123,13 +125,7 @@ async function runCompress(activeFiles, compQuality, compScan){
         // PDF existant — contrairement à un rendu "page = image" qui les détruirait.
         await ensurePdfJs();
         const pdfJsDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
-        const indirectObjects=[...src.context.enumerateIndirectObjects()];
-        const imageStreams=indirectObjects.filter(([ref,obj])=>{
-          if(!(obj instanceof PDFRawStream))return false;
-          const dict=obj.dict;
-          const subtype=dict.get(PDFName.of('Subtype'));
-          return subtype && subtype.toString()==='/Image';
-        });
+        const imageStreams=_imgStreams;
         let processed=0;
         const total=imageStreams.length||1;
         // Cache des images décodées par PDF.js, indexées par (page,nom) — on doit
@@ -158,9 +154,9 @@ async function runCompress(activeFiles, compQuality, compScan){
         // C'est le DOWNSCALE qui produit les vrais gains (méthode iLovePDF) :
         // un scan 300dpi n'a pas besoin de plus de ~150dpi à l'écran/impression bureau.
         const QPROF={
-          '0.4':{q:0.5, maxDim:1200},   // compression max (~100-150dpi)
-          '0.75':{q:0.72,maxDim:1800},  // recommandé (~150-200dpi)
-          '0.9':{q:0.85,maxDim:2600},   // léger (qualité quasi intacte)
+          '0.4':{q:0.42,maxDim:1000},   // compression max (~72-100dpi, niveau iLovePDF extrême)
+          '0.75':{q:0.65,maxDim:1600},  // recommandé (~150dpi)
+          '0.9':{q:0.82,maxDim:2400},   // léger (qualité quasi intacte)
         };
         const prof=QPROF[String(compQuality)]||{q:compQuality,maxDim:1800};
         // Pour chaque XObject Image du document pdf-lib, on retrouve les pixels
@@ -180,29 +176,45 @@ async function runCompress(activeFiles, compQuality, compScan){
           // convertir en JPEG couleur, on les laisse intacts.
           const isMask=dict.get(PDFName.of('ImageMask'));
           if(isMask && isMask.toString()==='true')continue;
-          const match=decodedList.find(im=>im.width===w && im.height===h);
-          if(!match)continue; // pas de correspondance fiable : on laisse l'image telle quelle
           try{
             // 1) Reconstituer les pixels dans un canvas source.
-            //    PDF.js expose soit .data (pixels bruts) soit .bitmap (ImageBitmap,
-            //    cas des JPEG décodés nativement — ignoré avant = 0 gain sur scans !)
+            //    a) JPEG (DCTDecode) : décodage DIRECT des octets du flux via
+            //       createImageBitmap — couvre 100% des JPEG sans dépendre de
+            //       l'appariement par dimensions (qui en laissait passer).
+            //    b) Sinon : pixels décodés par PDF.js (.bitmap ou .data).
             const srcCanvas=document.createElement('canvas');
             srcCanvas.width=w;srcCanvas.height=h;
             const sctx=srcCanvas.getContext('2d');
-            if(match.bitmap){
-              sctx.drawImage(match.bitmap,0,0,w,h);
-            }else if(match.data){
-              const imgData=sctx.createImageData(w,h);
-              const src8=match.data;
-              if(src8.length===w*h*4){
-                imgData.data.set(src8);
-              }else if(src8.length===w*h*3){
-                for(let px=0,o=0;px<w*h;px++,o+=3){
-                  imgData.data[px*4]=src8[o];imgData.data[px*4+1]=src8[o+1];imgData.data[px*4+2]=src8[o+2];imgData.data[px*4+3]=255;
-                }
-              }else{continue;}
-              sctx.putImageData(imgData,0,0);
-            }else{continue;}
+            let painted=false;
+            const fObj=dict.get(PDFName.of('Filter'));
+            const fstr=fObj?fObj.toString():'';
+            if(fstr.indexOf('DCTDecode')!==-1 && obj.contents && obj.contents.length){
+              try{
+                const bmp=await createImageBitmap(new Blob([obj.contents],{type:'image/jpeg'}));
+                sctx.drawImage(bmp,0,0,w,h);
+                if(bmp.close)bmp.close();
+                painted=true;
+              }catch(_){/* JPEG exotique (CMYK...) : on tentera via PDF.js */}
+            }
+            if(!painted){
+              const match=decodedList.find(im=>im.width===w && im.height===h);
+              if(!match)continue; // pas de correspondance fiable : image laissée telle quelle
+              if(match.bitmap){
+                sctx.drawImage(match.bitmap,0,0,w,h);painted=true;
+              }else if(match.data){
+                const imgData=sctx.createImageData(w,h);
+                const src8=match.data;
+                if(src8.length===w*h*4){
+                  imgData.data.set(src8);
+                }else if(src8.length===w*h*3){
+                  for(let px=0,o=0;px<w*h;px++,o+=3){
+                    imgData.data[px*4]=src8[o];imgData.data[px*4+1]=src8[o+1];imgData.data[px*4+2]=src8[o+2];imgData.data[px*4+3]=255;
+                  }
+                }else{continue;}
+                sctx.putImageData(imgData,0,0);painted=true;
+              }
+            }
+            if(!painted)continue;
             // 2) Downscale si l'image dépasse la résolution cible du profil.
             let tw=w,th=h,outCanvas=srcCanvas;
             const maxSide=Math.max(w,h);
