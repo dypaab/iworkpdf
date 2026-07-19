@@ -466,14 +466,14 @@ html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
 .tn-menu{
   position:absolute;top:calc(100% + 8px);right:0;
   background:var(--il-bg-card);border:1px solid var(--il-bd-card);
-  border-radius:12px;padding:8px;box-shadow:0 12px 40px #00000040;
-  display:none;grid-template-columns:1fr 1fr;gap:2px;width:340px;max-width:80vw;z-index:120;
+  border-radius:14px;padding:14px;box-shadow:0 12px 40px #00000040;
+  display:none;grid-template-columns:1fr 1fr;gap:6px;width:540px;max-width:90vw;z-index:120;
 }
 .tn-menu.open{display:grid}
 .tn-item{
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;color:var(--il-tx);text-decoration:none;
-  padding:9px 12px;border-radius:8px;transition:background .15s;
+  display:flex;align-items:center;gap:12px;
+  font-size:15px;font-weight:500;color:var(--il-tx);text-decoration:none;
+  padding:12px 14px;border-radius:10px;transition:background .15s;
 }
 .tn-item:hover{background:var(--il-drop-bg);color:var(--il-red)}
 

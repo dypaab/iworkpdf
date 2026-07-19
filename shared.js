@@ -265,7 +265,7 @@ function renderTools(){
     c.setAttribute('tabindex','0');
     const realIdx=TOOLS.indexOf(tool);
     const kbdNum=realIdx+1<=9?`<span class="kbd">Ctrl+${realIdx+1}</span>`:'';
-    c.innerHTML=`${toolIconHTML(tool.id,52)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
+    c.innerHTML=`${toolIconHTML(tool.id,58)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
     const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
     c.onclick=go;
     c.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go();};
@@ -293,7 +293,7 @@ function renderToolsNav(){
     if(!tl)return'';
     return `<a class="tn-link${id===curId?' active':''}" href="/tools/${id}">${t(tl.nk)}</a>`;
   }).join('');
-  const items=TOOLS.map(tl=>`<a class="tn-item" href="/tools/${tl.id}">${toolIconHTML(tl.id,24)}${t(tl.nk)}</a>`).join('');
+  const items=TOOLS.map(tl=>`<a class="tn-item" href="/tools/${tl.id}">${toolIconHTML(tl.id,30)}${t(tl.nk)}</a>`).join('');
   const bar=document.createElement('div');
   bar.id='tools-nav';bar.className='tools-nav'+(home?' tools-nav--home':'');
   bar.innerHTML=`<div class="tn-links">${links}</div>`+
