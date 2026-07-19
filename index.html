@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<meta http-equiv="X-Frame-Options" content="DENY"/>
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
+<meta http-equiv="Permissions-Policy" content="camera=(),microphone=(),geolocation=()"/>
+<title>iWorkPDF — by Yendyx</title>
+<meta name="description" content="Free PDF tools — merge, split, compress, sign and more. 100% local processing, nothing uploaded, no account required."/>
+<meta property="og:title" content="iWorkPDF — Free & Private PDF Tools by Yendyx"/>
+<meta property="og:description" content="14 PDF tools. 100% local processing. Your files never leave your device. Free forever."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com"/>
+<meta property="og:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:locale:alternate" content="fr_FR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="iWorkPDF — Free & Private PDF Tools"/>
+<meta name="twitter:description" content="14 PDF tools. 100% local. No upload. No tracking. Free."/>
+<meta name="twitter:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
+<meta name="theme-color" content="#0D1117"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com"/>
+<!-- CSP pour tests locaux - en production Vercel remplace par vercel.json headers -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src https://*.supabase.co https://*.supabase.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; worker-src blob: 'self'; object-src 'none'; base-uri 'self';"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/shared.css"/>
+</head>
+<body>
+<nav>
+  <div class="nav-logo" id="nav-logo">
+    <img src="/logo_seul_sans_fond.png" alt="YENDYX" width="26" height="26" style="display:block"/>
+    <span class="nav-brand">i<span>Work</span>PDF</span>
+  </div>
+  <div class="nav-actions">
+    <div class="lang-wrap" id="lang-wrap">
+      <button class="btn-lang" id="lang-btn" aria-label="Switch language">🌐 <span id="lang-lbl">EN</span> ▾</button>
+      <div class="lang-menu" id="lang-menu">
+        <button class="lang-opt" data-lang="en">🇬🇧 English</button>
+        <button class="lang-opt" data-lang="fr">🇫🇷 Français</button>
+      </div>
+    </div>
+    <div class="avatar" id="avatar" role="button" tabindex="0" aria-label="My account"></div>
+    <button id="theme-btn" title="Toggle theme" style="background:none;border:1px solid var(--bd);color:var(--tx2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;transition:all .2s">🌙</button>
+    <button class="btn-auth" id="auth-btn"><span id="auth-btn-txt">Sign in</span></button>
+    <a href="/pricing.html" style="font-size:13px;color:var(--tx2);text-decoration:none">Pricing</a>
+  <a href="/blog/" style="font-size:13px;color:var(--tx2);text-decoration:none">Blog</a>
+</div>
+</nav>
+
+<!-- TRUST BANNER -->
+<div class="trust-banner" id="trust-banner">
+  <div class="trust-item"><span class="ti-icon">🔒</span><span><strong id="tb1">Zero upload</strong> <span id="tb1s">by default</span></span></div>
+  <div class="trust-item"><span class="ti-icon">🇪🇺</span><span><strong>RGPD</strong> <span id="tb2">compliant</span></span></div>
+  <div class="trust-item"><span class="ti-icon">👁</span><span><strong id="tb3">Open architecture</strong></span></div>
+  <div class="trust-item"><span class="ti-icon">🗑</span><span><strong id="tb4">Auto-delete 48h</strong></span></div>
+  <div class="trust-item"><span class="ti-icon">🚫</span><span><strong id="tb5">No ads, no tracking</strong></span></div>
+  <button id="privacy-btn" style="background:none;border:1px solid var(--bd);color:var(--cy);padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s" id="tb-privacy">Privacy Policy</button>
+</div>
+
+<section class="hero">
+  <div class="badge">🔒 <span id="h-badge">Secured &amp; Private</span></div>
+  <h1><span id="h-title1">Your PDFs,</span><br><span class="grad" id="h-title2">secured.</span></h1>
+  <p id="h-sub">Processed locally in your browser — nothing uploaded unless you choose to share. Shared files are automatically deleted after 48h.</p>
+  <div class="hero-visual" id="hero-visual" aria-hidden="true"></div>
+  <div class="hero-ctas">
+    <button class="btn-primary" id="cta-start">🚀 <span id="h-cta1">Get started</span></button>
+    <button class="btn-ghost" id="cta-auth"><span id="h-cta2">Create account</span></button>
+  </div>
+  <div class="sec-badges">
+    <div class="sec-badge"><div class="dot"></div><span id="sb1">Your files stay on your device</span></div>
+    <div class="sec-badge"><div class="dot"></div><span id="sb2">No account required</span></div>
+    <div class="sec-badge"><div class="dot"></div><span id="sb3">No ads · No tracking</span></div>
+    <div class="sec-badge"><div class="dot"></div><span id="sb4">Free forever</span></div>
+    <div class="sec-badge"><div class="dot"></div><span id="sb5">Open & transparent</span></div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" id="stat-tools">12</div><div class="stat-lbl" id="st1">PDF Tools</div></div>
+    <div class="stat"><div class="stat-num">🔒</div><div class="stat-lbl" id="st2">Local by default</div></div>
+    <div class="stat"><div class="stat-num">48h</div><div class="stat-lbl" id="st3">Cloud auto-delete</div></div>
+    <div class="stat"><div class="stat-num" id="stat-count">0</div><div class="stat-lbl" id="st4">Files processed</div></div>
+  </div>
+</section>
+
+<div class="section" id="tools-section">
+  <p class="section-label">— OUTILS / TOOLS</p>
+  <h2 class="section-title" id="tools-title">What do you want to do?</h2>
+  <p class="section-sub" id="tools-sub">Click a tool to get started</p>
+  <div id="recent-bar" class="recent-bar"></div>
+  <div class="tools-grid" id="tools-grid"></div>
+  <p style="text-align:center;margin-top:24px;font-size:12px;color:var(--tx3)" id="shortcut-hint">⌨️ Shortcuts: Ctrl+1-9 to open tools</p>
+</div>
+
+<div class="overlay" id="ws-overlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="modal-title" id="ws-title"></h3>
+      <button class="modal-close" id="ws-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="ws-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="auth-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-head">
+      <!-- BUG G FIX: titre correct pour le modal auth -->
+      <h3 class="modal-title" id="auth-modal-title">My account</h3>
+      <button class="modal-close" id="auth-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="vfy-banner" id="vfy-banner">⚠️ <span id="vfy-txt">Check your email to activate your account.</span></div>
+      <div class="tab-bar" id="auth-tabs">
+        <button class="tab-btn active" id="atab-login">Sign in</button>
+        <button class="tab-btn" id="atab-register">Register</button>
+      </div>
+      <div id="pane-login">
+        <div class="sec-info">🔒 <span id="login-info">Your credentials are encrypted and never stored in plain text.</span></div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="l-email" autocomplete="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="l-pwd-lbl">Password</label>
+          <input class="form-input" type="password" id="l-pwd" autocomplete="current-password" placeholder="••••••••"/>
+        </div>
+        <div class="status-box" id="l-status"></div>
+        <button class="btn-primary full" id="login-btn">Sign in</button>
+      </div>
+      <div id="pane-register" class="hidden">
+        <div class="sec-info">📧 <span id="reg-info">A confirmation email will be sent. Your account will be active after verification.</span></div>
+        <div class="form-group">
+          <label class="form-label" id="reg-name-lbl">First name</label>
+          <input class="form-input" type="text" id="r-name" autocomplete="given-name" placeholder="Yendou"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="r-email" autocomplete="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="reg-pwd-lbl">Password (8 chars min.)</label>
+          <input class="form-input" type="password" id="r-pwd" autocomplete="new-password" placeholder="••••••••" id="r-pwd-input"/>
+          <div class="pwd-bar"><div class="pwd-fill" id="pwd-fill"></div></div>
+          <div class="pwd-lbl" id="pwd-label" style="color:var(--tx3)"></div>
+        </div>
+        <div class="status-box" id="r-status"></div>
+        <button class="btn-primary full" id="reg-btn">Create account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="hist-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-head">
+      <h3 class="modal-title">📁 <span id="hist-title">My files</span></h3>
+      <button class="modal-close" id="hist-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-bar" id="hist-tabs">
+        <button class="tab-btn active" id="htab-files">Files (48h)</button>
+        <button class="tab-btn" id="htab-audit">Activity log</button>
+      </div>
+      <div id="pane-files"></div>
+      <div id="pane-audit" class="hidden"></div>
+      <button class="btn-ghost full mt12" id="logout-btn">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<!-- NETWORK MONITOR -->
+<div id="net-monitor" class="safe" title="Network activity monitor">
+  <div class="net-dot" id="net-dot"></div>
+  <span class="nm-text" id="net-text">No network activity</span>
+  <span class="nm-count" id="net-count">0 req</span>
+</div>
+
+<!-- PROOF BAR -->
+<div class="section" style="padding-top:0">
+  <div class="proof-bar">
+    <div class="proof-item">
+      <div class="proof-icon">🖥</div>
+      <div class="proof-title" id="pr1">100% In-browser</div>
+      <div class="proof-sub" id="pr1s">pdf-lib.js processes files locally</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-icon">🚫</div>
+      <div class="proof-title" id="pr2">No server processing</div>
+      <div class="proof-sub" id="pr2s">Files never touch our servers</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-icon">🗑</div>
+      <div class="proof-title" id="pr3">Auto-deleted</div>
+      <div class="proof-sub" id="pr3s">Cloud files deleted after 48h</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-icon">🔓</div>
+      <div class="proof-title" id="pr4">Transparent</div>
+      <div class="proof-sub" id="pr4s">Architecture fully documented</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-icon">🆓</div>
+      <div class="proof-title" id="pr5">Always free</div>
+      <div class="proof-sub" id="pr5s">No hidden fees, no premium wall</div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section" id="faq-section">
+  <p class="section-label" style="text-align:center">— FAQ</p>
+  <h2 class="section-title" style="text-align:center;margin-bottom:8px" id="faq-title">Questions about your privacy</h2>
+  <p style="text-align:center;color:var(--tx2);font-size:14px;margin-bottom:32px" id="faq-sub">Honest answers, no marketing speak</p>
+  <div id="faq-list"></div>
+</div>
+
+<!-- SECTION : COMMENT ÇA MARCHE -->
+<section class="section" style="padding:60px 32px" id="how-section">
+  <p class="section-label" style="text-align:center" id="how-label">— HOW IT WORKS</p>
+  <h2 class="section-title" style="text-align:center;margin-bottom:40px" id="how-title">3 steps, nothing leaves your browser</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;max-width:900px;margin:0 auto">
+    <div style="text-align:center;padding:32px 24px;background:var(--sf);border:1px solid var(--bd);border-radius:16px">
+      <div style="font-size:40px;margin-bottom:16px">📂</div>
+      <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#00B4D8,#0077FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">1</div>
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:8px" id="hw1t">Select your file</h3>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.6" id="hw1s">Drag & drop or click to pick your PDF. The file is read directly by your browser — never sent to a server.</p>
+    </div>
+    <div style="text-align:center;padding:32px 24px;background:var(--sf);border:1px solid var(--bd);border-radius:16px">
+      <div style="font-size:40px;margin-bottom:16px">⚙️</div>
+      <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#00B4D8,#0077FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">2</div>
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:8px" id="hw2t">Processing happens locally</h3>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.6" id="hw2s">pdf-lib.js processes everything inside your browser. No cloud, no API calls, no waiting for a server response.</p>
+    </div>
+    <div style="text-align:center;padding:32px 24px;background:var(--sf);border:1px solid var(--bd);border-radius:16px">
+      <div style="font-size:40px;margin-bottom:16px">⬇️</div>
+      <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#00B4D8,#0077FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">3</div>
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:8px" id="hw3t">Download instantly</h3>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.6" id="hw3s">Your processed file is downloaded directly to your device. Optionally share via a secure 48h link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION : COMPARATIF -->
+<section class="section" style="padding:60px 32px;background:var(--sf)" id="compare-section">
+  <p class="section-label" style="text-align:center" id="cmp-label">— COMPARISON</p>
+  <h2 class="section-title" style="text-align:center;margin-bottom:8px" id="cmp-title">Why iWorkPDF?</h2>
+  <p style="text-align:center;color:var(--tx2);font-size:14px;margin-bottom:40px" id="cmp-sub">Compared to typical online PDF tools</p>
+  <div style="max-width:800px;margin:0 auto;overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:14px">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:14px 16px;border-bottom:2px solid var(--bd);color:var(--tx2);font-weight:600" id="cmp-feature">Feature</th>
+          <th style="padding:14px 16px;border-bottom:2px solid var(--bd);text-align:center;background:linear-gradient(135deg,#00B4D810,#0077FF10);border-radius:8px 8px 0 0">
+            <span style="background:linear-gradient(135deg,#00B4D8,#0077FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700">iWorkPDF</span>
+          </th>
+          <th style="padding:14px 16px;border-bottom:2px solid var(--bd);text-align:center;color:var(--tx2);font-weight:600" id="cmp-others">Typical tools</th>
+        </tr>
+      </thead>
+      <tbody id="cmp-rows">
+        <tr><td style="padding:12px 16px;border-bottom:1px solid var(--bd)" id="cmp-r1">File upload to server</td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd)"><span style="color:#10B981;font-weight:700">Never</span></td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd);color:var(--tx2)">Always</td></tr>
+        <tr><td style="padding:12px 16px;border-bottom:1px solid var(--bd)" id="cmp-r2">Price</td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd)"><span style="color:#10B981;font-weight:700">Free forever</span></td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd);color:var(--tx2)">Freemium / paywalled</td></tr>
+        <tr><td style="padding:12px 16px;border-bottom:1px solid var(--bd)" id="cmp-r3">Processing speed</td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd)"><span style="color:#10B981;font-weight:700">Instant</span></td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd);color:var(--tx2)">Depends on server load</td></tr>
+        <tr><td style="padding:12px 16px;border-bottom:1px solid var(--bd)" id="cmp-r4">Works offline</td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd)"><span style="color:#10B981;font-weight:700">Yes (PWA)</span></td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd);color:var(--tx2)">No</td></tr>
+        <tr><td style="padding:12px 16px;border-bottom:1px solid var(--bd)" id="cmp-r5">Tracking / Ads</td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd)"><span style="color:#10B981;font-weight:700">None</span></td><td style="text-align:center;padding:12px 16px;border-bottom:1px solid var(--bd);color:var(--tx2)">Often</td></tr>
+        <tr><td style="padding:12px 16px" id="cmp-r6">Account required</td><td style="text-align:center;padding:12px 16px"><span style="color:#10B981;font-weight:700">Optional</span></td><td style="text-align:center;padding:12px 16px;color:var(--tx2)">Often required</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PRIVACY MODAL -->
+<div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-head">
+      <h3 class="modal-title" id="privacy-title">🔒 Privacy Policy</h3>
+      <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="privacy-body"></div>
+  </div>
+</div>
+
+<footer>
+  <div style="max-width:1100px;margin:0 auto;padding:48px 32px 32px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;margin-bottom:48px">
+      <!-- Brand -->
+      <div>
+        <div class="footer-brand" style="font-size:22px;margin-bottom:12px">i<span>Work</span>PDF</div>
+        <p style="font-size:13px;color:var(--tx2);line-height:1.7;max-width:220px" id="footer-desc">Free PDF tools. 100% local processing. Your files never leave your device.</p>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <a href="https://yendyx.com" target="_blank" rel="noopener noreferrer" style="background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--tx2);text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#00B4D8'" onmouseout="this.style.borderColor=''">Yendyx.com ↗</a>
+        </div>
+      </div>
+      <!-- Tools -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-tools-title">PDF Tools</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a href="/tools/compress.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗜 Compress PDF</a>
+          <a href="/tools/merge.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔀 Merge PDFs</a>
+          <a href="/tools/split.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂️ Split PDF</a>
+          <a href="/tools/sign.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✍️ Sign PDF</a>
+          <a href="/tools/pdf2jpg.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 PDF to JPG</a>
+          <a href="/tools/watermark.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">💧 Watermark</a>
+        </div>
+      </div>
+      <!-- More tools -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-more-title">More Tools</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a href="/tools/rotate.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔄 Rotate PDF</a>
+          <a href="/tools/delete.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗑 Delete Pages</a>
+          <a href="/tools/security.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 PDF Security</a>
+          <a href="/tools/img2pdf.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Images to PDF</a>
+          <a href="/tools/crop.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂ Crop PDF</a>
+          <a href="/tools/extract.html" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Extract Images</a>
+        </div>
+      </div>
+      <!-- Legal -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-legal-title">Legal & Trust</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button id="footer-privacy-btn" style="background:none;border:none;color:var(--tx2);font-size:13px;cursor:pointer;font-family:inherit;text-align:left;padding:0;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 Privacy Policy</button>
+          <span style="font-size:13px;color:var(--tx2)">🇪🇺 RGPD Compliant</span>
+          <span style="font-size:13px;color:var(--tx2)">📜 No data sold</span>
+          <span style="font-size:13px;color:var(--tx2)">🔓 Open architecture</span>
+        </div>
+        <div style="margin-top:24px;padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:10px">
+          <div style="font-size:11px;color:var(--tx3);margin-bottom:4px" id="footer-built">Built with</div>
+          <div style="font-size:12px;color:var(--tx2)">pdf-lib.js · PDF.js<br>Supabase · Vercel</div>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom bar -->
+    <div style="border-top:1px solid var(--bd);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <p style="font-size:12px;color:var(--tx3)" id="footer-copy">© 2025 Yendyx · iWorkPDF · All rights reserved</p>
+      <p style="font-size:12px;color:var(--tx3)" id="footer-made">Made with ❤️ in France by Yendyx</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="/security.js"></script>
+<script src="/shared.js"></script>
+<script src="/legacy-tools.js"></script>
+<script>
+// ── Initialisation page d'accueil (modal multi-outils + grille) ──
+renderTools();
+
+// JSON-LD Organisation + WebSite + SoftwareApplication
+(function(){
+  const ld={
+    "@context":"https://schema.org",
+    "@graph":[
+      {"@type":"Organization","@id":"https://iworkpdf.yendyx.com/#org","name":"Yendyx","url":"https://yendyx.com","logo":"https://iworkpdf.yendyx.com/icon-512.png"},
+      {"@type":"WebSite","@id":"https://iworkpdf.yendyx.com","url":"https://iworkpdf.yendyx.com","name":"iWorkPDF — Free PDF Tools","description":"14 free PDF tools. 100% local processing. Your files never leave your device.","publisher":{"@id":"https://iworkpdf.yendyx.com/#org"},"inLanguage":["en","fr"]},
+      {"@type":"SoftwareApplication","name":"iWorkPDF","url":"https://iworkpdf.yendyx.com","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"14 free PDF tools. 100% local processing, no upload required.","provider":{"@id":"https://iworkpdf.yendyx.com/#org"}}
+    ]
+  };
+  const s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(ld);document.head.appendChild(s);
+})();
+
+// BUG 10: overlay click handlers séparés
+document.getElementById('ws-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget&&!isProcessing)closeWs();});
+document.getElementById('auth-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAuth();});
+document.getElementById('hist-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeHistory();});
+document.getElementById('ws-close-btn').addEventListener('click',closeWs);
+
+// Lang dropdown
+document.getElementById('lang-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  openLangMenu();
+});
+document.querySelectorAll('.lang-opt').forEach(btn => {
+  btn.addEventListener('click', () => setLang(btn.dataset.lang));
+});
+document.addEventListener('click', e => {
+  if (!document.getElementById('lang-wrap').contains(e.target)) {
+    document.getElementById('lang-menu').classList.remove('open');
+  }
+});
+
+// Nav
+document.getElementById('nav-logo').addEventListener('click', scrollToTop);
+document.getElementById('avatar').addEventListener('click', openHistory);
+document.getElementById('avatar').addEventListener('keydown', e=>{if(e.key==='Enter'||e.key===' ')openHistory();});
+document.getElementById('auth-btn').addEventListener('click', openAuth);
+
+// Hero CTAs
+document.getElementById('cta-start')?.addEventListener('click', scrollToTools);
+document.getElementById('cta-auth')?.addEventListener('click', openAuth);
+
+// Auth modal
+document.getElementById('auth-close-btn')?.addEventListener('click', closeAuth);
+document.getElementById('atab-login')?.addEventListener('click', ()=>authTab('login'));
+document.getElementById('atab-register')?.addEventListener('click', ()=>authTab('register'));
+document.getElementById('login-btn')?.addEventListener('click', doLogin);
+document.getElementById('reg-btn')?.addEventListener('click', doRegister);
+document.getElementById('r-pwd')?.addEventListener('input', updatePwdStrength);
+
+// History modal
+document.getElementById('hist-close-btn')?.addEventListener('click', closeHistory);
+document.getElementById('htab-files')?.addEventListener('click', ()=>histTab('files'));
+document.getElementById('htab-audit')?.addEventListener('click', ()=>histTab('audit'));
+document.getElementById('logout-btn')?.addEventListener('click', doLogout);
+
+// Privacy modal
+document.getElementById('privacy-btn')?.addEventListener('click', openPrivacy);
+document.getElementById('footer-privacy-btn')?.addEventListener('click', openPrivacy);
+document.getElementById('privacy-close-btn')?.addEventListener('click', closePrivacy);
+
+// Update tool count dynamically
+const stTools=document.getElementById('stat-tools');
+if(stTools) stTools.textContent=TOOLS.length;
+
+// Init
+applyLang();
+initStats();
+initTheme();
+initTrust();
+initCookieBanner();
+
+// PWA Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+document.getElementById('theme-btn')?.addEventListener('click',toggleTheme);
+sb.auth.getSession().then(({data:{session}})=>{
+  user=session?.user||null;
+  _lastUserId=user?.id||null;
+  updateAuthUI();
+});
+</script>
+</body>
+</html>

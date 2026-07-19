@@ -1,0 +1,560 @@
+/* ============================================================
+   iWorkPDF — tool-theme.css
+   Redesign des pages outils dans le style iLovePDF.
+   Chargé APRÈS shared.css sur toutes les pages /tools/*.html
+   Supporte dark (défaut) et light (classe .light sur <html>).
+   ============================================================ */
+
+/* ── TOKENS LIGHT ─────────────────────────────────────────── */
+:root{
+  /* Couleurs iLovePDF adaptées à iWorkPDF */
+  --il-red:#E8524A;        /* rouge principal (adapté pour contraste dark) */
+  --il-red-hover:#D4443C;
+  --il-red-shadow:#E8524A40;
+  --il-bg-page:#F7F8FA;    /* fond page light */
+  --il-bg-card:#FFFFFF;    /* fond carte light */
+  --il-bd-card:#E2E8F0;    /* bordure carte light */
+  --il-tx:#1A1A2E;         /* texte principal light */
+  --il-tx2:#64748B;        /* texte secondaire light */
+  --il-tx3:#94A3B8;        /* texte tertiaire light */
+  --il-drop-bg:#F0F4FF;    /* fond zone drop light */
+  --il-drop-bd:#CBD5E1;    /* bordure zone drop light */
+  --il-drop-hover:#E8EEFB; /* fond hover zone drop light */
+  --il-drop-bd-hover:#E8524A;
+  --il-prog-bg:#F1F5F9;    /* fond barre progression light */
+  --il-save-bg:#F8FAFC;    /* fond destination light */
+  --il-save-active-bg:#FFF5F5; /* fond destination sélectionnée light */
+  --il-save-active-bd:#E8524A;
+  --il-status-ok-bg:#F0FDF4;
+  --il-status-ok-bd:#86EFAC;
+  --il-status-err-bg:#FEF2F2;
+  --il-status-err-bd:#FCA5A5;
+  --il-status-info-bg:#EFF6FF;
+  --il-status-info-bd:#93C5FD;
+}
+
+/* ── TOKENS DARK (override) ───────────────────────────────── */
+html.dark{
+  --il-red:#FF6B63;
+  --il-red-hover:#FF5248;
+  --il-red-shadow:#FF6B6340;
+  --il-bg-page:#0D1117;
+  --il-bg-card:#161B2E;
+  --il-bd-card:#1E2D4580;
+  --il-tx:#FFFFFF;
+  --il-tx2:#8B9CB6;
+  --il-tx3:#4A5568;
+  --il-drop-bg:#0F1824;
+  --il-drop-bd:#1E2D45;
+  --il-drop-hover:#111E30;
+  --il-drop-bd-hover:#FF6B63;
+  --il-prog-bg:#1E2D45;
+  --il-save-bg:#161B2E;
+  --il-save-active-bg:#FF6B6310;
+  --il-save-active-bd:#FF6B63;
+  --il-status-ok-bg:#10B98112;
+  --il-status-ok-bd:#10B98140;
+  --il-status-err-bg:#EF444412;
+  --il-status-err-bd:#EF444440;
+  --il-status-info-bg:#00B4D812;
+  --il-status-info-bd:#00B4D840;
+}
+
+/* ── TOGGLE THEME BUTTON ───────────────────────────────────── */
+.theme-toggle{
+  background:none;
+  border:1px solid var(--il-bd-card);
+  color:var(--il-tx2);
+  width:36px;height:36px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:16px;
+  transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.theme-toggle:hover{border-color:var(--il-red);color:var(--il-red)}
+
+/* ── PAGE TOOL LAYOUT ─────────────────────────────────────── */
+.tool-page{
+  max-width:700px;
+  margin:90px auto 80px;
+  padding:0 20px;
+}
+.tool-page-head{
+  text-align:center;
+  margin-bottom:32px;
+}
+.tool-icon-big{
+  width:72px;height:72px;
+  border-radius:20px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:36px;
+  margin-bottom:16px;
+  background:linear-gradient(135deg,#FF6B6320,#E8524A20);
+  border:1px solid #E8524A30;
+}
+.tool-page-head h1{
+  font-size:28px;
+  font-weight:700;
+  color:var(--il-tx);
+  margin-bottom:8px;
+  letter-spacing:-.3px;
+}
+.tool-page-head p{
+  color:var(--il-tx2);
+  font-size:14px;
+  line-height:1.6;
+  max-width:480px;
+  margin:0 auto;
+}
+.tool-breadcrumb{
+  font-size:12px;
+  color:var(--il-tx3);
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:6px;
+}
+.tool-breadcrumb a{color:var(--il-tx2);text-decoration:none;}
+.tool-breadcrumb a:hover{color:var(--il-red)}
+.tool-breadcrumb span{color:var(--il-tx3)}
+.tool-breadcrumb::before{content:'←';font-size:11px}
+
+/* ── CARTE DE L'OUTIL ─────────────────────────────────────── */
+.tool-card-frame{
+  background:var(--il-bg-card);
+  border:1px solid var(--il-bd-card);
+  border-radius:20px;
+  padding:32px;
+  box-shadow:0 4px 24px #00000010;
+}
+html.dark .tool-card-frame{
+  box-shadow:0 4px 40px #00000040;
+}
+
+/* ── ZONE DROP ────────────────────────────────────────────── */
+.drop-zone{
+  border:2px dashed var(--il-drop-bd);
+  border-radius:16px;
+  padding:56px 32px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .25s;
+  position:relative;
+  margin-bottom:24px;
+  background:var(--il-drop-bg);
+}
+.drop-zone:hover,.drop-zone.dragover{
+  border-color:var(--il-drop-bd-hover);
+  background:var(--il-drop-hover);
+}
+.drop-zone input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+
+/* Icône PDF iLovePDF style */
+.drop-icon{
+  font-size:48px;
+  margin-bottom:16px;
+  display:block;
+}
+.drop-text{
+  font-size:17px;
+  font-weight:700;
+  color:var(--il-tx);
+  margin-bottom:6px;
+}
+.drop-sub{
+  font-size:13px;
+  color:var(--il-tx2);
+  margin-bottom:20px;
+}
+.drop-limit{
+  font-size:11px;
+  color:var(--il-tx3);
+  margin-top:8px;
+}
+
+/* Bouton centré dans la drop zone — style iLovePDF */
+.drop-zone .drop-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--il-red);
+  color:#fff;
+  border:none;
+  padding:14px 28px;
+  border-radius:10px;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .2s,box-shadow .2s,transform .15s;
+  box-shadow:0 4px 20px var(--il-red-shadow);
+  pointer-events:none; /* le click est géré par l'input file overlay */
+}
+.drop-zone:hover .drop-btn,.drop-zone.dragover .drop-btn{
+  background:var(--il-red-hover);
+  box-shadow:0 6px 28px var(--il-red-shadow);
+  transform:translateY(-1px);
+}
+
+/* ── FICHIER SÉLECTIONNÉ ─────────────────────────────────── */
+.file-list{
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:20px;
+}
+.file-item{
+  display:flex;align-items:center;gap:12px;
+  background:var(--il-save-bg);
+  border:1px solid var(--il-bd-card);
+  border-radius:12px;
+  padding:12px 16px;
+  font-size:14px;
+  color:var(--il-tx);
+}
+.file-icon{
+  font-size:22px;flex-shrink:0;
+}
+.file-name{
+  flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-weight:500;
+}
+.file-size{
+  color:var(--il-tx2);
+  font-size:12px;
+  white-space:nowrap;
+  background:var(--il-drop-bg);
+  padding:2px 10px;
+  border-radius:20px;
+}
+.file-rm{
+  background:none;border:none;
+  color:var(--il-tx3);
+  cursor:pointer;font-size:18px;
+  transition:color .2s;
+  padding:0 4px;
+  line-height:1;
+  flex-shrink:0;
+}
+.file-rm:hover{color:#E8524A}
+
+/* ── BOUTON PRINCIPAL ACTION ─────────────────────────────── */
+.btn-primary{
+  background:var(--il-red);
+  border:none;
+  color:#fff;
+  padding:15px 36px;
+  border-radius:10px;
+  font-family:inherit;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s,box-shadow .2s,transform .15s;
+  box-shadow:0 4px 20px var(--il-red-shadow);
+  letter-spacing:.1px;
+}
+.btn-primary:hover{
+  background:var(--il-red-hover);
+  transform:translateY(-1px);
+  box-shadow:0 6px 28px var(--il-red-shadow);
+}
+.btn-primary:disabled{
+  opacity:.5;cursor:not-allowed;
+  transform:none;box-shadow:none;
+}
+.flex-end{display:flex;justify-content:center;margin-top:24px;}
+
+/* ── BARRE DE PROGRESSION ─────────────────────────────────── */
+.prog-wrap{margin:16px 0;display:none}
+.prog-wrap.show{display:block}
+.prog-label{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:var(--il-tx2);
+  margin-bottom:8px;
+}
+.prog-bg{
+  background:var(--il-prog-bg);
+  border-radius:6px;height:8px;overflow:hidden;
+}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--il-red),#FF9A96);
+  border-radius:6px;
+  width:0;
+  transition:width .3s ease;
+}
+.prog-text{
+  font-size:12px;color:var(--il-tx2);
+  text-align:center;margin-top:8px;
+}
+
+/* ── STATUS BOX ───────────────────────────────────────────── */
+.status-box{
+  padding:12px 16px;
+  border-radius:10px;
+  font-size:13px;
+  margin-bottom:16px;
+  display:none;
+  font-weight:500;
+}
+.status-box.ok{
+  background:var(--il-status-ok-bg);
+  border:1px solid var(--il-status-ok-bd);
+  color:#16A34A;
+  display:block;
+}
+.status-box.err{
+  background:var(--il-status-err-bg);
+  border:1px solid var(--il-status-err-bd);
+  color:#DC2626;
+  display:block;
+}
+.status-box.info{
+  background:var(--il-status-info-bg);
+  border:1px solid var(--il-status-info-bd);
+  color:#2563EB;
+  display:block;
+}
+html.dark .status-box.ok{color:var(--ok)}
+html.dark .status-box.err{color:var(--er)}
+html.dark .status-box.info{color:#60A5FA}
+
+/* ── DESTINATION (local / cloud) ─────────────────────────── */
+.save-mode{
+  display:flex;gap:10px;margin-bottom:24px;
+}
+.save-opt{
+  flex:1;
+  background:var(--il-save-bg);
+  border:2px solid var(--il-bd-card);
+  border-radius:12px;
+  padding:16px 14px;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:center;
+}
+.save-opt:hover,.save-opt.active{
+  border-color:var(--il-save-active-bd);
+  background:var(--il-save-active-bg);
+}
+.save-opt-icon{font-size:24px;margin-bottom:6px}
+.save-opt-title{font-size:13px;font-weight:600;color:var(--il-tx);margin-bottom:2px}
+.save-opt-sub{font-size:11px;color:var(--il-tx2)}
+
+/* ── PILLS DE QUALITÉ / OPTIONS ─────────────────────────── */
+.radio-group{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;
+}
+.rbn{
+  background:var(--il-save-bg);
+  border:1.5px solid var(--il-bd-card);
+  color:var(--il-tx2);
+  padding:9px 18px;
+  border-radius:8px;
+  font-family:inherit;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.rbn:hover{border-color:var(--il-red);color:var(--il-red)}
+.rbn.active{
+  background:var(--il-red);
+  border-color:var(--il-red);
+  color:#fff;
+  font-weight:600;
+}
+.form-label{font-size:13px;color:var(--il-tx2);margin-bottom:8px;display:block;font-weight:500}
+.form-group{margin-bottom:20px}
+.form-input{
+  width:100%;
+  background:var(--il-save-bg);
+  border:1.5px solid var(--il-bd-card);
+  color:var(--il-tx);
+  padding:11px 14px;
+  border-radius:10px;
+  font-family:inherit;font-size:14px;
+  transition:border-color .2s;outline:none;
+}
+.form-input:focus{border-color:var(--il-red)}
+.form-input::placeholder{color:var(--il-tx3)}
+
+/* ── ESTIMATION DE COMPRESSION ────────────────────────────── */
+#comp-estimate .status-box{
+  display:block;
+  border-radius:12px;
+  padding:14px 18px;
+}
+
+/* ── SHARE BOX ───────────────────────────────────────────── */
+.share-box{
+  display:none;
+  background:var(--il-status-ok-bg);
+  border:1px solid var(--il-status-ok-bd);
+  border-radius:12px;
+  padding:16px;
+  margin-top:16px;
+}
+.share-row{display:flex;gap:8px;margin:10px 0 6px}
+.share-inp{
+  flex:1;padding:9px 12px;border-radius:8px;
+  border:1.5px solid var(--il-bd-card);
+  background:var(--il-bg-card);
+  color:var(--il-tx);font-size:13px;font-family:inherit;
+}
+.share-exp{font-size:11px;color:var(--il-tx2)}
+
+/* ── RÉSULTAT COMPRESSION ────────────────────────────────── */
+#comp-result{
+  font-size:14px;
+  font-weight:600;
+  margin:12px 0;
+  text-align:center;
+  padding:10px;
+  border-radius:8px;
+}
+
+/* ── PRIVACY MODE BAR ────────────────────────────────────── */
+.privacy-mode-bar{
+  background:linear-gradient(135deg,#10B98110,#00B4D808);
+  border:1px solid #10B98125;
+  border-radius:12px;
+  padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;flex-wrap:wrap;gap:10px;
+}
+.pm-label{font-size:13px;font-weight:600;color:var(--il-tx);display:flex;align-items:center;gap:8px}
+.pm-sub{font-size:11px;color:var(--il-tx2);margin-top:2px}
+
+/* ── LIGHT MODE OVERRIDES ────────────────────────────────── */
+html.light{
+  --bg:var(--il-bg-page);
+  --tx:var(--il-tx);
+  --tx2:var(--il-tx2);
+  --tx3:var(--il-tx3);
+}
+html.light body{background:var(--il-bg-page);color:var(--il-tx)}
+html.light nav{background:#FFFFFFeE;border-bottom:1px solid var(--il-bd-card)}
+html.light .nav-brand{color:var(--il-tx)}
+html.light .btn-lang{border-color:var(--il-bd-card);color:var(--il-tx2)}
+html.light .btn-lang:hover{border-color:var(--il-red);color:var(--il-red)}
+html.light .trust-banner{background:linear-gradient(135deg,#FF6B6308,#E8524A05);border-color:#E8524A20}
+html.light .trust-item{color:var(--il-tx2)}
+html.light .trust-item strong{color:var(--il-tx)}
+html.light footer{background:var(--il-bg-card);border-top:1px solid var(--il-bd-card);color:var(--il-tx2)}
+
+/* ── BARRE D'OUTILS HORIZONTALE (style iLovePDF) ─────────── */
+.tools-nav{
+  position:fixed;top:64px;left:0;right:0;z-index:99;
+  display:flex;align-items:center;gap:6px;
+  padding:0 32px;height:46px;
+  background:var(--il-bg-card);
+  border-bottom:1px solid var(--il-bd-card);
+}
+html.dark .tools-nav{background:#0D1117;border-bottom:1px solid #16203280}
+.tn-links{display:flex;align-items:center;gap:2px;min-width:0}
+.tn-link{
+  font-size:13px;color:var(--il-tx2);text-decoration:none;
+  padding:7px 12px;border-radius:8px;transition:all .2s;white-space:nowrap;
+}
+.tn-link:hover{color:var(--il-red);background:var(--il-drop-bg)}
+.tn-link.active{
+  color:var(--il-tx);background:var(--il-save-active-bg);
+  border:1px solid var(--il-save-active-bd);padding:6px 11px;
+}
+.tn-all{position:relative;margin-left:auto}
+.tn-all-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(90deg,#00B4D8,#0077FF);color:#fff;border:none;
+  border-radius:8px;padding:8px 16px;
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;
+}
+.tn-menu{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--il-bg-card);border:1px solid var(--il-bd-card);
+  border-radius:12px;padding:8px;box-shadow:0 12px 40px #00000040;
+  display:none;grid-template-columns:1fr 1fr;gap:2px;width:340px;max-width:80vw;z-index:120;
+}
+.tn-menu.open{display:grid}
+.tn-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--il-tx);text-decoration:none;
+  padding:9px 12px;border-radius:8px;transition:background .15s;
+}
+.tn-item:hover{background:var(--il-drop-bg);color:var(--il-red)}
+
+/* ── LAYOUT COMPACT (tout visible sans défiler) ──────────── */
+.tool-page{margin:124px auto 40px}
+.tool-breadcrumb{margin-bottom:10px}
+.tool-page-head{margin-bottom:12px}
+.tool-icon-big{width:64px;height:64px;border-radius:0;font-size:0;margin-bottom:6px;background:none;border:none}
+.tool-page-head h1{font-size:25px;margin-bottom:4px}
+.tool-page-head p{font-size:15px;line-height:1.5}
+.tool-card-frame{padding:20px}
+/* Zone de dépôt épurée, bouton-first (style iLovePDF) : on retire le gros
+   emoji, la ligne "PDF" et "Max 50 MB" pour ne garder que le bouton + un hint. */
+.drop-zone{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:34px 20px;margin-bottom:14px;
+  border-width:2px;
+}
+.drop-zone .drop-icon,
+.drop-zone .drop-sub,
+.drop-zone .drop-limit{display:none}
+.drop-zone .drop-text{font-size:17px;font-weight:600;color:var(--il-tx);margin:0}
+.drop-zone .drop-btn{padding:15px 34px;font-size:16px}
+.form-group{margin-bottom:14px}
+.flex-end{margin-top:16px}
+/* Privacy Mode + destination = infos secondaires, sous l'action */
+.privacy-mode-bar{margin:16px 0 0}
+.trust-banner.relocated{margin-top:32px}
+/* État initial (aucun fichier) = zone de dépôt seule, comme iLovePDF.
+   Destination, bouton d'action et placeholders n'apparaissent qu'après ajout. */
+#tool-body:not(.has-files) .save-mode,
+#tool-body:not(.has-files) .form-label:has(+ .save-mode),
+#tool-body:not(.has-files) .flex-end,
+#tool-body:not(.has-files) .merge-empty,
+#tool-body:not(.has-files) .merge-toolbar{display:none}
+
+/* ── ÉCRAN DE RÉSULTAT ───────────────────────────────────── */
+.result-screen{text-align:center;padding:14px 4px}
+.result-check{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--il-status-ok-bg);border:1px solid var(--il-status-ok-bd);
+  display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;
+}
+.result-title{font-size:19px;font-weight:700;color:var(--il-tx);margin-bottom:4px}
+.result-meta{font-size:13px;color:var(--il-tx2);margin-bottom:6px;word-break:break-all}
+.result-cert{font-size:12px;color:#10B981;margin-bottom:20px}
+.result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-ghost-lg{
+  background:transparent;color:var(--il-tx2);border:1.5px solid var(--il-bd-card);
+  border-radius:10px;padding:13px 24px;
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-ghost-lg:hover{border-color:var(--il-red);color:var(--il-red)}
+
+/* ── SPINNER BOUTON D'ACTION ─────────────────────────────── */
+.btn-primary .spin{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid #ffffff60;border-top-color:#fff;border-radius:50%;
+  animation:spin .6s linear infinite;margin-right:8px;vertical-align:-2px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 16px}
+  .tools-nav{padding:0 12px;gap:2px;overflow-x:auto}
+  .tn-link{padding:7px 9px;font-size:12px}
+  .tn-all-btn{padding:7px 12px;font-size:12px}
+  .tool-page{margin:120px auto 40px}
+}
+@media(max-width:600px){
+  .tool-card-frame{padding:20px 16px}
+  .drop-zone{padding:28px 14px}
+  .save-mode{flex-direction:column}
+  .tool-page-head h1{font-size:21px}
+}
+@media(max-width:480px){
+  .tools-nav .tn-link{display:none}
+  .tn-all{margin-left:0;width:100%}
+  .tn-all-btn{width:100%;justify-content:center}
+  .tn-menu{width:100%;left:0;right:auto;grid-template-columns:1fr}
+  .result-actions{flex-direction:column}
+  .result-actions .btn-primary,.result-actions .btn-ghost-lg{width:100%}
+}

@@ -1,0 +1,4 @@
+supabase_setup.sql
+supabase/
+*.md
+README.md

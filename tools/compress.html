@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<meta http-equiv="X-Frame-Options" content="DENY"/>
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
+<meta http-equiv="Permissions-Policy" content="camera=(),microphone=(),geolocation=()"/>
+<title>Compress PDF — Reduce file size locally | iWorkPDF</title>
+<meta name="description" content="Compress your PDF for free, 100% in your browser. See the estimated compression before you start. Nothing uploaded — your file never leaves your device."/>
+<meta property="og:title" content="Compress PDF — Free & Private | iWorkPDF"/>
+<meta property="og:description" content="Reduce PDF file size while keeping your text, links and bookmarks intact. 100% local processing."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com/tools/compress.html"/>
+<meta property="og:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:locale:alternate" content="fr_FR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Compress PDF — Free & Private"/>
+<meta name="twitter:description" content="Reduce PDF size locally in your browser. No upload, no tracking."/>
+<meta name="theme-color" content="#0D1117"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com/tools/compress.html"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src https://*.supabase.co https://*.supabase.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; worker-src blob: 'self'; object-src 'none'; base-uri 'self';"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/shared.css"/>
+<link rel="stylesheet" href="/tool-theme.css"/>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" id="nav-logo" href="/">
+    <img src="/logo_seul_sans_fond.png" alt="YENDYX" width="26" height="26" style="display:block"/>
+    <span class="nav-brand">i<span>Work</span>PDF</span>
+  </a>
+  <div class="nav-actions">
+    <div class="lang-wrap" id="lang-wrap">
+      <button class="btn-lang" id="lang-btn" aria-label="Switch language">🌐 <span id="lang-lbl">EN</span> ▾</button>
+      <div class="lang-menu" id="lang-menu">
+        <button class="lang-opt" data-lang="en">🇬🇧 English</button>
+        <button class="lang-opt" data-lang="fr">🇫🇷 Français</button>
+      </div>
+    </div>
+    <div class="avatar" id="avatar" role="button" tabindex="0" aria-label="My account"></div>
+    <button id="theme-btn" title="Toggle theme" style="background:none;border:1px solid var(--bd);color:var(--tx2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;transition:all .2s">🌙</button>
+    <button class="btn-auth" id="auth-btn"><span id="auth-btn-txt">Sign in</span></button>
+  </div>
+</nav>
+
+<!-- TRUST BANNER -->
+<div class="trust-banner" id="trust-banner">
+  <div class="trust-item"><span class="ti-icon">🔒</span><span><strong id="tb1">Zero upload</strong> <span id="tb1s">by default</span></span></div>
+  <div class="trust-item"><span class="ti-icon">🇪🇺</span><span><strong>RGPD</strong> <span id="tb2">compliant</span></span></div>
+  <div class="trust-item"><span class="ti-icon">👁</span><span><strong id="tb3">Open architecture</strong></span></div>
+  <div class="trust-item"><span class="ti-icon">🗑</span><span><strong id="tb4">Auto-delete 48h</strong></span></div>
+  <div class="trust-item"><span class="ti-icon">🚫</span><span><strong id="tb5">No ads, no tracking</strong></span></div>
+  <button id="privacy-btn" style="background:none;border:1px solid var(--bd);color:var(--cy);padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s" id="tb-privacy">Privacy Policy</button>
+</div>
+
+<main class="tool-page">
+  <p class="tool-breadcrumb"><a href="/">iWorkPDF</a> / <span id="tb-tool-name">Compress PDF</span></p>
+  <div class="tool-page-head">
+    <div class="tool-icon-big">🗜</div>
+    <h1 id="tool-h1">Compress PDF</h1>
+    <p id="tool-sub">Reduce file size while keeping your text, links and bookmarks intact — 100% local.</p>
+  </div>
+  <div class="tool-card-frame" id="tool-body"></div>
+</main>
+
+<!-- NETWORK MONITOR -->
+<div id="net-monitor" class="safe" title="Network activity monitor">
+  <div class="net-dot" id="net-dot"></div>
+  <span class="nm-text" id="net-text">No network activity</span>
+  <span class="nm-count" id="net-count">0 req</span>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-head">
+      <h3 class="modal-title" id="auth-modal-title">My account</h3>
+      <button class="modal-close" id="auth-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="vfy-banner" id="vfy-banner">⚠️ <span id="vfy-txt">Check your email to activate your account.</span></div>
+      <div class="tab-bar" id="auth-tabs">
+        <button class="tab-btn active" id="atab-login">Sign in</button>
+        <button class="tab-btn" id="atab-register">Register</button>
+      </div>
+      <div id="pane-login">
+        <div class="sec-info">🔒 <span id="login-info">Your credentials are encrypted and never stored in plain text.</span></div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="l-email" autocomplete="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="l-pwd-lbl">Password</label>
+          <input class="form-input" type="password" id="l-pwd" autocomplete="current-password" placeholder="••••••••"/>
+        </div>
+        <div class="status-box" id="l-status"></div>
+        <button class="btn-primary full" id="login-btn">Sign in</button>
+      </div>
+      <div id="pane-register" class="hidden">
+        <div class="sec-info">📧 <span id="reg-info">A confirmation email will be sent. Your account will be active after verification.</span></div>
+        <div class="form-group">
+          <label class="form-label" id="reg-name-lbl">First name</label>
+          <input class="form-input" type="text" id="r-name" autocomplete="given-name" placeholder="Yendou"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="r-email" autocomplete="email" placeholder="you@example.com"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" id="reg-pwd-lbl">Password (8 chars min.)</label>
+          <input class="form-input" type="password" id="r-pwd" autocomplete="new-password" placeholder="••••••••"/>
+          <div class="pwd-bar"><div class="pwd-fill" id="pwd-fill"></div></div>
+          <div class="pwd-lbl" id="pwd-label" style="color:var(--tx3)"></div>
+        </div>
+        <div class="status-box" id="r-status"></div>
+        <button class="btn-primary full" id="reg-btn">Create account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="overlay" id="hist-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-head">
+      <h3 class="modal-title">📁 <span id="hist-title">My files</span></h3>
+      <button class="modal-close" id="hist-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-bar" id="hist-tabs">
+        <button class="tab-btn active" id="htab-files">Files (48h)</button>
+        <button class="tab-btn" id="htab-audit">Activity log</button>
+      </div>
+      <div id="pane-files"></div>
+      <div id="pane-audit" class="hidden"></div>
+      <button class="btn-ghost full mt12" id="logout-btn">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-head">
+      <h3 class="modal-title" id="privacy-title">🔒 Privacy Policy</h3>
+      <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="privacy-body"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">i<span>Work</span>PDF <span style="color:var(--tx3);font-weight:400;font-size:13px">by Yendyx</span></div>
+  <p id="footer-txt">100% local processing · Signed URLs · Auto-delete 48h · Audit logs</p>
+  <p style="margin-top:6px"><a href="https://yendyx.com" target="_blank" rel="noopener noreferrer">Yendyx.com</a> · © 2025</p>
+  <p style="margin-top:10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <button id="footer-privacy-btn" style="background:none;border:none;color:var(--cy);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline">Privacy Policy</button>
+    <span style="color:var(--tx3);font-size:12px" id="footer-made">Made with ❤️ by Yendyx</span>
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="/security.js"></script>
+<script src="/shared.js"></script>
+<script src="/compress.js"></script>
+<script>
+// ── Initialisation propre à la page outil (pas de modal: zone #tool-body directe) ──
+document.getElementById('tool-body').innerHTML = buildUI('compress');
+setupDrop('compress');
+
+// Lang dropdown
+document.getElementById('lang-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  openLangMenu();
+});
+document.querySelectorAll('.lang-opt').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    setLang(btn.dataset.lang);
+    applyPageTitle();
+injectJsonLd('compress', 'Compress PDF', 'Reduce PDF file size for free, 100% in your browser. No upload, no tracking.');
+    // Régénère le contenu de l'outil pour refléter la nouvelle langue
+    // (le HTML de l'outil est injecté une fois, pas re-rendu par applyLang()).
+    // On préserve activeFiles (état global) et on re-render la liste/estimation.
+    document.getElementById('tool-body').innerHTML = buildUI('compress');
+    setupDrop('compress');
+    if(activeFiles.length){ renderFiles(); await renderCompressEstimate(); }
+  });
+});
+document.addEventListener('click', e => {
+  const wrap=document.getElementById('lang-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('lang-menu')?.classList.remove('open');
+  }
+});
+
+// Nav
+document.getElementById('avatar').addEventListener('click', openHistory);
+document.getElementById('avatar').addEventListener('keydown', e=>{if(e.key==='Enter'||e.key===' ')openHistory();});
+document.getElementById('auth-btn').addEventListener('click', openAuth);
+
+// Auth modal
+document.getElementById('auth-close-btn')?.addEventListener('click', closeAuth);
+document.getElementById('auth-overlay').addEventListener('click', e=>{if(e.target===e.currentTarget)closeAuth();});
+document.getElementById('atab-login')?.addEventListener('click', ()=>authTab('login'));
+document.getElementById('atab-register')?.addEventListener('click', ()=>authTab('register'));
+document.getElementById('login-btn')?.addEventListener('click', doLogin);
+document.getElementById('reg-btn')?.addEventListener('click', doRegister);
+document.getElementById('r-pwd')?.addEventListener('input', updatePwdStrength);
+
+// History modal
+document.getElementById('hist-close-btn')?.addEventListener('click', closeHistory);
+document.getElementById('hist-overlay').addEventListener('click', e=>{if(e.target===e.currentTarget)closeHistory();});
+document.getElementById('htab-files')?.addEventListener('click', ()=>histTab('files'));
+document.getElementById('htab-audit')?.addEventListener('click', ()=>histTab('audit'));
+document.getElementById('logout-btn')?.addEventListener('click', doLogout);
+
+// Privacy modal
+document.getElementById('privacy-btn')?.addEventListener('click', openPrivacy);
+document.getElementById('footer-privacy-btn')?.addEventListener('click', openPrivacy);
+document.getElementById('privacy-close-btn')?.addEventListener('click', closePrivacy);
+document.getElementById('privacy-overlay')?.addEventListener('click', e=>{
+  if(e.target===e.currentTarget) closePrivacy();
+});
+
+// Theme
+document.getElementById('theme-btn')?.addEventListener('click', toggleTheme);
+
+// Init commun (même séquence que l'accueil)
+applyLang();
+// Titre/sous-titre de la page outil : pas couverts par applyLang() (IDs spécifiques
+// à cette page), on les met à jour ici avec les clés existantes du dictionnaire T.
+function applyPageTitle(){
+  document.getElementById('tool-h1').textContent = t('compress');
+  document.getElementById('tool-sub').textContent = t('dcompress');
+  document.getElementById('tb-tool-name').textContent = t('compress');
+}
+applyPageTitle();
+injectJsonLd('compress', 'Compress PDF', 'Reduce PDF file size for free, 100% in your browser. No upload, no tracking.');
+initStats();
+initTheme();
+initTrust();
+initCookieBanner();
+
+// PWA Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+
+// Session Supabase (sans ça, l'utilisateur apparaît toujours déconnecté même connecté)
+sb.auth.getSession().then(({data:{session}})=>{
+  user=session?.user||null;
+  _lastUserId=user?.id||null;
+  updateAuthUI();
+});
+</script>
+</body>
+</html>

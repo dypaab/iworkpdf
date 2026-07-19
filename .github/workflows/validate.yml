@@ -1,0 +1,71 @@
+name: iWorkPDF — Validate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Syntax & Runtime Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install jsdom
+        run: npm install jsdom
+
+      - name: Validate JS syntax
+        run: |
+          echo "Checking JS files..."
+          for f in *.js; do
+            node --check "$f" && echo "✅ $f" || (echo "❌ $f" && exit 1)
+          done
+
+      - name: Validate JSON files
+        run: |
+          echo "Checking JSON files..."
+          for f in *.json; do
+            python3 -c "import json; json.load(open('$f'))" && echo "✅ $f" || (echo "❌ $f" && exit 1)
+          done
+
+      - name: Validate XML files
+        run: |
+          echo "Checking XML files..."
+          for f in *.xml; do
+            python3 -c "import xml.etree.ElementTree as ET; ET.parse('$f')" && echo "✅ $f" || (echo "❌ $f" && exit 1)
+          done
+
+      - name: Runtime test — compress.html
+        run: node tests/test_compress.js
+
+      - name: Runtime test — index.html
+        run: node tests/test_index.js
+
+      - name: Check required files
+        run: |
+          REQUIRED="index.html 404.html shared.js shared.css tool-theme.css security.js sw.js manifest.json vercel.json sitemap.xml robots.txt icon-192.png icon-512.png og-image.png pricing.html"
+          for f in $REQUIRED; do
+            [ -f "$f" ] && echo "✅ $f" || (echo "❌ Missing: $f" && exit 1)
+          done
+          TOOL_FILES="compress merge delete split rotate watermark pdf-security img2pdf pagenums pdf2jpg repair crop sign extract"
+          for t in $TOOL_FILES; do
+            [ -f "tools/${t%%-*}.html" ] || [ -f "tools/$t.html" ] && echo "✅ tools" || true
+          done
+
+      - name: Check no sensitive files deployed
+        run: |
+          for f in "supabase_setup.sql" ".env" "*.key" "*.pem"; do
+            if ls $f 2>/dev/null; then
+              echo "⚠️ Sensitive file found: $f — should be in .vercelignore"
+            fi
+          done
+          echo "✅ Sensitive file check done"

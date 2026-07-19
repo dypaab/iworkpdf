@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pricing — iWorkPDF by Yendyx</title>
+<meta name="description" content="iWorkPDF is free forever. All 14 PDF tools, no account required, no file size limit. Optional cloud features for registered users."/>
+<meta property="og:title" content="iWorkPDF Pricing — Free forever"/>
+<meta property="og:description" content="All PDF tools are free. No subscription, no hidden fees. Optional cloud sharing for registered users."/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com/pricing.html"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com/pricing.html"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https:; script-src-attr 'unsafe-inline'; worker-src blob: 'self';"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/shared.css"/>
+<link rel="stylesheet" href="/tool-theme.css"/>
+<style>
+.pricing-page{max-width:960px;margin:100px auto 80px;padding:0 24px;text-align:center}
+.pricing-hero{margin-bottom:60px}
+.pricing-hero h1{font-size:42px;font-weight:900;letter-spacing:-1px;margin-bottom:12px}
+.pricing-hero p{font-size:18px;color:var(--tx2);max-width:480px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:60px;text-align:left}
+.plan-card{background:var(--il-bg-card);border:2px solid var(--il-bd-card);border-radius:20px;padding:32px;position:relative;transition:border-color .2s}
+.plan-card.featured{border-color:#00B4D8;box-shadow:0 0 0 1px #00B4D830, 0 8px 40px #00B4D820}
+.plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:22px;font-weight:800;margin-bottom:4px}
+.plan-price{font-size:48px;font-weight:900;line-height:1;margin:16px 0 4px}
+.plan-price span{font-size:18px;font-weight:500;color:var(--tx2)}
+.plan-desc{font-size:14px;color:var(--tx2);margin-bottom:24px;line-height:1.6}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.plan-features li{font-size:13px;display:flex;align-items:center;gap:10px}
+.plan-features li::before{content:'✓';color:#10B981;font-weight:700;font-size:14px;flex-shrink:0}
+.plan-features li.no::before{content:'✗';color:var(--tx3)}
+.plan-features li.no{color:var(--tx3)}
+.plan-cta{display:block;text-align:center;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;width:100%}
+.plan-cta.primary{background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;border:none;box-shadow:0 4px 20px #00B4D840}
+.plan-cta.primary:hover{opacity:.9;transform:translateY(-1px)}
+.plan-cta.ghost{background:none;border:2px solid var(--il-bd-card);color:var(--tx2)}
+.plan-cta.ghost:hover{border-color:#00B4D8;color:#00B4D8}
+.faq-pricing{max-width:700px;margin:0 auto 60px;text-align:left}
+.compare-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:60px;text-align:left}
+.compare-table th{padding:14px 16px;border-bottom:2px solid var(--il-bd-card);font-weight:700;color:var(--tx2);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.compare-table td{padding:13px 16px;border-bottom:1px solid var(--il-bd-card);color:var(--tx)}
+.compare-table tr:last-child td{border-bottom:none}
+.tick{color:#10B981;font-weight:700}
+.cross{color:var(--tx3)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <line x1="16" y1="2" x2="16" y2="16" stroke="url(#g1)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="16" y1="16" x2="5" y2="26" stroke="url(#g2)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="16" y1="16" x2="27" y2="26" stroke="url(#g3)" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="16" cy="28" r="2" fill="#00B4D8"/>
+      <defs>
+        <linearGradient id="g1" x1="16" y1="2" x2="16" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#00D4FF"/><stop offset="1" stop-color="#00B4D8"/></linearGradient>
+        <linearGradient id="g2" x1="16" y1="16" x2="5" y2="26" gradientUnits="userSpaceOnUse"><stop stop-color="#00B4D8"/><stop offset="1" stop-color="#0077FF"/></linearGradient>
+        <linearGradient id="g3" x1="16" y1="16" x2="27" y2="26" gradientUnits="userSpaceOnUse"><stop stop-color="#00B4D8"/><stop offset="1" stop-color="#0077FF"/></linearGradient>
+      </defs>
+    </svg>
+    <span class="nav-brand">i<span>Work</span>PDF</span>
+  </a>
+  <div class="nav-actions">
+    <a href="/" style="font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:20px">← All tools</a>
+  </div>
+</nav>
+
+<main class="pricing-page">
+  <div class="pricing-hero">
+    <div class="badge">💚 Honest pricing</div>
+    <h1>Simple. Free. Always.</h1>
+    <p>All 14 tools are free forever. No credit card, no hidden fees, no surprises.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- FREE -->
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">€0<span>/month</span></div>
+      <p class="plan-desc">Everything you need, no strings attached. No account required.</p>
+      <ul class="plan-features">
+        <li>All 14 PDF tools</li>
+        <li>100% local processing</li>
+        <li>Unlimited file size</li>
+        <li>No account required</li>
+        <li>Dark & light mode</li>
+        <li>Works offline (PWA)</li>
+        <li class="no">Cloud file sharing</li>
+        <li class="no">File history</li>
+        <li class="no">Activity audit log</li>
+      </ul>
+      <a href="/" class="plan-cta ghost">Start for free</a>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan-card featured">
+      <div class="plan-badge">✨ Most popular</div>
+      <div class="plan-name" style="background:linear-gradient(135deg,#00B4D8,#0077FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Pro</div>
+      <div class="plan-price">€0<span>/month</span></div>
+      <p class="plan-desc">Free account with cloud features. Auto-deleted after 48h for maximum privacy.</p>
+      <ul class="plan-features">
+        <li>Everything in Free</li>
+        <li>Cloud file sharing (48h links)</li>
+        <li>File history dashboard</li>
+        <li>Activity audit log</li>
+        <li>Secure signed URLs</li>
+        <li>Email support</li>
+      </ul>
+      <button class="plan-cta primary" onclick="document.location='/#'">Create free account</button>
+    </div>
+  </div>
+
+  <!-- Tableau comparatif détaillé -->
+  <h2 style="font-size:28px;font-weight:700;margin-bottom:32px">Full comparison</h2>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:50%">Feature</th>
+        <th style="width:25%;text-align:center">Free</th>
+        <th style="width:25%;text-align:center;color:#00B4D8">Pro (free account)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>PDF Tools</strong> (14 total)</td><td class="tick" style="text-align:center">✓ All</td><td class="tick" style="text-align:center">✓ All</td></tr>
+      <tr><td>Local processing (never uploaded)</td><td class="tick" style="text-align:center">✓</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>File size limit</td><td style="text-align:center;color:var(--tx2)">None</td><td style="text-align:center;color:var(--tx2)">None</td></tr>
+      <tr><td>Account required</td><td class="tick" style="text-align:center">No</td><td style="text-align:center;color:var(--tx2)">Yes (free)</td></tr>
+      <tr><td>Cloud file sharing (48h secure link)</td><td class="cross" style="text-align:center">✗</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>File history</td><td class="cross" style="text-align:center">✗</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>Audit log</td><td class="cross" style="text-align:center">✗</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>Works offline (PWA)</td><td class="tick" style="text-align:center">✓</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>Dark & light mode</td><td class="tick" style="text-align:center">✓</td><td class="tick" style="text-align:center">✓</td></tr>
+      <tr><td>Ads / tracking</td><td class="tick" style="text-align:center">Never</td><td class="tick" style="text-align:center">Never</td></tr>
+      <tr><td>Price</td><td style="text-align:center;font-weight:700;color:#10B981">€0</td><td style="text-align:center;font-weight:700;color:#10B981">€0</td></tr>
+    </tbody>
+  </table>
+
+  <!-- FAQ -->
+  <div class="faq-pricing">
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:24px;text-align:center">Frequently asked questions</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px">Will iWorkPDF always be free?</summary>
+        <p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Yes. The 14 tools running locally in your browser will always be free. We may introduce premium features in the future (API access, batch processing) but the core tools will never be paywalled.</p>
+      </details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px">Why is the Pro plan also free?</summary>
+        <p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">iWorkPDF is a showcase product by Yendyx. We're building trust and reputation, not maximizing revenue. The cloud features cost us very little thanks to Supabase's free tier and auto-deletion after 48h.</p>
+      </details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px">Do I need a credit card to create an account?</summary>
+        <p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">No. Just an email address. No credit card, no trial period, no automatic billing.</p>
+      </details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px">
+        <summary style="cursor:pointer;font-weight:600;font-size:14px">What happens to my files after 48h?</summary>
+        <p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Cloud files are automatically deleted after 48 hours by a Supabase Edge Function. No manual action needed. This is by design — we don't want to store your files longer than necessary.</p>
+      </details>
+    </div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--bd);padding:24px;text-align:center">
+  <p style="font-size:13px;color:var(--tx2)"><a href="/" style="color:var(--cy);text-decoration:none">← iWorkPDF</a> · <a href="/pricing.html" style="color:var(--tx2);text-decoration:none">Pricing</a> · <a href="https://yendyx.com" target="_blank" rel="noopener noreferrer" style="color:var(--tx2);text-decoration:none">Yendyx</a></p>
+  <p style="font-size:12px;color:var(--tx3);margin-top:8px">© 2025 Yendyx · Made with ❤️ in France</p>
+</footer>
+<script>
+// Thème persisté
+try{
+  const saved=localStorage.getItem('iworkpdf_theme');
+  if(saved==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');}
+}catch{}
+</script>
+</body>
+</html>
