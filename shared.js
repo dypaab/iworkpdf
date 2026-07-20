@@ -1368,12 +1368,15 @@ function acceptCookies(){
 }
 
 function initTrust(){
-  // Privacy mode depuis localStorage
+  // Confidentialité maximale ACTIVÉE par défaut ; désactivée seulement si
+  // l'utilisateur l'a explicitement coupée (valeur '0' en localStorage).
   try{
-    if(localStorage.getItem('iworkpdf_privacy_mode')==='1'){
-      privacyMode=true;
-    }
-  }catch{}
+    privacyMode = localStorage.getItem('iworkpdf_privacy_mode') !== '0';
+  }catch{ privacyMode = true; }
+  // Refléter l'état sur l'UI déjà rendue (la barre est construite avant initTrust).
+  const _pm=document.getElementById('pm-checkbox'); if(_pm) _pm.checked=privacyMode;
+  if(privacyMode && saveMode==='cloud') saveMode='local';
+  if(typeof updateSaveAuthGate==='function') updateSaveAuthGate();
 
   // Network monitor
   initNetworkMonitor();
