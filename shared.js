@@ -329,7 +329,7 @@ function relocateTrustBanner(){
 function applyLang(){
   document.documentElement.lang=lang;
   // BUG G FIX: auth-modal-title → 'myacc' pas 'myfiles'
-  const ids={'h-badge':'badge','h-title1':'h1','h-title2':'h2','h-sub':'sub','h-cta1':'cta1','h-cta2':'cta2','illu-pc':'illu_pc','illu-local':'illu_local','illu-dl':'illu_dl','illu-nosrv':'illu_nosrv','demo-drop-txt':'demo_drop','why-title':'why','sb1':'sb1','sb2':'sb2','sb3':'sb3','sb4':'sb4','sb5':'sb5','st1':'st1','st2':'st2','st3':'st3','st4':'st4','tools-title':'ttl','tools-sub':'tsub','auth-btn-txt':'signin','auth-modal-title':'myacc','atab-login':'signin','atab-register':'register','login-info':'logininfo','reg-info':'reginfo','l-pwd-lbl':'password','reg-name-lbl':'firstname','reg-pwd-lbl':'pwdmin','reg-pwd2-lbl':'confirmpwd','login-btn':'signin','reg-btn':'register','htab-files':'myfiles','htab-audit':'actlog','hist-title':'histtitle','logout-btn':'logout','vfy-txt':'vfy','footer-txt':'footer'};
+  const ids={'h-badge':'badge','h-title1':'h1','h-title2':'h2','h-sub':'sub','h-cta1':'cta1','h-cta2':'cta2','illu-pc':'illu_pc','illu-local':'illu_local','illu-dl':'illu_dl','illu-nosrv':'illu_nosrv','demo-drop-txt':'demo_drop','why-title':'why','sb1':'sb1','sb2':'sb2','sb3':'sb3','sb4':'sb4','sb5':'sb5','st1':'st1','st2':'st2','st3':'st3','st4':'st4','tools-title':'ttl','tools-sub':'tsub','auth-btn-txt':'signin','auth-modal-title':'myacc','atab-login':'signin','atab-register':'register','login-info':'logininfo','reg-info':'reginfo','l-pwd-lbl':'password','reg-name-lbl':'firstname','reg-pwd-lbl':'pwdmin','reg-pwd2-lbl':'confirmpwd','login-btn':'signin','reg-btn':'register','htab-files':'myfiles','htab-audit':'actlog','hist-title':'histtitle','logout-btn':'logout','vfy-txt':'vfy','footer-txt':'footer','myfiles-btn-txt':'myfiles'};
   Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
   renderTools();
   const sh=document.getElementById('shortcut-hint');
@@ -359,6 +359,18 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 
 function scrollToTools(){document.getElementById('tools-section').scrollIntoView({behavior:'smooth'});}
 
+// Bouton "Mes fichiers" visible dans la barre de nav (docs sauvegardés + temps restant),
+// affiché seulement pour un utilisateur connecté.
+function ensureMyFilesButton(){
+  const actions=document.querySelector('.nav-actions');
+  if(!actions||document.getElementById('myfiles-btn'))return;
+  const b=document.createElement('button');
+  b.id='myfiles-btn'; b.type='button'; b.className='btn-lang'; b.style.display='none';
+  b.innerHTML='📁 <span id="myfiles-btn-txt"></span>';
+  b.addEventListener('click',openHistory);
+  actions.insertBefore(b, document.getElementById('avatar')||actions.firstChild);
+}
+
 function updateAuthUI(){
   const btn=document.getElementById('auth-btn');
   const av=document.getElementById('avatar');
@@ -373,6 +385,10 @@ function updateAuthUI(){
     av.style.display='none';
     if(vb)vb.classList.remove('show');
   }
+  // Bouton "Mes fichiers" (documents sauvegardés) visible seulement si connecté.
+  ensureMyFilesButton();
+  const mfb=document.getElementById('myfiles-btn');
+  if(mfb){ mfb.style.display=user?'':'none'; const mt=document.getElementById('myfiles-btn-txt'); if(mt)mt.textContent=t('myfiles'); }
   // Affiche/masque l'option de sauvegarde cloud selon l'état de connexion.
   updateSaveAuthGate();
 }
@@ -414,6 +430,7 @@ async function doRegister(){
   const pwd=document.getElementById('r-pwd').value;
   const st=document.getElementById('r-status');
   const btn=document.getElementById('reg-btn');
+  let sent=false;
   try{
     if(!sb)throw new Error(lang==='fr'?'Création de compte indisponible (hors ligne).':'Registration unavailable (offline).');
     if(!name)throw new Error(lang==='fr'?'Entrez votre prénom.':'Enter your first name.');
@@ -427,9 +444,17 @@ async function doRegister(){
     const{error}=await sb.auth.signUp({email,password:pwd,options:{data:{name},emailRedirectTo:window.location.origin+'/confirmed.html'}});
     if(error)throw new Error(error.message);
     st.className='status-box ok';st.textContent=t('accreated');
+    // Email de confirmation envoyé : effacer les infos saisies, bloquer le bouton
+    // et sortir de la fenêtre (l'utilisateur validera depuis son email).
+    ['r-name','r-email','r-pwd','r-pwd2'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    const pf=document.getElementById('pwd-fill'),pl=document.getElementById('pwd-label');
+    if(pf)pf.style.width='0%'; if(pl)pl.textContent='';
+    sent=true;
+    showToast(t('accreated'),'ok');
+    setTimeout(closeAuth,1800);
   }catch(e){
     st.className='status-box err';st.textContent=e.message;
-  }finally{btn.disabled=false;}
+  }finally{ if(!sent) btn.disabled=false; }
 }
 
 async function doLogout(){if(sb)await sb.auth.signOut();closeHistory();}
@@ -440,7 +465,25 @@ async function audit(action,resourceId=null,meta={}){
   catch(e){console.warn('Audit:',e.message);}
 }
 
-function openHistory(){document.getElementById('hist-overlay').classList.add('active');loadFiles();}
+function openHistory(){
+  document.getElementById('hist-overlay').classList.add('active');
+  renderProfileInfo();
+  loadFiles();
+}
+
+// En-tête de profil dans "Mes fichiers" : avatar + nom + email de l'utilisateur.
+function renderProfileInfo(){
+  if(!user)return;
+  const body=document.querySelector('#hist-overlay .modal-body');
+  if(!body)return;
+  let el=document.getElementById('profile-info');
+  if(!el){ el=document.createElement('div'); el.id='profile-info'; body.insertBefore(el, body.firstChild); }
+  el.style.cssText='display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--bd);border-radius:12px';
+  const name=user.user_metadata?.name||'';
+  const email=user.email||'';
+  const initial=(name||email||'U')[0].toUpperCase();
+  el.innerHTML=`<div style="width:42px;height:42px;border-radius:50%;background:#E1483A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0">${Security.escHtml(initial)}</div><div style="min-width:0"><div style="font-weight:600">${Security.escHtml(name||'—')}</div><div style="color:var(--tx2);font-size:13px;overflow:hidden;text-overflow:ellipsis">${Security.escHtml(email)}</div></div>`;
+}
 
 function closeHistory(){document.getElementById('hist-overlay').classList.remove('active');}
 
@@ -521,7 +564,31 @@ function ensureRegisterConfirm(){
   grp.insertAdjacentElement('afterend',wrap);
 }
 
-function openAuth(){ensureRegisterConfirm();document.getElementById('auth-overlay').classList.add('active');}
+function openAuth(){
+  ensureRegisterConfirm();
+  ensureGoogleButton();
+  const rb=document.getElementById('reg-btn'); if(rb) rb.disabled=false; // réactiver après une inscription précédente
+  document.getElementById('auth-overlay').classList.add('active');
+}
+
+// Bouton "Continuer avec Google" injecté en haut de la fenêtre d'auth (OAuth Supabase).
+function ensureGoogleButton(){
+  const tabs=document.getElementById('auth-tabs');
+  if(!tabs||document.getElementById('google-btn'))return;
+  const b=document.createElement('button');
+  b.id='google-btn'; b.type='button';
+  b.style.cssText='width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;margin-bottom:14px;border:1px solid var(--bd);border-radius:11px;background:#fff;color:#1A1A2E;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit';
+  b.innerHTML=`<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.1 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.2 13.1 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 7l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16z"/><path fill="#FBBC05" d="M10.4 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-7.8-6.1C.9 16.2 0 20 0 24s.9 7.8 2.6 11l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.1 0 11.3-2 15-5.5l-7.1-5.5c-2 1.3-4.5 2.1-7.9 2.1-6.4 0-11.8-3.6-13.6-8.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg> <span id="google-btn-txt">${lang==='fr'?'Continuer avec Google':'Continue with Google'}</span>`;
+  b.addEventListener('click',doGoogleLogin);
+  tabs.parentNode.insertBefore(b, tabs);
+}
+async function doGoogleLogin(){
+  if(!sb){ showToast(lang==='fr'?'Indisponible hors ligne.':'Unavailable offline.','err'); return; }
+  try{
+    const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}});
+    if(error)throw new Error(error.message);
+  }catch(e){ showToast(e.message,'err'); }
+}
 
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');}
 
