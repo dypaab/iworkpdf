@@ -424,7 +424,7 @@ async function doRegister(){
     if(pwd!==pwd2)throw new Error(lang==='fr'?'Les mots de passe ne correspondent pas.':'Passwords do not match.');
     st.className='status-box info';st.textContent=t('creatingacc');
     btn.disabled=true;
-    const{error}=await sb.auth.signUp({email,password:pwd,options:{data:{name},emailRedirectTo:window.location.origin}});
+    const{error}=await sb.auth.signUp({email,password:pwd,options:{data:{name},emailRedirectTo:window.location.origin+'/confirmed.html'}});
     if(error)throw new Error(error.message);
     st.className='status-box ok';st.textContent=t('accreated');
   }catch(e){
@@ -777,13 +777,56 @@ function showResultScreen(id, bytes, filename, metaLine){
     <div class="result-cert">🛡️ ${lang==='fr'?'Traité 100% sur votre appareil':'Processed 100% on your device'}</div>
     <div class="result-actions">
       <button class="btn-primary" id="res-dl">⬇ ${lang==='fr'?'Télécharger à nouveau':'Download again'}</button>
+      ${user?`<button class="btn-primary" id="res-save">💾 ${lang==='fr'?'Sauvegarder en ligne (48h)':'Save online (48h)'}</button>`:''}
       <button class="btn-ghost-lg" id="res-new">↺ ${lang==='fr'?'Nouveau fichier':'New file'}</button>
     </div>
+    <div id="res-save-out" style="margin-top:12px"></div>
   </div>`;
   document.getElementById('res-dl').addEventListener('click',()=>{
     if(_lastResult) dlBytes(_lastResult.bytes.slice(), _lastResult.filename).catch(()=>{});
   });
+  document.getElementById('res-save')?.addEventListener('click',()=>saveResultOnline(id));
   document.getElementById('res-new').addEventListener('click',()=>resetToolUI(id));
+}
+
+// Propose à un utilisateur connecté de sauvegarder en ligne (48h) le fichier
+// qu'il vient de traiter, directement depuis l'écran de résultat.
+async function saveResultOnline(id){
+  if(!sb||!user){ openAuth(); return; }
+  if(!user.email_confirmed_at){ showToast(lang==='fr'?'Vérifiez votre email d\'abord.':'Please verify your email first.','err'); return; }
+  if(!_lastResult) return;
+  const btn=document.getElementById('res-save');
+  const out=document.getElementById('res-save-out');
+  try{
+    if(btn){ btn.disabled=true; btn.textContent=lang==='fr'?'Sauvegarde…':'Saving…'; }
+    const {bytes, filename}=_lastResult;
+    const path=Security.buildStoragePath(user.id,filename);
+    const mimeType=filename.endsWith('.pptx')
+      ?'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      :'application/pdf';
+    const blob=new Blob([bytes],{type:mimeType});
+    const{error:upErr}=await sb.storage.from('pdf-files').upload(path,blob,{contentType:mimeType,upsert:false});
+    if(upErr)throw upErr;
+    const{data:signedData,error:signErr}=await sb.storage.from('pdf-files').createSignedUrl(path,3600);
+    if(signErr)throw signErr;
+    const expiresAt=new Date(Date.now()+48*3600*1000).toISOString();
+    const{data:dbRow,error:dbErr}=await sb.from('shared_files').insert({user_id:user.id,file_path:path,filename,tool_used:id,file_size:bytes.byteLength,expires_at:expiresAt}).select().single();
+    if(dbErr)throw dbErr;
+    await audit('upload',dbRow?.id,{filename,tool:id,size:bytes.byteLength});
+    if(out){
+      out.innerHTML=`<p style="font-size:13px;font-weight:600;margin-bottom:6px">🔗 ${lang==='fr'?'Lien sécurisé (valide 1h) :':'Secure link (valid 1h):'}</p><div class="share-row"><input class="share-inp" id="res-share-inp" readonly/><button class="btn-primary" style="padding:8px 14px;font-size:13px" id="res-share-copy">${t('copylink')}</button></div><p class="share-exp" style="color:var(--tx3);margin-top:4px">${lang==='fr'?'Enregistré 48h dans votre compte':'Saved 48h in your account'}</p>`;
+      const inp=document.getElementById('res-share-inp');
+      if(inp) inp.value=signedData.signedUrl;
+      document.getElementById('res-share-copy')?.addEventListener('click',()=>{
+        navigator.clipboard?.writeText(signedData.signedUrl).then(()=>showToast(t('linkcopied'),'ok'),()=>{});
+      });
+    }
+    if(btn) btn.style.display='none';
+    showToast(lang==='fr'?'✅ Sauvegardé en ligne (48h)':'✅ Saved online (48h)','ok');
+  }catch(e){
+    if(btn){ btn.disabled=false; btn.textContent='💾 '+(lang==='fr'?'Sauvegarder en ligne (48h)':'Save online (48h)'); }
+    showToast(e.message||'error','err');
+  }
 }
 
 // Réinitialise l'outil (page dédiée #tool-body ou modal #ws-body).

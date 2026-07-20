@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<link rel="icon" type="image/png" href="/logo_seul_sans_fond.png"/>
+<title>Email validé — iWorkPDF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#F7F8FA;--card:#fff;--tx:#1A1A2E;--tx2:#5A6270;--ok:#12965A;--accent:#E1483A;--bd:#E5E8EC}
+  @media (prefers-color-scheme: dark){:root{--bg:#0D1117;--card:#161B22;--tx:#E6EDF3;--tx2:#9BA6B2;--bd:#233}}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:18px;max-width:440px;width:100%;
+    padding:40px 32px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+  .logo{width:48px;height:48px;margin-bottom:18px}
+  .check{width:72px;height:72px;border-radius:50%;background:rgba(18,150,90,.12);color:var(--ok);
+    display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 20px}
+  h1{font-size:23px;margin:0 0 10px}
+  p{color:var(--tx2);font-size:15px;line-height:1.55;margin:0 0 26px}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;
+    font-size:15px;padding:13px 26px;border-radius:11px;border:none;cursor:pointer;transition:filter .15s}
+  .btn:hover{filter:brightness(1.06)}
+  .sub{margin-top:18px;font-size:12px;color:var(--tx2)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="/logo_seul_sans_fond.png" alt="iWorkPDF"/>
+    <div class="check" aria-hidden="true">✅</div>
+    <h1 id="title">Email validé !</h1>
+    <p id="msg">Votre compte iWorkPDF est maintenant actif. Vous pouvez accéder à tous les outils et sauvegarder vos fichiers en ligne.</p>
+    <a class="btn" id="go" href="/">Accéder au site</a>
+    <p class="sub" id="sub">iWorkPDF · by Yendyx</p>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async () => {
+  const FR = (navigator.language || 'fr').toLowerCase().startsWith('fr');
+  const T = {
+    title:   FR ? 'Email validé !'            : 'Email verified!',
+    msg:     FR ? 'Votre compte iWorkPDF est maintenant actif. Vous pouvez accéder à tous les outils et sauvegarder vos fichiers en ligne.'
+                : 'Your iWorkPDF account is now active. You can use every tool and save your files online.',
+    msgUser: FR ? 'Bienvenue {name} ! Votre compte est actif. Cliquez pour accéder au site.'
+                : 'Welcome {name}! Your account is active. Click below to open the site.',
+    go:      FR ? 'Accéder au site'           : 'Go to the site',
+  };
+  document.documentElement.lang = FR ? 'fr' : 'en';
+  document.getElementById('title').textContent = T.title;
+  document.getElementById('go').textContent = T.go;
+
+  // Capture la session depuis l'URL (#access_token…) pour que l'utilisateur
+  // arrive déjà connecté sur le site. Échec silencieux : la page reste utile.
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      const sb = window.supabase.createClient(
+        'https://iispzrdathkixcgriyrr.supabase.co',
+        'sb_publishable_quzgA4pxNzzzqntQOF6WoQ_3ZnFB36C',
+        { auth: { persistSession: true, detectSessionInUrl: true } }
+      );
+      const { data } = await sb.auth.getSession();
+      const name = data?.session?.user?.user_metadata?.name || '';
+      if (name) {
+        document.getElementById('msg').textContent = T.msgUser.replace('{name}', name);
+      } else {
+        document.getElementById('msg').textContent = T.msg;
+      }
+    } else {
+      document.getElementById('msg').textContent = T.msg;
+    }
+  } catch (_) {
+    document.getElementById('msg').textContent = T.msg;
+  }
+})();
+</script>
+</body>
+</html>
