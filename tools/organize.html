@@ -10,20 +10,20 @@
 <meta http-equiv="X-Frame-Options" content="DENY"/>
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
 <meta http-equiv="Permissions-Policy" content="camera=(),microphone=(),geolocation=()"/>
-<title>PDF Security | iWorkPDF</title>
-<meta name="description" content="Protect or unlock a PDF file for free, 100% in your browser. Nothing uploaded."/>
-<meta property="og:title" content="PDF Security — Free & Private | iWorkPDF"/>
-<meta property="og:description" content="Protect or unlock a PDF file for free, 100% in your browser. Nothing uploaded."/>
+<title>Organize PDF Pages | iWorkPDF</title>
+<meta name="description" content="Reorder, rotate and remove PDF pages for free, 100% in your browser. Drag & drop to rearrange. Nothing uploaded."/>
+<meta property="og:title" content="Organize PDF Pages — Free & Private | iWorkPDF"/>
+<meta property="og:description" content="Reorder, rotate and remove PDF pages for free, 100% in your browser. Drag & drop to rearrange. Nothing uploaded."/>
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://iworkpdf.yendyx.com/tools/security"/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com/tools/organize"/>
 <meta property="og:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:locale:alternate" content="fr_FR"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="PDF Security — Free & Private"/>
-<meta name="twitter:description" content="Protect or unlock a PDF file for free, 100% in your browser. Nothing uploaded."/>
+<meta name="twitter:title" content="Organize PDF Pages — Free & Private"/>
+<meta name="twitter:description" content="Reorder, rotate and remove PDF pages for free, 100% in your browser. Drag & drop to rearrange. Nothing uploaded."/>
 <meta name="theme-color" content="#0D1117"/>
-<link rel="canonical" href="https://iworkpdf.yendyx.com/tools/security"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com/tools/organize"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co https://*.supabase.io https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; worker-src blob: 'self'; object-src 'none'; base-uri 'self';"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet"/>
@@ -61,11 +61,11 @@
 </div>
 
 <main class="tool-page">
-  <p class="tool-breadcrumb"><a href="/">iWorkPDF</a> / <span id="tb-tool-name">PDF Security</span></p>
+  <p class="tool-breadcrumb"><a href="/">iWorkPDF</a> / <span id="tb-tool-name">Organize PDF</span></p>
   <div class="tool-page-head">
-    <div class="tool-icon-big">🔒</div>
-    <h1 id="tool-h1">PDF Security</h1>
-    <p id="tool-sub">Protect or unlock a PDF file for free, 100% in your browser. Nothing uploaded.</p>
+    <div class="tool-icon-big">🗂</div>
+    <h1 id="tool-h1">Organize PDF</h1>
+    <p id="tool-sub">Reorder, rotate and remove PDF pages for free, 100% in your browser. Drag & drop to rearrange. Nothing uploaded.</p>
   </div>
   <div class="tool-card-frame" id="tool-body"></div>
 </main>
@@ -159,7 +159,7 @@
 <footer>
   <div class="footer-brand">i<span>Work</span>PDF <span style="color:var(--tx3);font-weight:400;font-size:13px">by Yendyx</span></div>
   <p id="footer-txt">100% local processing · Signed URLs · Auto-delete 48h · Audit logs</p>
-  <p style="margin-top:6px"><a href="https://yendyx.com" target="_blank" rel="noopener noreferrer">Yendyx.com</a> · © 2025</p>
+  <p style="margin-top:6px"><a href="https://yendyx.com" target="_blank" rel="noopener noreferrer">Yendyx.com</a> · © 2025–2026</p>
   <p style="margin-top:10px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
     <button id="footer-privacy-btn" style="background:none;border:none;color:var(--cy);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline">Privacy Policy</button>
     <span style="color:var(--tx3);font-size:12px" id="footer-made">Made with ❤️ by Yendyx</span>
@@ -170,11 +170,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="/security.js?v20260721a"></script>
 <script src="/shared.js?v20260721a"></script>
-<script src="/pdf-security.js?v20260721a"></script>
+<script src="/organize.js?v20260721a"></script>
 <script>
 // ── Initialisation propre à la page outil (pas de modal: zone #tool-body directe) ──
-document.getElementById('tool-body').innerHTML = buildUI('security');
-setupDrop('security');
+document.getElementById('tool-body').innerHTML = buildUI('organize');
+setupDrop('organize');
 
 // Lang dropdown
 document.getElementById('lang-btn').addEventListener('click', e => {
@@ -185,13 +185,12 @@ document.querySelectorAll('.lang-opt').forEach(btn => {
   btn.addEventListener('click', async () => {
     setLang(btn.dataset.lang);
     applyPageTitle();
-injectJsonLd('security', 'PDF Security', 'Protect or unlock a PDF file for free, 100% in your browser. No upload.');
-    // Régénère le contenu de l'outil pour refléter la nouvelle langue
-    // (le HTML de l'outil est injecté une fois, pas re-rendu par applyLang()).
-    // On préserve activeFiles (état global) et on re-render la liste/estimation.
-    document.getElementById('tool-body').innerHTML = buildUI('security');
-    setupDrop('security');
-    if(activeFiles.length){ renderFiles(); }
+    injectJsonLd('organize', 'Organize PDF', 'Reorder, rotate and remove PDF pages for free, 100% in your browser. No upload.');
+    // Régénère le contenu de l'outil pour refléter la nouvelle langue.
+    // On préserve activeFiles + organizePages (état global) et on re-render la grille.
+    document.getElementById('tool-body').innerHTML = buildUI('organize');
+    setupDrop('organize');
+    if(activeFiles.length){ renderOrganizeGrid(); }
   });
 });
 document.addEventListener('click', e => {
@@ -235,23 +234,19 @@ document.getElementById('theme-btn')?.addEventListener('click', toggleTheme);
 
 // Init commun (même séquence que l'accueil)
 applyLang();
-// Titre/sous-titre de la page outil : pas couverts par applyLang() (IDs spécifiques
-// à cette page), on les met à jour ici avec les clés existantes du dictionnaire T.
 function applyPageTitle(){
-  document.getElementById('tool-h1').textContent = t('security');
-  document.getElementById('tool-sub').textContent = t('dsecurity');
-  document.getElementById('tb-tool-name').textContent = t('security');
+  document.getElementById('tool-h1').textContent = t('organize');
+  document.getElementById('tool-sub').textContent = t('dorganize');
+  document.getElementById('tb-tool-name').textContent = t('organize');
 }
 applyPageTitle();
-injectJsonLd('security', 'PDF Security', 'Protect or unlock a PDF file for free, 100% in your browser. No upload.');
+injectJsonLd('organize', 'Organize PDF', 'Reorder, rotate and remove PDF pages for free, 100% in your browser. No upload.');
 initStats();
 initTheme();
 initTrust();
 initCookieBanner();
 
 // PWA : service worker UNIQUEMENT dans l'app installée (mode standalone).
-// Site web classique : aucun SW (proxys/réseaux d'entreprise → incidents 'Offline'),
-// et on désinstalle les SW hérités des anciennes versions.
 if('serviceWorker' in navigator){
   const isApp=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   window.addEventListener('load',()=>{
@@ -260,7 +255,7 @@ if('serviceWorker' in navigator){
   });
 }
 
-// Session Supabase (sans ça, l'utilisateur apparaît toujours déconnecté même connecté)
+// Session Supabase
 if(sb)sb.auth.getSession().then(({data:{session}})=>{
   user=session?.user||null;
   _lastUserId=user?.id||null;
