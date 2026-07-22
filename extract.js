@@ -35,19 +35,21 @@ function buildExtractUI(){
 // ── Analyse pixel : renvoie {score 0-100, drop, reason, stats} ────────────
 // Rejette : quasi-transparent (masque), quasi-noir (rectangle noir),
 // quasi-blanc (page vide) et quasi-uniforme (aplat de couleur).
-function analyzeRGBA(data){
-  const n=data.length/4;
-  if(!n) return {score:0,drop:true,reason:'empty'};
+function analyzeRGBA(data,w,h){
+  const n=w*h;
+  if(!n||data.length<n*4) return {score:0,drop:true,reason:'empty'};
   let sum=0,sumSq=0,black=0,white=0,trans=0;
   const buckets=new Set();
+  const lum=new Float32Array(n);
   for(let i=0;i<n;i++){
     const a=data[i*4+3];
-    if(a<16){trans++; continue;}
     const r=data[i*4],g=data[i*4+1],b=data[i*4+2];
-    const lum=0.299*r+0.587*g+0.114*b;
-    sum+=lum; sumSq+=lum*lum;
-    if(lum<16)black++;
-    else if(lum>240)white++;
+    const L=0.299*r+0.587*g+0.114*b;
+    lum[i]=L;
+    if(a<16){trans++; continue;}
+    sum+=L; sumSq+=L*L;
+    if(L<16)black++;
+    else if(L>240)white++;
     buckets.add(((r>>4)<<8)|((g>>4)<<4)|(b>>4)); // ~4096 teintes possibles
   }
   const opaque=n-trans;
@@ -59,19 +61,34 @@ function analyzeRGBA(data){
   const whiteFrac=white/opaque;
   const uniq=buckets.size;
 
+  // ── ÉNERGIE DE CONTOUR (texture) : différence moyenne de luminance avec les
+  // voisins de droite et du bas. C'est LE discriminant "vraie photo" : une photo
+  // est riche en détails (énergie élevée) ; un aplat noir / masque / dégradé
+  // lisse est quasi plat (énergie ~0), un graphique vectoriel est intermédiaire.
+  let edge=0,edgeN=0;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=y*w+x;
+    if(x+1<w){ edge+=Math.abs(lum[i]-lum[i+1]); edgeN++; }
+    if(y+1<h){ edge+=Math.abs(lum[i]-lum[i+w]); edgeN++; }
+  }
+  const edgeEnergy=edgeN?edge/edgeN:0;
+
   let drop=false,reason='';
   if(transFrac>0.97){drop=true;reason='mask';}
   else if(blackFrac>0.90){drop=true;reason='black';}
   else if(whiteFrac>0.985){drop=true;reason='blank';}
-  else if(std<6 && uniq<6){drop=true;reason='flat';}
+  else if(edgeEnergy<1.4 && uniq<24){drop=true;reason='flat';} // aplat / dégradé lisse
+  else if(std<5 && uniq<6){drop=true;reason='flat2';}
 
-  // Score de lisibilité : contraste (std) + diversité de couleurs (uniq)
-  // + pénalité si dominé par une couleur extrême.
-  let score=Math.min(std/55,1)*55 + Math.min(uniq/280,1)*35
-          + (1-Math.max(blackFrac,whiteFrac,transFrac))*10;
+  // Score de lisibilité : texture (edge, poids fort) + contraste (std)
+  // + diversité de couleurs (uniq) − pénalité si dominé par une couleur extrême.
+  let score = Math.min(edgeEnergy/22,1)*45
+            + Math.min(std/55,1)*30
+            + Math.min(uniq/300,1)*20
+            + (1-Math.max(blackFrac,whiteFrac,transFrac))*5;
   score=Math.round(Math.max(0,Math.min(100,score)));
-  if(!drop && score<20){drop=true;reason='lowscore';}
-  return {score,drop,reason,std,uniq,blackFrac,whiteFrac,transFrac};
+  if(!drop && score<22){drop=true;reason='lowscore';}
+  return {score,drop,reason,std,uniq,edgeEnergy,blackFrac,whiteFrac,transFrac};
 }
 
 // Décode des octets JPEG en bitmap (createImageBitmap, fallback <img>).
@@ -147,12 +164,14 @@ async function runExtract(activeFiles){
   }
 
   // Canvas d'analyse réutilisé (échantillon 48×48)
-  const ac=document.createElement('canvas');ac.width=48;ac.height=48;
+  const AS=96; // résolution d'analyse (plus fine = score plus précis)
+  const ac=document.createElement('canvas');ac.width=AS;ac.height=AS;
   const actx=ac.getContext('2d',{willReadFrequently:true});
+  actx.imageSmoothingEnabled=false; // garde les détails/contours (mieux pour la texture)
   function sampleOf(drawable){
-    actx.clearRect(0,0,48,48);
-    try{actx.drawImage(drawable,0,0,48,48);}catch(_){return null;}
-    return actx.getImageData(0,0,48,48).data;
+    actx.clearRect(0,0,AS,AS);
+    try{actx.drawImage(drawable,0,0,AS,AS);}catch(_){return null;}
+    return actx.getImageData(0,0,AS,AS).data;
   }
 
   let idx=0,aborted=false,skipped=0;
@@ -212,7 +231,7 @@ async function runExtract(activeFiles){
 
       if(!outBytes)continue;
       // Verdict anti-rectangle-noir
-      const verdict=sample?analyzeRGBA(sample):{score:60,drop:false,reason:'unverified'};
+      const verdict=sample?analyzeRGBA(sample,AS,AS):{score:60,drop:false,reason:'unverified'};
       if(verdict.drop){skipped++;continue;}
       kept.push({name:`${stem}_img${kept.length+1}.jpg`,data:outBytes,score:verdict.score});
     }catch(_){/* image illisible : on continue */}
