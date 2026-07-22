@@ -12,6 +12,9 @@
 // ============================================================
 
 let _extractUrls = [];   // object URLs à révoquer entre deux extractions
+let _extractKept = [];   // images conservées (mutable : ✕ retire, ⬇ télécharge)
+let _extractStem = '';
+let _extractSkipped = 0;
 
 function buildExtractUI(){
   const bottom=`<div class="status-box" id="ts"></div><div class="prog-wrap" id="tp"><div class="prog-bg"><div class="prog-fill" id="pf"></div></div><div class="prog-text" id="pt"></div></div>`;
@@ -25,7 +28,6 @@ function buildExtractUI(){
     <div class="sec-info">ℹ️ <span>${lang==='fr'
       ?'Extrait les photos et images INTÉGRÉES au PDF, à leur résolution d\'origine. Les aplats noirs, masques et images illisibles sont automatiquement écartés. Pour convertir chaque page entière en image, utilisez PDF → JPG.'
       :'Extracts the photos and images EMBEDDED in the PDF, at their original resolution. Black fills, masks and unreadable images are automatically filtered out. To convert full pages to images, use PDF → JPG.'}</span></div>
-    <div id="extract-results" style="display:none;margin-top:14px"></div>
     ${bottom}
     <div class="flex-end"><button class="btn-primary" onclick="run('extract')">${lang==='fr'?'🖼 Extraire les images':'🖼 Extract images'}</button></div>`;
 }
@@ -91,10 +93,13 @@ async function bitmapFromBytes(bytes){
 async function runExtract(activeFiles){
   // Nettoyage d'un rendu précédent
   _extractUrls.forEach(u=>{try{URL.revokeObjectURL(u);}catch(_){}}); _extractUrls=[];
-  const box=document.getElementById('extract-results');
-  if(box){box.style.display='none';box.innerHTML='';}
+  _extractKept=[];
+  const _prevBox=document.getElementById('extract-results');
+  if(_prevBox){_prevBox.style.display='none';_prevBox.innerHTML='';}
 
-  const buf=await activeFiles[0].arrayBuffer();
+  let buf=null;
+  try{
+  buf=await activeFiles[0].arrayBuffer();
   const{PDFDocument,PDFName,PDFRawStream}=PDFLib;
   const src=await PDFDocument.load(buf,{ignoreEncryption:true,updateMetadata:false});
   const stem=activeFiles[0].name.replace(/\.pdf$/i,'');
@@ -229,74 +234,106 @@ async function runExtract(activeFiles){
 
   addRecent(activeFiles[0].name,'extract',activeFiles[0].size);
   incrementStats();
-  isProcessing=false;
-  document.querySelectorAll('#ws-body .btn-primary, #tool-body .btn-primary').forEach(b=>b.disabled=false);
+  }catch(e){
+    console.error(e);
+    try{ if(buf)Security.wipeMemory(buf); }catch(_){}
+    hideProg();
+    setStatus(lang==='fr'
+      ?'❌ Une erreur est survenue pendant l\'extraction. Réessayez (relancez l\'outil).'
+      :'❌ An error occurred during extraction. Please try again (re-run the tool).','err');
+  }finally{
+    isProcessing=false;
+    document.querySelectorAll('#ws-body .btn-primary, #tool-body .btn-primary').forEach(b=>b.disabled=false);
+  }
   return;
 }
 
-// ── Rendu de la grille d'aperçu + boutons de téléchargement ───────────────
-function renderExtractResults(kept,stem,skipped){
-  const box=document.getElementById('extract-results');
-  if(!box)return;
-  box.style.display='block';
-  box.innerHTML='';
+// ── Conteneur de résultats PLEINE LARGEUR, placé EN BAS (hors des 2 colonnes) ──
+function getExtractResultsBox(){
+  let box=document.getElementById('extract-results');
+  const host=document.querySelector('main.tool-page')||document.body;
+  if(!box){ box=document.createElement('div'); box.id='extract-results'; box.style.marginTop='24px'; }
+  if(box.parentElement!==host){ host.appendChild(box); } // sous les colonnes = pleine largeur
+  return box;
+}
 
-  // En-tête + bouton "Tout télécharger"
+function removeExtractImage(idx){
+  if(idx<0||idx>=_extractKept.length) return;
+  _extractKept.splice(idx,1);
+  renderExtractResults(_extractKept,_extractStem,_extractSkipped);
+  if(!_extractKept.length){
+    setStatus(lang==='fr'?'Toutes les images ont été retirées.':'All images removed.','info');
+  }
+}
+
+// Grille horizontale sur plusieurs lignes ; ⬇ télécharge, ✕ retire.
+function renderExtractResults(kept,stem,skipped){
+  _extractKept=kept; _extractStem=stem; _extractSkipped=skipped;
+  _extractUrls.forEach(u=>{try{URL.revokeObjectURL(u);}catch(_){}}); _extractUrls=[];
+  const box=getExtractResultsBox();
+  box.innerHTML='';
+  if(!kept.length){ box.style.display='none'; return; }
+  box.style.display='block';
+
   const head=document.createElement('div');
-  head.className='merge-toolbar';
-  head.style.display='flex';
+  head.className='merge-toolbar'; head.style.display='flex';
   const cnt=document.createElement('span');
   cnt.className='merge-count';
   cnt.textContent=lang==='fr'
     ?`${kept.length} image${kept.length>1?'s':''}${skipped?` · ${skipped} écartée${skipped>1?'s':''}`:''}`
     :`${kept.length} image${kept.length>1?'s':''}${skipped?` · ${skipped} filtered`:''}`;
   const dlAll=document.createElement('button');
-  dlAll.className='btn-primary';
-  dlAll.style.cssText='padding:8px 14px;font-size:13px';
+  dlAll.className='btn-primary'; dlAll.style.cssText='padding:8px 14px;font-size:13px';
   dlAll.textContent=kept.length>1
     ?(lang==='fr'?'⬇ Tout télécharger (ZIP)':'⬇ Download all (ZIP)')
     :(lang==='fr'?'⬇ Télécharger':'⬇ Download');
   dlAll.addEventListener('click',async()=>{
     try{
-      if(kept.length===1)await dlJpg(kept[0].data,kept[0].name);
-      else await dlZip(kept.map(k=>({name:k.name,data:k.data})),`${stem}_images.zip`);
+      if(_extractKept.length===1) await dlJpg(_extractKept[0].data,_extractKept[0].name);
+      else await dlZip(_extractKept.map(k=>({name:k.name,data:k.data})),`${stem}_images.zip`);
     }catch(e){ if(e.name!=='AbortError') setStatus('❌ '+e.message,'err'); }
   });
-  head.appendChild(cnt);head.appendChild(dlAll);
+  head.appendChild(cnt); head.appendChild(dlAll);
   box.appendChild(head);
 
   const tip=document.createElement('div');
   tip.className='pg-card-tip';
   tip.textContent=lang==='fr'
-    ?'Score = probabilité que l\'image soit une vraie photo lisible. Cliquez une image pour la télécharger seule.'
-    :'Score = likelihood the image is a real, readable photo. Click an image to download it alone.';
+    ?'Score = probabilité que l\'image soit une vraie photo lisible.  ⬇ télécharge une image  ·  ✕ la retire.'
+    :'Score = likelihood the image is a real, readable photo.  ⬇ downloads an image  ·  ✕ removes it.';
   box.appendChild(tip);
 
-  // Grille
   const grid=document.createElement('div');
-  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:12px';
-  kept.forEach(k=>{
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:12px';
+  kept.forEach((k,idx)=>{
     const url=URL.createObjectURL(new Blob([k.data],{type:'image/jpeg'}));
     _extractUrls.push(url);
     const card=document.createElement('div');
-    card.style.cssText='position:relative;border:1px solid var(--il-bd-card,var(--bd));border-radius:12px;overflow:hidden;background:var(--il-bg-card,var(--sf));cursor:pointer;box-shadow:0 2px 10px #00000012';
-    card.title=lang==='fr'?'Télécharger cette image':'Download this image';
+    card.style.cssText='position:relative;border:1px solid var(--il-bd-card,var(--bd));border-radius:12px;overflow:hidden;background:var(--il-bg-card,var(--sf));box-shadow:0 2px 10px #00000012';
     const img=document.createElement('img');
-    img.src=url;img.loading='lazy';
-    img.style.cssText='width:100%;height:130px;object-fit:contain;display:block;background:repeating-conic-gradient(#00000008 0% 25%,transparent 0% 50%) 0/16px 16px';
-    // Badge score
+    img.src=url; img.loading='lazy';
+    img.style.cssText='width:100%;height:150px;object-fit:contain;display:block;background:repeating-conic-gradient(#00000008 0% 25%,transparent 0% 50%) 0/16px 16px';
+    // ⬇ télécharger (haut gauche)
+    const dl=document.createElement('button');
+    dl.className='md-btn'; dl.style.left='8px'; dl.innerHTML='⬇';
+    dl.title=lang==='fr'?'Télécharger cette image':'Download this image';
+    dl.addEventListener('click',async e=>{ e.stopPropagation();
+      try{ await dlJpg(k.data,k.name); }catch(err){ if(err.name!=='AbortError') setStatus('❌ '+err.message,'err'); }
+    });
+    // ✕ retirer (haut droite)
+    const rm=document.createElement('button');
+    rm.className='md-btn md-del'; rm.innerHTML='✕';
+    rm.title=lang==='fr'?'Retirer cette image':'Remove this image';
+    rm.addEventListener('click',e=>{ e.stopPropagation(); removeExtractImage(idx); });
+    // Badge lisibilité (bas de l'image)
     const col=k.score>=70?'#12965A':(k.score>=40?'#C77700':'#B4371F');
     const badge=document.createElement('span');
     badge.textContent=(lang==='fr'?'Lisibilité ':'Readability ')+k.score+'%';
-    badge.style.cssText=`position:absolute;top:8px;right:8px;background:${col};color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;box-shadow:0 2px 6px #0003`;
+    badge.style.cssText=`position:absolute;bottom:38px;left:8px;background:${col};color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;box-shadow:0 2px 6px #0003;pointer-events:none`;
     const foot=document.createElement('div');
     foot.textContent=k.name;
     foot.style.cssText='font-size:11px;color:var(--tx2);padding:6px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
-    card.addEventListener('click',async()=>{
-      try{ await dlJpg(k.data,k.name); }
-      catch(e){ if(e.name!=='AbortError') setStatus('❌ '+e.message,'err'); }
-    });
-    card.appendChild(img);card.appendChild(badge);card.appendChild(foot);
+    card.appendChild(img); card.appendChild(dl); card.appendChild(rm); card.appendChild(badge); card.appendChild(foot);
     grid.appendChild(card);
   });
   box.appendChild(grid);
