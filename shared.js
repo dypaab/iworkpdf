@@ -278,7 +278,7 @@ function renderTools(){
     c.setAttribute('role','button');
     c.setAttribute('tabindex','0');
     const realIdx=TOOLS.indexOf(tool);
-    const kbdNum=realIdx+1<=9?`<span class="kbd">${realIdx+1}</span>`:'';
+    const kbdNum=''; // numéros de raccourci retirés des cartes (désactivés pour le moment)
     c.innerHTML=`${toolIconHTML(tool.id,58)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
     const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
     c.onclick=go;
