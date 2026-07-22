@@ -207,9 +207,13 @@ async function runExtract(activeFiles){
         outBytes=bytes;
       }else{
         // Autres encodages : pixels décodés par PDF.js → JPEG ré-encodé.
+        // On CONSOMME chaque image décodée une seule fois (flag _used) : sinon,
+        // deux images de mêmes dimensions renverraient toujours la 1re → une
+        // photo apparaîtrait à la place d'une autre / en double.
         const list=await getDecoded();
-        const m=list.find(im=>im.width===w&&im.height===h);
-        if(!m)continue;
+        const mIdx=list.findIndex(im=>!im._used && im.width===w && im.height===h);
+        if(mIdx<0)continue;
+        const m=list[mIdx]; m._used=true;
         const canvas=document.createElement('canvas');
         canvas.width=w;canvas.height=h;
         const ctx=canvas.getContext('2d');
