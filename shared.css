@@ -38,9 +38,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .badge{display:inline-flex;align-items:center;gap:6px;background:var(--gs);border:1px solid #00B4D840;color:var(--cy);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
 .badge::before{content:'●';font-size:8px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(36px,6vw,72px);font-weight:700;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px}
+.hero h1{font-size:clamp(30px,4vw,50px);font-weight:700;line-height:1.12;letter-spacing:-1px;margin-bottom:18px}
 .grad{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:20px;color:var(--tx2);max-width:560px;margin:0 auto 32px;line-height:1.65}
+.hero p{font-size:17px;color:var(--tx2);max-width:520px;margin:0 auto 28px;line-height:1.6}
 .hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn-primary{background:var(--gr);border:none;color:#fff;padding:14px 32px;border-radius:var(--r);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 20px #00B4D840}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px #00B4D860}
@@ -436,7 +436,9 @@ nav{-webkit-backdrop-filter:blur(20px)}
 }
 
 /* ── HERO 2 COLONNES + ILLUSTRATION "100% LOCAL" ──────────── */
-.hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;max-width:1060px;margin:0 auto;text-align:left}
+.hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:start;max-width:1060px;margin:0 auto;text-align:left}
+/* L'illustration s'aligne verticalement sur le bloc titre (même hauteur de départ). */
+.hero-illu{margin-top:6px}
 .hero-copy .badge{display:inline-flex}
 .hero-illu svg{width:100%;height:auto;display:block}
 .illu-flow{animation:illuFlow 1.2s linear infinite}
