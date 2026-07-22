@@ -55,7 +55,7 @@ const T={
     crop_apply:'✂ Crop',repair_apply:'🔧 Repair',
     repair_ok:'PDF repaired successfully',
     dragging_hint:'Drop a PDF here to start',
-    shortcut_hint:'⌨️ Shortcuts: Ctrl+1-9 to open tools',
+    shortcut_hint:'⌨️ Shortcut: press 1-9 to open a tool',
     file_info:'File info',
     recent:'Recent files',no_recent:'No recent files',
     tool_count:'Files processed',
@@ -80,7 +80,7 @@ const T={
     crop_apply:'✂ Rogner',repair_apply:'🔧 Réparer',
     repair_ok:'PDF réparé avec succès',
     dragging_hint:'Déposez un PDF ici pour commencer',
-    shortcut_hint:'⌨️ Raccourcis: Ctrl+1-9 pour ouvrir les outils',
+    shortcut_hint:'⌨️ Raccourci : appuyez sur 1-9 pour ouvrir un outil',
     file_info:'Infos fichier',
     recent:'Fichiers récents',no_recent:'Aucun fichier récent',
     tool_count:'Fichiers traités',
@@ -278,7 +278,7 @@ function renderTools(){
     c.setAttribute('role','button');
     c.setAttribute('tabindex','0');
     const realIdx=TOOLS.indexOf(tool);
-    const kbdNum=realIdx+1<=9?`<span class="kbd">Ctrl+${realIdx+1}</span>`:'';
+    const kbdNum=realIdx+1<=9?`<span class="kbd">${realIdx+1}</span>`:'';
     c.innerHTML=`${toolIconHTML(tool.id,58)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
     const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
     c.onclick=go;
@@ -338,6 +338,28 @@ function relocateTrustBanner(){
     tb.classList.add('relocated');
     ft.parentNode.insertBefore(tb,ft);
   }
+}
+
+// Raccourcis clavier : touches 1-9 SEULES (Ctrl+chiffre est réservé au
+// navigateur pour changer d'onglet → impossible à intercepter de façon fiable).
+// Ouvre le Nième outil. Ignoré si on saisit dans un champ ou si un modificateur
+// est enfoncé.
+let _shortcutsBound=false;
+function initShortcuts(){
+  if(_shortcutsBound)return; _shortcutsBound=true;
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey||e.shiftKey)return;
+    const el=e.target, tag=(el&&el.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tag==='select'||(el&&el.isContentEditable))return;
+    if(e.key>='1'&&e.key<='9'){
+      const tool=TOOLS[parseInt(e.key,10)-1];
+      if(tool){
+        e.preventDefault();
+        if(tool.migrated){ window.location.href=`/tools/${tool.id}`; }
+        else if(typeof openTool==='function'){ openTool(tool.id); }
+      }
+    }
+  });
 }
 
 function applyLang(){
