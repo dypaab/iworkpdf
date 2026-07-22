@@ -285,8 +285,8 @@ function renderExtractResults(kept,stem,skipped){
   const dlAll=document.createElement('button');
   dlAll.className='btn-primary'; dlAll.style.cssText='padding:8px 14px;font-size:13px';
   dlAll.textContent=kept.length>1
-    ?(lang==='fr'?'⬇ Tout télécharger (ZIP)':'⬇ Download all (ZIP)')
-    :(lang==='fr'?'⬇ Télécharger':'⬇ Download');
+    ?(lang==='fr'?'Tout télécharger (ZIP)':'Download all (ZIP)')
+    :(lang==='fr'?'Télécharger':'Download');
   dlAll.addEventListener('click',async()=>{
     try{
       if(_extractKept.length===1) await dlJpg(_extractKept[0].data,_extractKept[0].name);
@@ -299,8 +299,8 @@ function renderExtractResults(kept,stem,skipped){
   const tip=document.createElement('div');
   tip.className='pg-card-tip';
   tip.textContent=lang==='fr'
-    ?'Score = probabilité que l\'image soit une vraie photo lisible.  ⬇ télécharge une image  ·  ✕ la retire.'
-    :'Score = likelihood the image is a real, readable photo.  ⬇ downloads an image  ·  ✕ removes it.';
+    ?'Score = probabilité que l\'image soit une vraie photo lisible. Icône de gauche : retirer · icône de droite : télécharger.'
+    :'Score = likelihood the image is a real, readable photo. Left icon: remove · right icon: download.';
   box.appendChild(tip);
 
   const grid=document.createElement('div');
@@ -313,18 +313,20 @@ function renderExtractResults(kept,stem,skipped){
     const img=document.createElement('img');
     img.src=url; img.loading='lazy';
     img.style.cssText='width:100%;height:150px;object-fit:contain;display:block;background:repeating-conic-gradient(#00000008 0% 25%,transparent 0% 50%) 0/16px 16px';
-    // ⬇ télécharger (haut gauche)
+    const X_SVG='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    const DL_SVG='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11M8 10l4 4 4-4M5 20h14"/></svg>';
+    // ✕ retirer (haut GAUCHE)
+    const rm=document.createElement('button');
+    rm.className='md-btn'; rm.style.left='8px'; rm.innerHTML=X_SVG;
+    rm.title=lang==='fr'?'Retirer cette image':'Remove this image';
+    rm.addEventListener('click',e=>{ e.stopPropagation(); removeExtractImage(idx); });
+    // Télécharger (haut DROITE)
     const dl=document.createElement('button');
-    dl.className='md-btn'; dl.style.left='8px'; dl.innerHTML='⬇';
+    dl.className='md-btn'; dl.style.right='8px'; dl.innerHTML=DL_SVG;
     dl.title=lang==='fr'?'Télécharger cette image':'Download this image';
     dl.addEventListener('click',async e=>{ e.stopPropagation();
       try{ await dlJpg(k.data,k.name); }catch(err){ if(err.name!=='AbortError') setStatus('❌ '+err.message,'err'); }
     });
-    // ✕ retirer (haut droite)
-    const rm=document.createElement('button');
-    rm.className='md-btn md-del'; rm.innerHTML='✕';
-    rm.title=lang==='fr'?'Retirer cette image':'Remove this image';
-    rm.addEventListener('click',e=>{ e.stopPropagation(); removeExtractImage(idx); });
     // Badge lisibilité (bas de l'image)
     const col=k.score>=70?'#12965A':(k.score>=40?'#C77700':'#B4371F');
     const badge=document.createElement('span');
