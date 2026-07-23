@@ -1322,7 +1322,7 @@ function getPrivacyEN(){
 
     <div class="privacy-section">
       <h3>📬 Contact</h3>
-      <p>Questions about your privacy? Contact us at <a href="mailto:privacy@yendyx.com" style="color:var(--cy)">privacy@yendyx.com</a></p>
+      <p>Questions about your privacy? Contact us at <a href="mailto:contact@yendyx.com" style="color:var(--cy)">contact@yendyx.com</a></p>
       <p style="margin-top:8px;color:var(--tx3);font-size:11px">Last updated: June 2025 · iWorkPDF by Yendyx</p>
     </div>`;
 }
@@ -1380,7 +1380,7 @@ function getPrivacyFR(){
 
     <div class="privacy-section">
       <h3>📬 Contact</h3>
-      <p>Questions sur votre confidentialité ? Contactez-nous à <a href="mailto:privacy@yendyx.com" style="color:var(--cy)">privacy@yendyx.com</a></p>
+      <p>Questions sur votre confidentialité ? Contactez-nous à <a href="mailto:contact@yendyx.com" style="color:var(--cy)">contact@yendyx.com</a></p>
       <p style="margin-top:8px;color:var(--tx3);font-size:11px">Dernière mise à jour : Juin 2025 · iWorkPDF by Yendyx</p>
     </div>`;
 }
