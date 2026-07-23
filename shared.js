@@ -169,10 +169,10 @@ const _thumbPdfCache = new WeakMap();
 const TRUST_I18N = {
   en:{
     tb1:"Zero upload", tb1s:"by default", tb2:"compliant",
-    tb3:"Open architecture", tb4:"Auto-delete 48h", tb5:"No ads, no tracking",
+    tb3:"Open architecture", tb4:"Auto-delete 48h", tb5:"No ads, no cookies",
     privacy_btn:"Privacy Policy",
     sb1:"Your files stay on your device", sb2:"No account required",
-    sb3:"No ads, no tracking", sb4:"Free forever", sb5:"Open and transparent",
+    sb3:"No ads, no cookies", sb4:"Free forever", sb5:"Open and transparent",
     pr1:"100% In-browser", pr1s:"pdf-lib.js processes files locally",
     pr2:"No server processing", pr2s:"Files never touch our servers",
     pr3:"Auto-deleted", pr3s:"Cloud files deleted after 48h",
@@ -189,7 +189,7 @@ const TRUST_I18N = {
       {q:"Do my files get uploaded to your servers?",
        a:"No. By default, every PDF operation runs entirely in your browser using pdf-lib.js. Your files never leave your device. The only exception is if you explicitly choose Cloud 48h to share a file, and even then, it is deleted automatically after 48 hours."},
       {q:"Do you track what I do or what files I process?",
-       a:"No. We have zero analytics, no cookies, no advertising trackers. We do not know what files you process, how many pages they have, or anything about their content. Your activity stays entirely private."},
+       a:"We only collect anonymous, aggregated usage statistics (which tool is opened, time spent) via a random local identifier — no cookies, no advertising trackers, no third parties, and never any personal data or file content. We cannot know who you are, what your files contain, or link any activity to a person."},
       {q:"Can I use iWorkPDF without creating an account?",
        a:"Yes, completely. Every tool works without any account. The account is only needed if you want to save a cloud link for 48h sharing. You can ignore it entirely."},
       {q:"What happens if I use the Cloud 48h option?",
@@ -202,10 +202,10 @@ const TRUST_I18N = {
   },
   fr:{
     tb1:"Zero envoi", tb1s:"par defaut", tb2:"conforme",
-    tb3:"Architecture ouverte", tb4:"Suppression auto 48h", tb5:"Sans pub, sans tracking",
+    tb3:"Architecture ouverte", tb4:"Suppression auto 48h", tb5:"Sans pub, sans cookie",
     privacy_btn:"Politique de confidentialite",
     sb1:"Vos fichiers restent sur votre appareil", sb2:"Sans compte requis",
-    sb3:"Sans pub, sans tracking", sb4:"Gratuit pour toujours", sb5:"Ouvert et transparent",
+    sb3:"Sans pub, sans cookie", sb4:"Gratuit pour toujours", sb5:"Ouvert et transparent",
     pr1:"100% dans le navigateur", pr1s:"pdf-lib.js traite localement",
     pr2:"Aucun serveur", pr2s:"Vos fichiers ne touchent jamais nos serveurs",
     pr3:"Auto-supprime", pr3s:"Fichiers cloud supprimes apres 48h",
@@ -222,7 +222,7 @@ const TRUST_I18N = {
       {q:"Mes fichiers sont-ils envoyes sur vos serveurs ?",
        a:"Non. Par defaut, chaque operation PDF fonctionne entierement dans votre navigateur via pdf-lib.js. Vos fichiers ne quittent jamais votre appareil. La seule exception est si vous choisissez explicitement Cloud 48h pour partager un fichier. Meme dans ce cas, il est supprime automatiquement apres 48 heures."},
       {q:"Tracez-vous ce que je fais ou quels fichiers je traite ?",
-       a:"Non. Nous avons zero analytics, aucun cookie, aucun tracker publicitaire. Nous ne savons pas quels fichiers vous traitez, combien de pages ils ont, ni rien sur leur contenu. Votre activite reste entierement privee."},
+       a:"Nous collectons uniquement des statistiques d'usage anonymes et agregees (quel outil est ouvert, temps passe) via un identifiant local aleatoire — sans cookie, sans tracker publicitaire, sans tiers, et jamais aucune donnee personnelle ni contenu de fichier. Nous ne pouvons pas savoir qui vous etes, ce que contiennent vos fichiers, ni relier une activite a une personne."},
       {q:"Puis-je utiliser iWorkPDF sans creer de compte ?",
        a:"Oui, completement. Chaque outil fonctionne sans compte. Le compte est necessaire uniquement si vous voulez sauvegarder un lien cloud de partage 48h. Vous pouvez totalement ignorer cette option."},
       {q:"Que se passe-t-il avec le mode Cloud 48h ?",
@@ -1515,6 +1515,7 @@ function earlyReturn(msg,type='err'){
 async function run(id){
   if(isProcessing)return;
   if(!activeFiles.length){setStatus(t('nofile'),'err');return;}
+  try{trackToolRun(id);}catch(_){}
   isProcessing=true;
   document.querySelectorAll('#ws-body .btn-primary, #tool-body .btn-primary').forEach(b=>b.disabled=true);
   toggleActionSpinner(true);
@@ -1762,25 +1763,58 @@ function copyLink(){
   navigator.clipboard?.writeText(document.getElementById('share-link-inp')?.value||'').catch(()=>{});
   setStatus(t('linkcopied'),'ok');
 }
-// ── ANALYTICS PRIVACY-FIRST ────────────────────────────────
-// Zéro cookie, zéro fingerprinting, zéro tiers.
-// Stocke uniquement : page URL (sans query), referrer domain, langue, outil.
-// Conforme RGPD sans consentement (donnée non personnelle).
-async function trackPageView(toolId){
-  if(!sb)return;
+// ── ANALYTICS 100% ANONYMES ────────────────────────────────
+// AUCUNE donnée personnelle : pas d'email, pas d'IP, pas de compte lié.
+// Seulement un identifiant aléatoire (localStorage), la langue, le type
+// d'appareil, l'outil et la durée. Zéro cookie, zéro fingerprinting, zéro
+// tiers. Désactivé en Mode Confidentialité Maximale. Table jamais exposée
+// (insertion via fonction edge). Agrégats visibles par l'admin uniquement.
+const _VID_KEY='iworkpdf_vid';
+function getVisitorId(){
   try{
-    const payload={
-      page: window.location.pathname,
-      tool: toolId||null,
-      referrer: document.referrer ? new URL(document.referrer).hostname : null,
-      lang: navigator.language?.substring(0,2)||'en',
-      ua_type: /Mobile|Android|iPhone/.test(navigator.userAgent)?'mobile':'desktop',
-      ts: new Date().toISOString(),
-    };
-    // On utilise une fonction edge Supabase pour ne pas exposer la table directement
-    await sb.functions.invoke('track-pageview', {body: payload}).catch(()=>{});
-  }catch{}
+    let v=localStorage.getItem(_VID_KEY);
+    if(!v){ v=(crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)); localStorage.setItem(_VID_KEY,v); }
+    return v;
+  }catch(_){ return 'anon'; }
 }
+function _analyticsAllowed(){
+  return typeof SUPABASE_URL!=='undefined' && SUPABASE_URL
+    && !(typeof privacyMode!=='undefined' && privacyMode);
+}
+function trackEvent(event, extra){
+  if(!_analyticsAllowed())return;
+  try{
+    const payload=Object.assign({
+      visitor_id:getVisitorId(),
+      event:event,
+      lang:(navigator.language||'en').substring(0,2),
+      ua_type:/Mobile|Android|iPhone/.test(navigator.userAgent)?'mobile':'desktop'
+    }, extra||{});
+    // keepalive : l'envoi survit à la fermeture de l'onglet (pour la durée).
+    fetch(`${SUPABASE_URL}/functions/v1/track`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
+      body:JSON.stringify(payload),
+      keepalive:true
+    }).catch(()=>{});
+  }catch(_){}
+}
+let _pageStart=Date.now(), _durationSent=false, _pageTool=null;
+function trackPageView(toolId){
+  _pageTool=toolId||null; _pageStart=Date.now(); _durationSent=false;
+  trackEvent('pageview',{tool:_pageTool});
+}
+function trackToolRun(toolId){ trackEvent('tool_run',{tool:toolId||null}); }
+function _sendDuration(){
+  if(_durationSent)return; _durationSent=true;
+  const ms=Date.now()-_pageStart;
+  if(ms>=1500) trackEvent('duration',{tool:_pageTool, duration_ms:ms});
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden') _sendDuration();
+  else { _pageStart=Date.now(); _durationSent=false; }
+});
+window.addEventListener('pagehide', _sendDuration);
 
 // ── COMPTE : mot de passe oublié / suppression / CONTACT ──────
 async function doForgotPassword(){

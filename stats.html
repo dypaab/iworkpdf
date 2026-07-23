@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Stats — iWorkPDF (privé)</title>
+<link rel="icon" type="image/png" href="/logo_seul_sans_fond.png"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://*.supabase.io; img-src 'self' data:; object-src 'none'; base-uri 'self';"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#0D1117;--sf:#161B22;--sf2:#1C2230;--bd:#2A3140;--tx:#E6EDF3;--tx2:#9DA7B3;--tx3:#6B7686;--cy:#00B4D8;--gr:linear-gradient(135deg,#00B4D8,#0077FF)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--tx);padding:28px 20px;max-width:1100px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:var(--tx2);font-size:14px;margin-bottom:24px}
+  a{color:var(--cy)}
+  .card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:18px}
+  .login{max-width:360px;margin:60px auto}
+  .login input{width:100%;padding:12px 14px;margin:6px 0;background:var(--sf2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-family:inherit;font-size:15px}
+  .btn{width:100%;padding:13px;margin-top:8px;border:none;border-radius:10px;background:var(--gr);color:#fff;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit}
+  .btn.ghost{background:none;border:1px solid var(--bd);color:var(--tx2)}
+  .msg{font-size:13px;margin-top:10px;min-height:18px}
+  .msg.err{color:#F87171}.msg.ok{color:#34D399}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+  .kpi{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:18px}
+  .kpi .n{font-size:30px;font-weight:700;letter-spacing:-.5px}
+  .kpi .l{color:var(--tx2);font-size:13px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--bd);font-size:14px}
+  th{color:var(--tx3);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  td.num,th.num{text-align:right}
+  .bar{height:6px;border-radius:4px;background:var(--gr);display:inline-block;vertical-align:middle;margin-left:8px}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+  select{padding:8px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-family:inherit}
+  .note{color:var(--tx3);font-size:12px;margin-top:18px;line-height:1.6}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+
+<div id="login" class="login card hidden">
+  <h1 style="font-size:20px">Dashboard privé</h1>
+  <p class="sub" style="margin-bottom:12px">Réservé à l'administrateur (contact@yendyx.com).</p>
+  <input id="email" type="email" placeholder="Email" autocomplete="email"/>
+  <input id="pwd" type="password" placeholder="Mot de passe" autocomplete="current-password"/>
+  <button class="btn" id="loginBtn">Se connecter</button>
+  <div class="msg" id="loginMsg"></div>
+</div>
+
+<div id="dash" class="hidden">
+  <div class="toolbar">
+    <h1 style="flex:1">📊 iWorkPDF — Statistiques</h1>
+    <select id="days">
+      <option value="7">7 jours</option>
+      <option value="30" selected>30 jours</option>
+      <option value="90">90 jours</option>
+      <option value="365">1 an</option>
+    </select>
+    <button class="btn ghost" style="width:auto;padding:8px 14px;margin:0" id="refreshBtn">Rafraîchir</button>
+    <button class="btn ghost" style="width:auto;padding:8px 14px;margin:0" id="logoutBtn">Déconnexion</button>
+  </div>
+  <p class="sub">Données 100% anonymes — aucun email, aucune IP, aucun compte lié. <span id="who" style="color:var(--tx3)"></span></p>
+
+  <div class="grid" id="kpis"></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3 style="margin:0 0 6px;font-size:16px">Par outil</h3>
+    <div id="toolsTable"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin:0 0 6px;font-size:16px">Activité par jour</h3>
+    <div id="dailyTable"></div>
+  </div>
+
+  <p class="note">🔒 Ces statistiques sont visibles uniquement par toi (verrouillées sur ton compte admin). Elles ne contiennent aucune donnée personnelle : chaque visiteur est un identifiant aléatoire, sans lien avec une personne.</p>
+</div>
+
+<div id="denied" class="login card hidden">
+  <h1 style="font-size:20px">Accès refusé</h1>
+  <p class="sub">Ce compte n'est pas administrateur.</p>
+  <button class="btn ghost" id="logoutBtn2">Se déconnecter</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://iispzrdathkixcgriyrr.supabase.co';
+const SUPABASE_KEY='sb_publishable_quzgA4pxNzzzqntQOF6WoQ_3ZnFB36C';
+const ADMIN='contact@yendyx.com';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+const show=(id,on)=>$(id).classList.toggle('hidden',!on);
+
+function fmtDur(ms){
+  ms=ms||0; const s=Math.round(ms/1000);
+  if(s<60)return s+' s';
+  const m=Math.round(s/60); if(m<60)return m+' min';
+  const h=Math.floor(m/60), mm=m%60; return h+' h '+(mm?mm+' min':'');
+}
+function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+
+async function route(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){ show('login',true);show('dash',false);show('denied',false);return; }
+  const email=(session.user.email||'').toLowerCase();
+  if(email!==ADMIN){ show('login',false);show('dash',false);show('denied',true);return; }
+  show('login',false);show('denied',false);show('dash',true);
+  $('who').textContent='· connecté : '+email;
+  loadStats();
+}
+
+async function loadStats(){
+  const days=parseInt($('days').value,10)||30;
+  $('kpis').innerHTML='<div class="kpi"><div class="n">…</div><div class="l">Chargement</div></div>';
+  const {data,error}=await sb.functions.invoke('stats-summary',{body:{days}});
+  if(error||!data||data.error){ $('kpis').innerHTML='<div class="kpi"><div class="n">—</div><div class="l">Erreur : '+esc((data&&data.error)||(error&&error.message)||'inconnue')+'</div></div>'; return; }
+  render(data);
+}
+
+function render(d){
+  const avg=d.avg_time_per_visitor_ms||0;
+  $('kpis').innerHTML=[
+    ['Visiteurs (anonymes)', (d.visitors||0).toLocaleString('fr')],
+    ['Pages vues', (d.pageviews||0).toLocaleString('fr')],
+    ['Outils lancés', (d.tool_runs||0).toLocaleString('fr')],
+    ['Temps total', fmtDur(d.total_time_ms)],
+    ['Temps moyen / visiteur', fmtDur(avg)]
+  ].map(([l,n])=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+
+  const tools=(d.tools||[]).slice().sort((a,b)=>(b.runs-a.runs)||(b.pageviews-a.pageviews));
+  const maxRuns=Math.max(1,...tools.map(t=>t.runs||0));
+  $('toolsTable').innerHTML = tools.length ? `<table>
+    <thead><tr><th>Outil</th><th class="num">Lancements</th><th class="num">Vues</th><th class="num">Temps</th></tr></thead>
+    <tbody>${tools.map(t=>`<tr>
+      <td>${esc(t.tool)}</td>
+      <td class="num">${(t.runs||0).toLocaleString('fr')}<span class="bar" style="width:${Math.round((t.runs||0)/maxRuns*80)}px"></span></td>
+      <td class="num">${(t.pageviews||0).toLocaleString('fr')}</td>
+      <td class="num">${fmtDur(t.time_ms)}</td>
+    </tr>`).join('')}</tbody></table>` : '<p class="sub">Aucune donnée sur la période.</p>';
+
+  const daily=(d.daily||[]).slice();
+  $('dailyTable').innerHTML = daily.length ? `<table>
+    <thead><tr><th>Jour</th><th class="num">Visiteurs</th><th class="num">Pages vues</th></tr></thead>
+    <tbody>${daily.map(x=>`<tr><td>${esc(x.day)}</td><td class="num">${x.visitors}</td><td class="num">${x.pageviews}</td></tr>`).join('')}</tbody></table>` : '<p class="sub">Aucune donnée sur la période.</p>';
+}
+
+$('loginBtn').addEventListener('click', async()=>{
+  const m=$('loginMsg'); m.className='msg'; m.textContent='Connexion…';
+  const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('pwd').value});
+  if(error){ m.className='msg err'; m.textContent=error.message; return; }
+  m.className='msg ok'; m.textContent='OK'; route();
+});
+['pwd'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click();}));
+$('refreshBtn').addEventListener('click',loadStats);
+$('days').addEventListener('change',loadStats);
+$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();route();});
+$('logoutBtn2').addEventListener('click',async()=>{await sb.auth.signOut();route();});
+
+route();
+</script>
+</body>
+</html>
