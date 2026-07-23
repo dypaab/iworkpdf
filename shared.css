@@ -138,6 +138,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .h-meta{font-size:11px;color:var(--tx2);margin-top:2px}
 .h-exp{font-size:11px;color:var(--wa)}
 .btn-dl{background:var(--gr);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.h-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.btn-share{background:none;border:1px solid var(--bd);color:var(--cy);padding:6px 12px;border-radius:20px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.btn-share:hover{border-color:var(--cy);background:var(--gs)}
 .audit-item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd);font-size:12px;flex-wrap:wrap}
 .audit-action{border-radius:6px;padding:2px 8px;font-weight:600;font-size:11px;white-space:nowrap;border:1px solid}
 .audit-meta{color:var(--tx2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
