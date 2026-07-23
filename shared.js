@@ -1956,6 +1956,16 @@ function initExtras(){
     b.addEventListener('click',doDeleteAccount);
     logoutBtn.insertAdjacentElement('afterend',b);
   }
+  // Lien vers le dashboard stats privé (l'accès est verrouillé côté serveur :
+  // seuls les comptes de la table `admins` voient réellement les données).
+  if(logoutBtn && !document.getElementById('stats-link')){
+    const s=document.createElement('a');
+    s.id='stats-link'; s.href='/stats'; s.target='_blank'; s.rel='noopener';
+    s.className='btn-ghost full';
+    s.style.cssText='margin-top:8px;display:block;text-align:center;text-decoration:none';
+    s.textContent=lang==='fr'?'📊 Statistiques':'📊 Statistics';
+    logoutBtn.insertAdjacentElement('afterend',s);
+  }
   const fp=document.getElementById('footer-privacy-btn');
   if(fp && !document.getElementById('contact-link')){
     const c=document.createElement('button');
