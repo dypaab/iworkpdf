@@ -550,7 +550,7 @@ async function loadFiles(){
     item.className='h-item';
     item.innerHTML=`<div>📄</div><div class="h-info"><div class="h-name">${Security.escHtml(f.filename)}</div><div class="h-meta">${Security.escHtml(f.tool_used)} · ${(f.file_size/1024).toFixed(0)} Ko</div><div class="h-exp">⏱ ${t('expiresin')} ${h}h</div></div><div class="h-actions"><button class="btn-share" title="${lang==='fr'?'Copier un lien de partage temporaire':'Copy a temporary share link'}">🔗 ${lang==='fr'?'Partager':'Share'}</button><button class="btn-dl">${t('download')}</button></div>`;
     item.querySelector('.btn-dl').addEventListener('click',()=>dlSigned(f.file_path,f.filename,f.id));
-    item.querySelector('.btn-share').addEventListener('click',()=>shareFile(f.file_path,f.filename,f.expires_at));
+    item.querySelector('.btn-share').addEventListener('click',()=>shareFile(f.id,f.filename,f.expires_at));
     container.appendChild(item);
   });
   el.innerHTML='';el.appendChild(container);
@@ -591,22 +591,21 @@ async function dlSigned(path,filename,fileId){
 // Lien de partage TEMPORAIRE : URL signée accessible par quiconque a le lien,
 // valable jusqu'à l'expiration du fichier (max 48h). Rien n'est rendu public de
 // façon permanente ; le lien expire tout seul.
-async function shareFile(path, filename, expiresAt){
+async function shareFile(fileId, filename, expiresAt){
   try{
-    const remain = Math.max(300, Math.floor((new Date(expiresAt).getTime() - Date.now())/1000));
-    const ttl = Math.min(remain, 172800); // plafonné à 48h
-    const {data,error}=await sb.storage.from('pdf-files').createSignedUrl(path, ttl);
-    if(error) throw error;
+    // Lien BRANDÉ vers une page de téléchargement (le destinataire reste sur
+    // iWorkPDF, voit le nom du fichier + l'expiration). Le fichier n'est servi
+    // que via une URL signée courte générée à la volée par la page.
+    const link = location.origin + '/download?id=' + encodeURIComponent(fileId);
+    const h = Math.max(0, Math.round((new Date(expiresAt).getTime() - Date.now())/3600000));
     let copied=false;
-    try{ await navigator.clipboard.writeText(data.signedUrl); copied=true; }catch(_){}
-    const hh=Math.max(1, Math.round(ttl/3600));
+    try{ await navigator.clipboard.writeText(link); copied=true; }catch(_){}
     if(copied){
-      showToast((lang==='fr'?'🔗 Lien de partage copié — valable ~':'🔗 Share link copied — valid ~')+hh+'h', 'ok');
+      showToast((lang==='fr'?'🔗 Lien de partage copié — valable ~':'🔗 Share link copied — valid ~')+h+'h', 'ok');
     }else{
-      // Presse-papiers indisponible : on montre le lien à copier à la main.
-      prompt(lang==='fr'?'Lien de partage (valable ~'+hh+'h) :':'Share link (valid ~'+hh+'h):', data.signedUrl);
+      prompt(lang==='fr'?'Lien de partage (valable ~'+h+'h) :':'Share link (valid ~'+h+'h):', link);
     }
-    try{ await audit('share', null, {filename}); }catch(_){}
+    try{ await audit('share', fileId, {filename}); }catch(_){}
   }catch(e){ showToast(e.message||'Erreur', 'err'); }
 }
 
