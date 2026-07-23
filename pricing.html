@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
 <meta charset="UTF-8"/>
 <link rel="manifest" href="/manifest.json"/>
@@ -163,7 +163,7 @@
 // Thème persisté
 try{
   const saved=localStorage.getItem('iworkpdf_theme');
-  if(saved==='light'){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');}
+  if(saved==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}
 }catch{}
 </script>
 </body>

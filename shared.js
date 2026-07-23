@@ -1950,23 +1950,29 @@ function initExtras(){
     loginBtn.insertAdjacentElement('afterend',a);
   }
   const logoutBtn=document.getElementById('logout-btn');
-  if(logoutBtn && !document.getElementById('del-acct-btn')){
-    const b=document.createElement('button');
-    b.id='del-acct-btn';b.type='button';b.className='btn-ghost full';
-    b.style.cssText='margin-top:8px;color:var(--er);border-color:#EF444455';
-    b.textContent=lang==='fr'?'Supprimer mon compte':'Delete my account';
-    b.addEventListener('click',doDeleteAccount);
-    logoutBtn.insertAdjacentElement('afterend',b);
-  }
-  // Lien vers le dashboard stats privé (l'accès est verrouillé côté serveur :
-  // seuls les comptes de la table `admins` voient réellement les données).
+  // Statistiques AU-DESSUS de « Se déconnecter » (nav de compte). Accès
+  // verrouillé côté serveur (table `admins`) : les non-admins voient « accès refusé ».
   if(logoutBtn && !document.getElementById('stats-link')){
     const s=document.createElement('a');
     s.id='stats-link'; s.href='/stats'; s.target='_blank'; s.rel='noopener';
     s.className='btn-ghost full';
-    s.style.cssText='margin-top:8px;display:block;text-align:center;text-decoration:none';
+    s.style.cssText='display:block;text-align:center;text-decoration:none;margin-bottom:8px';
     s.textContent=lang==='fr'?'📊 Statistiques':'📊 Statistics';
-    logoutBtn.insertAdjacentElement('afterend',s);
+    logoutBtn.insertAdjacentElement('beforebegin',s);
+  }
+  // Zone DANGER nettement séparée (séparateur + lien discret) pour éviter de
+  // confondre « Supprimer mon compte » avec « Se déconnecter ».
+  if(logoutBtn && !document.getElementById('del-acct-zone')){
+    const wrap=document.createElement('div');
+    wrap.id='del-acct-zone';
+    wrap.style.cssText='margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);text-align:center';
+    const b=document.createElement('button');
+    b.id='del-acct-btn';b.type='button';
+    b.style.cssText='background:none;border:none;color:var(--er,#EF4444);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;opacity:.85';
+    b.textContent=lang==='fr'?'Supprimer mon compte':'Delete my account';
+    b.addEventListener('click',doDeleteAccount);
+    wrap.appendChild(b);
+    logoutBtn.insertAdjacentElement('afterend',wrap);
   }
   const fp=document.getElementById('footer-privacy-btn');
   if(fp && !document.getElementById('contact-link')){
