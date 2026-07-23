@@ -1499,11 +1499,13 @@ function acceptCookies(){
 }
 
 function initTrust(){
-  // Confidentialité maximale ACTIVÉE par défaut ; désactivée seulement si
-  // l'utilisateur l'a explicitement coupée (valeur '0' en localStorage).
+  // Mode Confidentialité Maximale = OPT-IN (désactivé par défaut) : activé
+  // seulement si l'utilisateur l'a explicitement coché ('1' en localStorage).
+  // Par défaut : cloud + stats ANONYMES autorisés (fichiers jamais envoyés sans
+  // action de l'utilisateur). Le mode ON coupe tout contact serveur (local only).
   try{
-    privacyMode = localStorage.getItem('iworkpdf_privacy_mode') !== '0';
-  }catch{ privacyMode = true; }
+    privacyMode = localStorage.getItem('iworkpdf_privacy_mode') === '1';
+  }catch{ privacyMode = false; }
   // Refléter l'état sur l'UI déjà rendue (la barre est construite avant initTrust).
   const _pm=document.getElementById('pm-checkbox'); if(_pm) _pm.checked=privacyMode;
   if(privacyMode && saveMode==='cloud') saveMode='local';
