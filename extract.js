@@ -122,6 +122,7 @@ async function runExtract(activeFiles){
 
   // Décodage PDF.js paresseux (images non-JPEG)
   let _decoded=null;
+  const _usedDecoded=new Set(); // index déjà consommés (évite les doublons SANS muter les objets PDF.js)
   async function getDecoded(){
     if(_decoded)return _decoded;
     _decoded=[];
@@ -188,9 +189,17 @@ async function runExtract(activeFiles){
         outBytes=bytes;
       }else{
         // Autres encodages : pixels décodés par PDF.js → JPEG ré-encodé.
+        // On consomme chaque image décodée une seule fois via un Set d'index
+        // EXTERNE (on ne modifie jamais l'objet PDF.js — c'est ce qui plantait) :
+        // sinon deux images de mêmes dimensions renvoient toujours la 1re → doublon.
         const list=await getDecoded();
-        const m=list.find(im=>im.width===w&&im.height===h);
-        if(!m)continue;
+        let mIdx=-1;
+        for(let li=0; li<list.length; li++){
+          if(!_usedDecoded.has(li) && list[li].width===w && list[li].height===h){ mIdx=li; break; }
+        }
+        if(mIdx<0)continue;
+        _usedDecoded.add(mIdx);
+        const m=list[mIdx];
         const canvas=document.createElement('canvas');
         canvas.width=w;canvas.height=h;
         const ctx=canvas.getContext('2d');
