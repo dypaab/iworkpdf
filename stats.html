@@ -88,7 +88,8 @@
 <script>
 const SUPABASE_URL='https://iispzrdathkixcgriyrr.supabase.co';
 const SUPABASE_KEY='sb_publishable_quzgA4pxNzzzqntQOF6WoQ_3ZnFB36C';
-const ADMIN='contact@yendyx.com';
+// L'autorisation admin est décidée par le SERVEUR (table `admins` dans Supabase),
+// jamais par le client → aucun email d'admin n'apparaît dans ce code.
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 const show=(id,on)=>$(id).classList.toggle('hidden',!on);
@@ -104,10 +105,9 @@ function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>'
 async function route(){
   const {data:{session}}=await sb.auth.getSession();
   if(!session){ show('login',true);show('dash',false);show('denied',false);return; }
-  const email=(session.user.email||'').toLowerCase();
-  if(email!==ADMIN){ show('login',false);show('dash',false);show('denied',true);return; }
+  // C'est le SERVEUR (allowlist `admins`) qui autorise, pas le client.
   show('login',false);show('denied',false);show('dash',true);
-  $('who').textContent='· connecté : '+email;
+  $('who').textContent='· connecté : '+((session.user.email)||'');
   loadStats();
 }
 
@@ -115,7 +115,10 @@ async function loadStats(){
   const days=parseInt($('days').value,10)||30;
   $('kpis').innerHTML='<div class="kpi"><div class="n">…</div><div class="l">Chargement</div></div>';
   const {data,error}=await sb.functions.invoke('stats-summary',{body:{days}});
-  if(error||!data||data.error){ $('kpis').innerHTML='<div class="kpi"><div class="n">—</div><div class="l">Erreur : '+esc((data&&data.error)||(error&&error.message)||'inconnue')+'</div></div>'; return; }
+  if(error||!data||data.error){
+    // Compte non autorisé (absent de l'allowlist admins) ou erreur serveur.
+    show('dash',false); show('denied',true); return;
+  }
   render(data);
 }
 
