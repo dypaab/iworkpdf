@@ -115,6 +115,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://iworkpdf.yendyx.com/terms</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://iworkpdf.yendyx.com/blog/</loc>
     <lastmod>2026-07-15</lastmod>
     <changefreq>weekly</changefreq>
