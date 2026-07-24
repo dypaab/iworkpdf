@@ -2012,9 +2012,12 @@ function openNewPasswordModal(){
   if(document.getElementById('np-overlay'))return;
   const ov=document.createElement('div');
   ov.id='np-overlay';ov.className='overlay active';ov.setAttribute('role','dialog');
-  ov.innerHTML=`<div class="modal" style="max-width:420px"><div class="modal-head"><h3 class="modal-title">🔑 ${lang==='fr'?'Nouveau mot de passe':'New password'}</h3></div><div class="modal-body"><div class="form-group"><label class="form-label">${lang==='fr'?'Nouveau mot de passe (8 car. min.)':'New password (8 chars min.)'}</label><input class="form-input" type="password" id="np-pwd" autocomplete="new-password" placeholder="••••••••"/></div><div class="form-group"><label class="form-label">${lang==='fr'?'Confirmer le mot de passe':'Confirm password'}</label><input class="form-input" type="password" id="np-pwd2" autocomplete="new-password" placeholder="••••••••"/></div><div class="status-box" id="np-status"></div><button class="btn-primary full" id="np-save">${lang==='fr'?'Enregistrer':'Save'}</button></div></div>`;
+  ov.innerHTML=`<div class="modal" style="max-width:420px"><div class="modal-head"><h3 class="modal-title">🔑 ${lang==='fr'?'Nouveau mot de passe':'New password'}</h3><button class="modal-close" id="np-close" aria-label="Close">✕</button></div><div class="modal-body"><div class="form-group"><label class="form-label">${lang==='fr'?'Nouveau mot de passe (8 car. min.)':'New password (8 chars min.)'}</label><input class="form-input" type="password" id="np-pwd" autocomplete="new-password" placeholder="••••••••"/></div><div class="form-group"><label class="form-label">${lang==='fr'?'Confirmer le mot de passe':'Confirm password'}</label><input class="form-input" type="password" id="np-pwd2" autocomplete="new-password" placeholder="••••••••"/></div><div class="status-box" id="np-status"></div><button class="btn-primary full" id="np-save">${lang==='fr'?'Enregistrer':'Save'}</button></div></div>`;
   document.body.appendChild(ov);
   document.getElementById('np-save').addEventListener('click',doSetNewPassword);
+  const closeNp=()=>ov.remove();
+  document.getElementById('np-close').addEventListener('click',closeNp);
+  ov.addEventListener('click',e=>{if(e.target===ov)closeNp();});
 }
 async function doSetNewPassword(){
   const pwd=document.getElementById('np-pwd')?.value||'';
