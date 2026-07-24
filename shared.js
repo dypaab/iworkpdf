@@ -2079,7 +2079,7 @@ function initExtras(){
     wrap.appendChild(b);
     logoutBtn.insertAdjacentElement('afterend',wrap);
   }
-  const fp=document.getElementById('footer-privacy-btn');
+  const fp=document.getElementById('footer-privacy-link')||document.getElementById('footer-privacy-btn');
   if(fp && !document.getElementById('contact-link')){
     const c=document.createElement('button');
     c.id='contact-link';c.className=fp.className;c.style.cssText=fp.getAttribute('style')||'';
