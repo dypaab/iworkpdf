@@ -367,6 +367,17 @@ function applyLang(){
   // BUG G FIX: auth-modal-title → 'myacc' pas 'myfiles'
   const ids={'h-badge':'badge','h-title1':'h1','h-title2':'h2','h-sub':'sub','h-cta1':'cta1','h-cta2':'cta2','h-proof':'hproof','h-oss':'hoss','illu-pc':'illu_pc','illu-local':'illu_local','illu-dl':'illu_dl','illu-nosrv':'illu_nosrv','demo-drop-txt':'demo_drop','why-title':'why','cmp-title':'cmp','sb1':'sb1','sb2':'sb2','sb3':'sb3','sb4':'sb4','sb5':'sb5','st1':'st1','st2':'st2','st3':'st3','st4':'st4','tools-title':'ttl','tools-sub':'tsub','auth-btn-txt':'signin','auth-modal-title':'myacc','atab-login':'signin','atab-register':'register','login-info':'logininfo','reg-info':'reginfo','l-pwd-lbl':'password','reg-name-lbl':'firstname','reg-pwd-lbl':'pwdmin','reg-pwd2-lbl':'confirmpwd','login-btn':'signin','reg-btn':'register','htab-files':'myfiles','htab-audit':'actlog','hist-title':'histtitle','logout-btn':'logout','vfy-txt':'vfy','footer-txt':'footer','myfiles-btn-txt':'myfiles'};
   Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t(key);});
+  // Éléments injectés dynamiquement (non présents dans le HTML) — re-traduits ici
+  // pour qu'un changement de langue mette bien tout en français / anglais.
+  const dyn={
+    'htab-account': lang==='fr'?'Mon compte':'Account',
+    'forgot-link':  lang==='fr'?'Mot de passe oublié ?':'Forgot password?',
+    'footer-pricing-link': lang==='fr'?'Tarifs':'Pricing'
+  };
+  Object.entries(dyn).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  // Reconstruire le contenu de l'onglet « Mon compte » s'il est ouvert
+  const pa=document.getElementById('pane-account');
+  if(pa && !pa.classList.contains('hidden') && typeof renderAccountPane==='function') renderAccountPane();
   renderTools();
   const sh=document.getElementById('shortcut-hint');
   if(sh) sh.textContent=t('shortcut_hint');
