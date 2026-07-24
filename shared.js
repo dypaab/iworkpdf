@@ -2036,32 +2036,54 @@ async function doSetNewPassword(){
   }catch(e){ if(st){st.className='status-box err';st.textContent=e.message;} }
 }
 
-async function doDeleteAccount(){
+// Étape 1 : modal « Êtes-vous sûr ? » (au lieu des popups natives).
+function doDeleteAccount(){
   if(!user)return;
   const fr=lang==='fr';
-  const ok=confirm(fr
-    ?'Supprimer définitivement votre compte et tous vos fichiers ? Action irréversible.'
-    :'Permanently delete your account and all your files? This cannot be undone.');
-  if(!ok)return;
+  if(document.getElementById('del-confirm-overlay'))return;
   const word=fr?'SUPPRIMER':'DELETE';
-  const typed=prompt(fr?`Dernière étape : tapez ${word} pour confirmer.`:`Final step: type ${word} to confirm.`);
-  if(!typed||typed.trim().toUpperCase()!==word){
-    showToast(fr?'Suppression annulée.':'Deletion cancelled.','info');
-    return;
-  }
+  const ov=document.createElement('div');
+  ov.id='del-confirm-overlay';ov.className='overlay active';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+  ov.innerHTML=`<div class="modal" style="max-width:440px">
+    <div class="modal-head"><h3 class="modal-title">⚠️ ${fr?'Supprimer le compte':'Delete account'}</h3><button class="modal-close" id="dc-close" aria-label="Close">✕</button></div>
+    <div class="modal-body">
+      <p style="color:var(--tx2);line-height:1.6;margin-bottom:14px">${fr?'Êtes-vous sûr de vouloir supprimer définitivement votre compte et tous vos fichiers ? Cette action est <strong>irréversible</strong>.':'Are you sure you want to permanently delete your account and all your files? This action is <strong>irreversible</strong>.'}</p>
+      <div class="form-group"><label class="form-label">${fr?`Tapez ${word} pour confirmer`:`Type ${word} to confirm`}</label><input class="form-input" id="dc-input" autocomplete="off" placeholder="${word}"/></div>
+      <div class="status-box" id="dc-status"></div>
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <button class="btn-ghost" id="dc-cancel" style="flex:1">${fr?'Annuler':'Cancel'}</button>
+        <button id="dc-confirm" style="flex:1;background:var(--er,#EF4444);color:#fff;border:none;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-family:inherit">${fr?'Supprimer définitivement':'Delete permanently'}</button>
+      </div>
+    </div></div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  document.getElementById('dc-close').addEventListener('click',close);
+  document.getElementById('dc-cancel').addEventListener('click',close);
+  ov.addEventListener('click',e=>{if(e.target===ov)close();});
+  document.getElementById('dc-confirm').addEventListener('click',()=>performDeleteAccount(ov));
+}
+// Étape 2 : suppression réelle après confirmation + saisie du mot-clé.
+async function performDeleteAccount(ov){
+  const fr=lang==='fr';
+  const word=fr?'SUPPRIMER':'DELETE';
+  const st=document.getElementById('dc-status');
+  const typed=(document.getElementById('dc-input')?.value||'').trim().toUpperCase();
+  if(typed!==word){ if(st){st.className='status-box err';st.textContent=fr?`Tapez ${word} pour confirmer.`:`Type ${word} to confirm.`;} return; }
   try{
     const{data:{session}}=await sb.auth.getSession();
     const token=session?.access_token;
-    if(!token)throw new Error(lang==='fr'?'Session expirée.':'Session expired.');
+    if(!token)throw new Error(fr?'Session expirée.':'Session expired.');
+    if(st){st.className='status-box info';st.textContent=fr?'Suppression…':'Deleting…';}
     const res=await fetch(`${SUPABASE_URL}/functions/v1/delete-account`,{
       method:'POST',
       headers:{'Authorization':`Bearer ${token}`,'apikey':SUPABASE_KEY,'Content-Type':'application/json'}
     });
-    if(!res.ok)throw new Error(lang==='fr'?'Échec de la suppression.':'Deletion failed.');
+    if(!res.ok)throw new Error(fr?'Échec de la suppression.':'Deletion failed.');
     await sb.auth.signOut();
+    ov?.remove();
     closeHistory();
-    showToast(lang==='fr'?'Compte supprimé.':'Account deleted.','ok');
-  }catch(e){ showToast(e.message,'err'); }
+    showToast(fr?'Compte supprimé.':'Account deleted.','ok');
+  }catch(e){ if(st){st.className='status-box err';st.textContent=e.message;} }
 }
 
 function openContact(){
