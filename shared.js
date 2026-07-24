@@ -622,11 +622,116 @@ function ensureRegisterConfirm(){
   grp.insertAdjacentElement('afterend',wrap);
 }
 
+// Ajoute un bouton "œil" (afficher/masquer) sur chaque champ mot de passe.
+function addPasswordEyes(){
+  const EYE_ON='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const EYE_OFF='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 4.2-5.2M9.9 4.2A10.6 10.6 0 0 1 12 4c6.5 0 10 7 10 7a18 18 0 0 1-2.3 3.3M1 1l22 22"/></svg>';
+  document.querySelectorAll('#auth-overlay input[type="password"]').forEach(inp=>{
+    if(inp.dataset.eye) return; inp.dataset.eye='1';
+    const wrap=document.createElement('div'); wrap.style.cssText='position:relative';
+    inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+    inp.style.paddingRight='42px';
+    const btn=document.createElement('button'); btn.type='button'; btn.tabIndex=-1;
+    btn.setAttribute('aria-label', lang==='fr'?'Afficher/masquer le mot de passe':'Show/hide password');
+    btn.style.cssText='position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--tx3);padding:6px;line-height:0';
+    btn.innerHTML=EYE_ON;
+    btn.addEventListener('click',()=>{
+      const show=inp.type==='password';
+      inp.type=show?'text':'password';
+      btn.innerHTML=show?EYE_OFF:EYE_ON;
+      btn.style.color=show?'var(--cy)':'var(--tx3)';
+    });
+    wrap.appendChild(btn);
+  });
+}
+
+// ── LOGIN EN 2 ÉTAPES (email d'abord) ─────────────────────────────
+// Étape 1 : email → on interroge check-email pour router :
+//   - compte Google  → redirection directe vers Google
+//   - compte mot de passe → étape « mot de passe » (connexion)
+//   - pas de compte  → étape « création »
+function showAuthStep(step){ // 'email' | 'login' | 'register'
+  const tabs=document.getElementById('auth-tabs');
+  const paneL=document.getElementById('pane-login');
+  const paneR=document.getElementById('pane-register');
+  const ef=document.getElementById('ef-step1');
+  const gbtn=document.getElementById('google-btn');
+  if(tabs) tabs.style.display='none';
+  if(ef) ef.style.display = (step==='email')?'block':'none';
+  if(gbtn) gbtn.style.display = (step==='email')?'':'none';
+  if(paneL) paneL.classList.toggle('hidden', step!=='login');
+  if(paneR) paneR.classList.toggle('hidden', step!=='register');
+  const title=document.getElementById('auth-modal-title');
+  if(title) title.textContent = step==='login' ? (lang==='fr'?'Connexion':'Sign in')
+    : step==='register' ? (lang==='fr'?'Créer un compte':'Create account')
+    : (lang==='fr'?'Connexion / Inscription':'Sign in / Sign up');
+}
+function _efBackLink(paneId){
+  const pane=document.getElementById(paneId);
+  if(!pane || pane.querySelector('.ef-back')) return;
+  const a=document.createElement('button'); a.type='button'; a.className='ef-back';
+  a.style.cssText='background:none;border:none;color:var(--cy);font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:12px;padding:0';
+  a.textContent=lang==='fr'?'← Changer d\'email':'← Change email';
+  a.addEventListener('click',()=>showAuthStep('email'));
+  pane.insertBefore(a, pane.firstChild);
+}
+function buildEmailFirst(){
+  const tabs=document.getElementById('auth-tabs');
+  if(!tabs || document.getElementById('ef-step1')) return;
+  const div=document.createElement('div'); div.id='ef-step1';
+  div.innerHTML=`<div class="ef-or" style="text-align:center;color:var(--tx3);font-size:12px;margin:2px 0 12px">${lang==='fr'?'ou avec votre email':'or with your email'}</div>`+
+    `<div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="ef-email" autocomplete="email" placeholder="you@example.com"/></div>`+
+    `<div class="status-box" id="ef-status"></div>`+
+    `<button class="btn-primary full" id="ef-continue">${lang==='fr'?'Continuer':'Continue'}</button>`;
+  tabs.parentNode.insertBefore(div, tabs);
+  document.getElementById('ef-continue').addEventListener('click', efContinue);
+  document.getElementById('ef-email').addEventListener('keydown',e=>{if(e.key==='Enter')efContinue();});
+  _efBackLink('pane-login'); _efBackLink('pane-register');
+  // Les champs email des panneaux sont masqués (email déjà saisi à l'étape 1).
+  ['l-email','r-email'].forEach(id=>{const el=document.getElementById(id); if(el){const g=el.closest('.form-group'); if(g) g.style.display='none';}});
+}
+async function efContinue(){
+  const email=(document.getElementById('ef-email')?.value||'').trim();
+  const st=document.getElementById('ef-status');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ if(st){st.className='status-box err';st.textContent=lang==='fr'?'Email invalide.':'Invalid email.';} return; }
+  const btn=document.getElementById('ef-continue'); if(btn)btn.disabled=true;
+  if(st){st.className='status-box info';st.textContent=lang==='fr'?'Vérification…':'Checking…';}
+  let info={exists:false,provider:null};
+  try{
+    const res=await fetch(`${SUPABASE_URL}/functions/v1/check-email`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({email})});
+    if(res.ok) info=await res.json();
+  }catch(_){}
+  if(btn)btn.disabled=false;
+  if(info && info.exists && info.provider==='google'){
+    if(st){st.className='status-box info';st.textContent=lang==='fr'?'Redirection vers Google…':'Redirecting to Google…';}
+    try{ await doGoogleLogin(); }catch(_){}
+    return;
+  }
+  if(st){st.className='status-box';st.textContent='';}
+  if(info && info.exists){
+    const le=document.getElementById('l-email'); if(le) le.value=email;
+    showAuthStep('login');
+    setTimeout(()=>document.getElementById('l-pwd')?.focus(),60);
+  }else{
+    ensureRegisterConfirm(); addPasswordEyes();
+    const re=document.getElementById('r-email'); if(re) re.value=email;
+    _efBackLink('pane-register');
+    showAuthStep('register');
+    setTimeout(()=>document.getElementById('r-name')?.focus(),60);
+  }
+}
+
 function openAuth(){
   ensureRegisterConfirm();
   ensureGoogleButton();
+  addPasswordEyes();
+  buildEmailFirst();
+  showAuthStep('email');
+  const efe=document.getElementById('ef-email'); if(efe) efe.value='';
+  const efs=document.getElementById('ef-status'); if(efs){efs.className='status-box';efs.textContent='';}
   const rb=document.getElementById('reg-btn'); if(rb) rb.disabled=false; // réactiver après une inscription précédente
   document.getElementById('auth-overlay').classList.add('active');
+  setTimeout(()=>document.getElementById('ef-email')?.focus(),60);
 }
 
 // Bouton "Continuer avec Google" injecté en haut de la fenêtre d'auth (OAuth Supabase).
