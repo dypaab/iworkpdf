@@ -16,7 +16,7 @@ const sb=(window.supabase&&window.supabase.createClient)
   :null;
 if(!sb)console.warn('[iWorkPDF] supabase-js absent — outils locaux OK, cloud/auth désactivés');
 
-let lang='en',user=null,saveMode='local';
+let lang='en',user=null,saveMode='local',isAdmin=false;
 let activeFiles=[],rotateAngle=90,secMode='protect';
 let isProcessing=false;
 // BUG D FIX: garder le userId avant que onAuthStateChange le vide
@@ -524,10 +524,52 @@ function renderProfileInfo(){
 function closeHistory(){document.getElementById('hist-overlay').classList.remove('active');}
 
 function histTab(tab){
-  document.querySelectorAll('#hist-tabs .tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='files'&&i===0)||(tab==='audit'&&i===1)));
+  const map={files:0,audit:1,account:2};
+  document.querySelectorAll('#hist-tabs .tab-btn').forEach((b,i)=>b.classList.toggle('active',i===map[tab]));
   document.getElementById('pane-files').classList.toggle('hidden',tab!=='files');
   document.getElementById('pane-audit').classList.toggle('hidden',tab!=='audit');
+  const pa=document.getElementById('pane-account');
+  if(pa)pa.classList.toggle('hidden',tab!=='account');
   if(tab==='audit')loadAudit();
+  if(tab==='account')renderAccountPane();
+}
+
+// Vérifie côté serveur si le compte connecté est admin (table `admins`),
+// puis affiche/masque le lien Statistiques. Aucun email codé en dur.
+async function refreshAdmin(){
+  try{ isAdmin = (sb && user) ? !!(await sb.rpc('is_admin')).data : false; }
+  catch(e){ isAdmin=false; }
+  const s=document.getElementById('stats-link');
+  if(s)s.style.display=isAdmin?'block':'none';
+}
+
+// Contenu de l'onglet « Mon compte » : Statistiques (admin), déconnexion,
+// et zone danger avec suppression (double confirmation).
+function renderAccountPane(){
+  const el=document.getElementById('pane-account'); if(!el)return;
+  const fr=lang==='fr';
+  el.innerHTML='';
+  const stats=document.createElement('a');
+  stats.id='stats-link'; stats.href='/stats'; stats.target='_blank'; stats.rel='noopener';
+  stats.className='btn-ghost full';
+  stats.style.cssText='display:none;text-align:center;text-decoration:none;margin-bottom:12px';
+  stats.textContent=fr?'📊 Statistiques (admin)':'📊 Statistics (admin)';
+  el.appendChild(stats);
+  const out=document.createElement('button');
+  out.className='btn-ghost full';
+  out.textContent=fr?'Se déconnecter':'Sign out';
+  out.addEventListener('click',doLogout);
+  el.appendChild(out);
+  const dz=document.createElement('div');
+  dz.style.cssText='margin-top:22px;padding-top:16px;border-top:1px solid var(--bd)';
+  dz.innerHTML=`<div style="font-size:12px;color:var(--tx3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">${fr?'Zone de danger':'Danger zone'}</div>`;
+  const del=document.createElement('button');
+  del.style.cssText='background:none;border:1px solid var(--er,#EF4444);color:var(--er,#EF4444);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border-radius:8px;padding:9px 16px';
+  del.textContent=fr?'Supprimer mon compte':'Delete my account';
+  del.addEventListener('click',doDeleteAccount);
+  dz.appendChild(del);
+  el.appendChild(dz);
+  refreshAdmin();
 }
 
 function authTab(tab){
@@ -1987,10 +2029,17 @@ async function doSetNewPassword(){
 
 async function doDeleteAccount(){
   if(!user)return;
-  const ok=confirm(lang==='fr'
+  const fr=lang==='fr';
+  const ok=confirm(fr
     ?'Supprimer définitivement votre compte et tous vos fichiers ? Action irréversible.'
     :'Permanently delete your account and all your files? This cannot be undone.');
   if(!ok)return;
+  const word=fr?'SUPPRIMER':'DELETE';
+  const typed=prompt(fr?`Dernière étape : tapez ${word} pour confirmer.`:`Final step: type ${word} to confirm.`);
+  if(!typed||typed.trim().toUpperCase()!==word){
+    showToast(fr?'Suppression annulée.':'Deletion cancelled.','info');
+    return;
+  }
   try{
     const{data:{session}}=await sb.auth.getSession();
     const token=session?.access_token;
@@ -2054,30 +2103,26 @@ function initExtras(){
     a.addEventListener('click',doForgotPassword);
     loginBtn.insertAdjacentElement('afterend',a);
   }
+  // 3e onglet « Mon compte » — construit en JS (le modal est identique sur
+  // toutes les pages). Y vivent : Statistiques (admin only), déconnexion,
+  // et la suppression de compte (déplacée hors de « Mes fichiers »).
   const logoutBtn=document.getElementById('logout-btn');
-  // Statistiques AU-DESSUS de « Se déconnecter » (nav de compte). Accès
-  // verrouillé côté serveur (table `admins`) : les non-admins voient « accès refusé ».
-  if(logoutBtn && !document.getElementById('stats-link')){
-    const s=document.createElement('a');
-    s.id='stats-link'; s.href='/stats'; s.target='_blank'; s.rel='noopener';
-    s.className='btn-ghost full';
-    s.style.cssText='display:block;text-align:center;text-decoration:none;margin-bottom:8px';
-    s.textContent=lang==='fr'?'📊 Statistiques':'📊 Statistics';
-    logoutBtn.insertAdjacentElement('beforebegin',s);
-  }
-  // Zone DANGER nettement séparée (séparateur + lien discret) pour éviter de
-  // confondre « Supprimer mon compte » avec « Se déconnecter ».
-  if(logoutBtn && !document.getElementById('del-acct-zone')){
-    const wrap=document.createElement('div');
-    wrap.id='del-acct-zone';
-    wrap.style.cssText='margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);text-align:center';
-    const b=document.createElement('button');
-    b.id='del-acct-btn';b.type='button';
-    b.style.cssText='background:none;border:none;color:var(--er,#EF4444);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;opacity:.85';
-    b.textContent=lang==='fr'?'Supprimer mon compte':'Delete my account';
-    b.addEventListener('click',doDeleteAccount);
-    wrap.appendChild(b);
-    logoutBtn.insertAdjacentElement('afterend',wrap);
+  const histTabs=document.getElementById('hist-tabs');
+  if(histTabs && !document.getElementById('htab-account')){
+    const tb=document.createElement('button');
+    tb.className='tab-btn'; tb.id='htab-account';
+    tb.textContent=lang==='fr'?'Mon compte':'Account';
+    tb.addEventListener('click',()=>histTab('account'));
+    histTabs.appendChild(tb);
+    const audit=document.getElementById('pane-audit');
+    if(audit && !document.getElementById('pane-account')){
+      const pa=document.createElement('div');
+      pa.id='pane-account'; pa.className='hidden';
+      audit.insertAdjacentElement('afterend',pa);
+    }
+    // L'ancien bouton « Se déconnecter » en bas du modal est masqué :
+    // la déconnexion se fait désormais dans l'onglet « Mon compte ».
+    if(logoutBtn)logoutBtn.style.display='none';
   }
   const fp=document.getElementById('footer-privacy-link')||document.getElementById('footer-privacy-btn');
   if(fp && !document.getElementById('contact-link')){
