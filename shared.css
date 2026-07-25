@@ -444,22 +444,6 @@ nav{-webkit-backdrop-filter:blur(20px)}
    illustration masquée pour que la grille d'outils remonte dans le 1er écran. */
 .hero-inner{max-width:920px;margin:0 auto;text-align:center}
 .hero-illu{display:none}
-/* Fenêtre "capture produit" du hero (thémée clair/sombre) */
-.hero-shot{display:block;max-width:600px;margin:22px auto 0}
-.hs-win{background:var(--sf);border:1px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:0 18px 46px rgba(8,16,44,.24)}
-.hs-bar{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--sf2);border-bottom:1px solid var(--bd)}
-.hs-dot{width:9px;height:9px;border-radius:50%}
-.hs-url{margin-left:8px;flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:20px;font-size:11px;color:var(--tx2);padding:4px 12px;text-align:left}
-.hs-app{padding:16px 18px 20px;background:var(--bg);text-align:left}
-.hs-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-.hs-chips span{font-size:10.5px;color:var(--cy);background:var(--sf2);border:1px solid var(--bd);padding:3px 10px;border-radius:14px;font-weight:600}
-.hs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.hs-card{background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:11px 11px 12px}
-.hs-ic{font-size:19px;line-height:1}
-.hs-card b{display:block;font-size:12px;font-weight:600;color:var(--tx);margin:7px 0 2px}
-.hs-card i{font-style:normal;font-size:10px;color:var(--tx2);line-height:1.35}
-.hs-card.on{border-color:var(--bl);box-shadow:0 6px 16px #0077FF22}
-@media(max-width:560px){.hs-grid{grid-template-columns:repeat(2,1fr)}.hero-shot{margin-top:14px}}
 .hero-copy .badge{display:inline-flex}
 .hero-illu svg{width:100%;height:auto;display:block}
 .illu-flow{animation:illuFlow 1.2s linear infinite}
