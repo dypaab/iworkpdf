@@ -1,4 +1,4 @@
-// iWorkPDF Service Worker v8 — OFFLINE POUR L'APP INSTALLÉE UNIQUEMENT.
+// iWorkPDF Service Worker v9 — OFFLINE POUR L'APP INSTALLÉE UNIQUEMENT.
 // Enregistré SEULEMENT en mode standalone (PWA installée) — jamais sur le
 // site web classique (voir le snippet de register dans les pages).
 //
@@ -12,8 +12,8 @@
 // 4. Sur certains réseaux (proxys d'entreprise), les fetch initiés par le
 //    SW échouent alors que ceux de la page passent → d'où l'auto-réparation.
 
-const STATIC_CACHE = 'iworkpdf-static-v8';
-const FONT_CACHE = 'iworkpdf-fonts-v8';
+const STATIC_CACHE = 'iworkpdf-static-v9';
+const FONT_CACHE = 'iworkpdf-fonts-v9';
 
 const TOOL_IDS = ['compress','merge','delete','split','rotate','security','watermark',
                   'img2pdf','pagenums','pdf2jpg','repair','crop','sign','extract'];
