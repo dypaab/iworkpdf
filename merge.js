@@ -141,7 +141,7 @@ async function renderMergePages(){
 async function renderMergeThumb(canvas,i){
   try{
     const buf=await activeFiles[i].arrayBuffer();
-    const pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+    const pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
     mergeDocs[i].pages=pdfDoc.numPages;
     const meta=document.getElementById(`md-meta-${i}`);
     if(meta)meta.textContent=`${pdfDoc.numPages} page${pdfDoc.numPages>1?'s':''}`;

@@ -54,7 +54,7 @@ async function renderCropPagePreview(){
   try{
     await ensurePdfJs();
     const buf=await activeFiles[0].arrayBuffer();
-    const doc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+    const doc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
     const page=await doc.getPage(1);
     const vp0=page.getViewport({scale:1});
     const scale=Math.min(460/vp0.width,380/vp0.height);

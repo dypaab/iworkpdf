@@ -41,7 +41,7 @@ function setCompQ(btn,q){
 async function scanPdfImages(file){
   await ensurePdfJs();
   const buf=await file.arrayBuffer();
-  const doc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+  const doc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
   let imgCount=0, imgPixels=0;
   const pagesToScan=Math.min(doc.numPages,15); // limite raisonnable pour rester rapide
   for(let i=1;i<=pagesToScan;i++){
@@ -125,7 +125,7 @@ async function runCompress(activeFiles, compQuality, compScan){
         // touchés puisqu'on ne modifie que les streams d'images dans le contexte
         // PDF existant — contrairement à un rendu "page = image" qui les détruirait.
         await ensurePdfJs();
-        const pdfJsDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+        const pdfJsDoc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
         const imageStreams=_imgStreams;
         let processed=0;
         const total=imageStreams.length||1;

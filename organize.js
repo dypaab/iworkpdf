@@ -152,7 +152,7 @@ async function renderOrganizeThumb(canvas,file,origIdx,rotation){
     let pdfDoc=_thumbPdfCache.get(file);
     if(!pdfDoc){
       const buf=await file.arrayBuffer();
-      pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+      pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
       _thumbPdfCache.set(file,pdfDoc);
       Security.wipeMemory(buf);
     }

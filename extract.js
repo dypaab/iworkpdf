@@ -128,7 +128,7 @@ async function runExtract(activeFiles){
     _decoded=[];
     try{
       await ensurePdfJs();
-      const d=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+      const d=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
       for(let p=1;p<=d.numPages;p++){
         try{
           const page=await d.getPage(p);

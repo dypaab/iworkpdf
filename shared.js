@@ -1152,7 +1152,7 @@ async function renderThumb(canvas, file, pageIdx, scale=0.22){
     let pdfDoc=_thumbPdfCache.get(file);
     if(!pdfDoc){
       const buf=await file.arrayBuffer();
-      pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+      pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
       _thumbPdfCache.set(file, pdfDoc);
       Security.wipeMemory(buf);
     }
@@ -1172,7 +1172,7 @@ async function renderThumb(canvas, file, pageIdx, scale=0.22){
 async function getPdfPageCount(file){
   await ensurePdfJs();
   const buf=await file.arrayBuffer();
-  const doc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+  const doc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
   const n=doc.numPages;
   Security.wipeMemory(buf);
   return n;

@@ -37,7 +37,7 @@ function setJpgQ(btn, q){
 async function runPdf2Jpg(activeFiles, jpgQuality){
   await ensurePdfJs();
       const buf=await activeFiles[0].arrayBuffer();
-      const pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+      const pdfDoc=await pdfjsLib.getDocument({data:buf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
       const n=pdfDoc.numPages;
       const stem=activeFiles[0].name.replace('.pdf','');
       // Échelle selon qualité: 0.7→1.5x, 0.9→2x, 1.0→3x

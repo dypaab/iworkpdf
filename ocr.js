@@ -88,7 +88,7 @@ async function runOcr(activeFiles,lng){
   if(ext==='pdf'){
     await ensurePdfJs();
     pdfBuf=await file.arrayBuffer();
-    const doc=await pdfjsLib.getDocument({data:pdfBuf.slice(0)}).promise;
+    const doc=await pdfjsLib.getDocument({data:pdfBuf.slice(0),isEvalSupported:false,disableAutoFetch:true,disableStream:true}).promise;
     for(let p=1;p<=doc.numPages;p++){
       setProgress(4+p/doc.numPages*8,lang==='fr'?`Préparation page ${p}/${doc.numPages}…`:`Preparing page ${p}/${doc.numPages}…`);
       sources.push(await ocrRenderPdfPage(doc,p));
