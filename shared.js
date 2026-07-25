@@ -467,7 +467,8 @@ async function doLogin(){
     }
     Security.resetRateLimit(email);
   }catch(e){
-    st.className='status-box err';st.textContent=e.message;
+    st.className='status-box err';
+    st.textContent=(e&&e.message)?e.message:(lang==='fr'?'Une erreur est survenue. Réessayez.':'Something went wrong. Please try again.');
   }finally{btn.disabled=false;}
 }
 
@@ -513,7 +514,8 @@ async function doRegister(){
     showToast(t('accreated'),'ok');
     setTimeout(closeAuth,1800);
   }catch(e){
-    st.className='status-box err';st.textContent=e.message;
+    st.className='status-box err';
+    st.textContent=(e&&e.message)?e.message:(lang==='fr'?'Une erreur est survenue. Réessayez.':'Something went wrong. Please try again.');
   }finally{ if(!sent) btn.disabled=false; }
 }
 
