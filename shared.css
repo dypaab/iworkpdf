@@ -442,7 +442,16 @@ nav{-webkit-backdrop-filter:blur(20px)}
 /* ── HERO 2 COLONNES + ILLUSTRATION "100% LOCAL" ──────────── */
 /* Hero centré pleine largeur : titre sur une seule ligne, contenu resserré,
    illustration masquée pour que la grille d'outils remonte dans le 1er écran. */
-.hero-inner{max-width:920px;margin:0 auto;text-align:center}
+.hero-inner{max-width:920px;margin:0 auto;text-align:center;position:relative;z-index:1}
+/* Formes organiques vivantes du hero — blobs doux, mouvement lent */
+.hero-blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.hero-blobs .blob{position:absolute;filter:blur(30px);opacity:.16;will-change:transform}
+.hero-blobs .b1{width:300px;height:270px;top:-50px;left:-40px;background:#00B4D8;border-radius:42% 58% 63% 37%/41% 44% 56% 59%;animation:blobFloat 15s ease-in-out infinite}
+.hero-blobs .b2{width:260px;height:250px;top:0;right:-50px;background:#0077FF;border-radius:60% 40% 33% 67%/55% 58% 42% 45%;animation:blobFloat 19s ease-in-out infinite reverse}
+.hero-blobs .b3{width:220px;height:210px;bottom:-70px;left:34%;background:#12965A;opacity:.11;border-radius:50% 50% 45% 55%/55% 45% 55% 45%;animation:blobFloat 22s ease-in-out infinite}
+.hero-blobs .b4{width:180px;height:180px;top:30%;left:12%;background:#6D53E0;opacity:.10;border-radius:63% 37% 54% 46%/38% 60% 40% 62%;animation:blobFloat 17s ease-in-out infinite reverse}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-16px) scale(1.09)}}
+@media(prefers-reduced-motion:reduce){.hero-blobs .blob{animation:none}}
 .hero-illu{display:none}
 .hero-copy .badge{display:inline-flex}
 .hero-illu svg{width:100%;height:auto;display:block}
