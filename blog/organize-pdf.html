@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <link rel="icon" type="image/png" href="/logo_seul_sans_fond.png"/>
 <title>How to Organize PDF Pages for Free — Reorder, Rotate, Remove | iWorkPDF</title>
-<meta name="description" content="Reorder, rotate and remove PDF pages for free, directly in your browser. Drag & drop to rearrange. Nothing uploaded."/>
-<meta name="keywords" content="organize PDF, reorder PDF pages, rearrange PDF, rotate PDF pages, delete PDF pages free"/>
+<meta name="description" content="Reorder, rotate and remove PDF pages for free, in your browser. Drag & drop. Organiser un PDF : réordonner, pivoter, supprimer des pages, sans envoi."/>
+<meta name="keywords" content="organize PDF, reorder PDF pages, rearrange PDF, organiser pdf, réordonner pages pdf gratuit"/>
 <meta property="og:title" content="How to Organize PDF Pages for Free — Reorder, Rotate, Remove"/>
 <meta property="og:description" content="Reorder, rotate and remove PDF pages for free, directly in your browser. Drag & drop to rearrange. Nothing uploaded."/>
 <meta property="og:url" content="https://iworkpdf.yendyx.com/blog/organize-pdf"/>
@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/shared.css?v20260722a"/>
 <link rel="stylesheet" href="/tool-theme.css?v20260722a"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my file uploaded?","acceptedAnswer":{"@type":"Answer","text":"No. Everything happens locally in your browser; your PDF never leaves your device."}},{"@type":"Question","name":"Can I rotate a single page?","acceptedAnswer":{"@type":"Answer","text":"Yes — each page has its own ↻ rotate button, so you can fix just the pages that need it."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, entirely free. No account required, no watermark, no limit."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my file uploaded?","acceptedAnswer":{"@type":"Answer","text":"No. Everything happens locally in your browser; your PDF never leaves your device."}},{"@type":"Question","name":"Can I rotate a single page?","acceptedAnswer":{"@type":"Answer","text":"Yes — each page has its own rotate button, so you can fix just the pages that need it."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, entirely free. No account required, no watermark, no limit."}}]}</script>
 </head>
 <body>
 <nav>
@@ -24,40 +24,72 @@
     <img src="/logo_seul_sans_fond.png" alt="YENDYX" width="40" height="40" style="display:block"/>
     <span class="nav-brand">i<span>Work</span>PDF</span>
   </a>
-  <a href="/tools/organize" style="background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600">🗂 Try it free</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button id="lang-toggle" style="background:none;border:1px solid var(--bd);color:var(--tx2);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit">🌐 FR</button>
+    <a href="/tools/organize" style="background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600">🗂 <span id="cta-nav">Try it free</span></a>
+  </div>
 </nav>
 <main style="max-width:740px;margin:100px auto 80px;padding:0 24px">
   <nav aria-label="breadcrumb" style="font-size:12px;color:var(--tx3);margin-bottom:24px">
-    <a href="/" style="color:var(--tx2);text-decoration:none">iWorkPDF</a> › <a href="/blog/" style="color:var(--tx2);text-decoration:none">Blog</a> › <span>How to Organize PDF Pages for Free</span>
+    <a href="/" style="color:var(--tx2);text-decoration:none">iWorkPDF</a> › <a href="/blog/" style="color:var(--tx2);text-decoration:none">Blog</a> › <span id="crumb">How to Organize PDF Pages for Free</span>
   </nav>
   <div style="font-size:48px;margin-bottom:16px">🗂</div>
-  <h1 style="font-size:36px;font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:16px">How to Organize PDF Pages for Free</h1>
-  <p style="font-size:17px;color:var(--tx2);line-height:1.7;margin-bottom:24px">Reorder, rotate and remove the pages of a PDF — all by drag & drop, directly in your browser. Nothing is uploaded.</p>
-  <a href="/tools/organize" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:700;font-size:15px;margin-bottom:48px">🗂 Use the tool — free</a>
-  <article>
-    <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Why organize a PDF?</h2>
-    <p style="color:var(--tx2);line-height:1.8">Sometimes a PDF has pages in the wrong order, a page scanned upside down, or a blank page you want gone. Instead of re-exporting from the original document, you can rearrange everything visually: put pages in the right order, rotate the ones that need it, and drop the ones you don't want — then export a clean PDF.</p>
-    <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Local and private</h2>
-    <p style="color:var(--tx2);line-height:1.8">Like every iWorkPDF tool, Organize runs entirely in your browser. Your file is read locally and never sent to a server, so it's safe even for confidential documents.</p>
-    <h2 style="font-size:24px;font-weight:700;margin:40px 0 24px">Step-by-step guide</h2>
-    <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">1</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Open your PDF</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Drop your PDF into the Organize tool. You'll see a thumbnail of every page.</p></div></div>
-    <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">2</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Reorder, rotate, remove</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Drag pages to reorder them (or use the ‹ › arrows on touch screens). Click ↻ to rotate a page, or ✕ to remove it from the document.</p></div></div>
-    <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">3</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Export your clean PDF</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Click to generate the new PDF in your chosen order, with your rotations applied — downloaded instantly.</p></div></div>
-    <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Tips</h2>
-    <ul style="padding-left:0;list-style:none"><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">On a computer, drag & drop is the fastest way to reorder; on mobile, use the ‹ › arrows.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Need to only delete pages? The dedicated Delete Pages tool preserves bookmarks and internal links.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Reordering rebuilds the document, so the outline/bookmarks may not carry over — expected for a rearrange.</li></ul>
-    <div style="background:linear-gradient(135deg,#00B4D810,#0077FF10);border:1px solid #00B4D830;border-radius:16px;padding:28px;text-align:center;margin:40px 0">
-      <div style="font-size:32px;margin-bottom:12px">🗂</div>
-      <h3 style="font-size:20px;font-weight:700;margin-bottom:8px">Ready to try it?</h3>
-      <p style="font-size:14px;color:var(--tx2);margin-bottom:20px">100% free · No account · Nothing uploaded</p>
-      <a href="/tools/organize" style="display:inline-block;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 32px;border-radius:10px;font-weight:700;font-size:15px">Open 🗂 — free</a>
-    </div>
-    <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">FAQ</h2>
-    <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Is my file uploaded?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">No. Everything happens locally in your browser; your PDF never leaves your device.</p></details>
-    <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Can I rotate a single page?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Yes — each page has its own ↻ rotate button, so you can fix just the pages that need it.</p></details>
-    <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Is it free?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Yes, entirely free. No account required, no watermark, no limit.</p></details>
-  </article>
+
+  <!-- EN -->
+  <div id="post-en">
+    <h1 style="font-size:36px;font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:16px">How to Organize PDF Pages for Free</h1>
+    <p style="font-size:17px;color:var(--tx2);line-height:1.7;margin-bottom:24px">Reorder, rotate and remove the pages of a PDF — all by drag & drop, directly in your browser. Nothing is uploaded.</p>
+    <a href="/tools/organize" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:700;font-size:15px;margin-bottom:48px">🗂 Use the tool — free</a>
+    <article>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Why organize a PDF?</h2>
+      <p style="color:var(--tx2);line-height:1.8">Sometimes a PDF has pages in the wrong order, a page scanned upside down, or a blank page you want gone. Instead of re-exporting from the original document, you can rearrange everything visually: put pages in the right order, rotate the ones that need it, and drop the ones you don't want — then export a clean PDF.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Local and private</h2>
+      <p style="color:var(--tx2);line-height:1.8">Like every iWorkPDF tool, Organize runs entirely in your browser. Your file is read locally and never sent to a server, so it's safe even for confidential documents.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 24px">Step-by-step guide</h2>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">1</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Open your PDF</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Drop your PDF into the Organize tool. You'll see a thumbnail of every page.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">2</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Reorder, rotate, remove</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Drag pages to reorder them (or use the ‹ › arrows on touch screens). Click ↻ to rotate a page, or ✕ to remove it from the document.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">3</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Export your clean PDF</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Click to generate the new PDF in your chosen order, with your rotations applied — downloaded instantly.</p></div></div>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Tips</h2>
+      <ul style="padding-left:0;list-style:none"><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">On a computer, drag & drop is the fastest way to reorder; on mobile, use the ‹ › arrows.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Need to only delete pages? The dedicated Delete Pages tool preserves bookmarks and internal links.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Reordering rebuilds the document, so the outline/bookmarks may not carry over — expected for a rearrange.</li></ul>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">FAQ</h2>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Is my file uploaded?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">No. Everything happens locally in your browser; your PDF never leaves your device.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Can I rotate a single page?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Yes — each page has its own ↻ rotate button, so you can fix just the pages that need it.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Is it free?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Yes, entirely free. No account required, no watermark, no limit.</p></details>
+    </article>
+  </div>
+
+  <!-- FR -->
+  <div id="post-fr" style="display:none">
+    <h1 style="font-size:36px;font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:16px">Comment organiser les pages d'un PDF gratuitement</h1>
+    <p style="font-size:17px;color:var(--tx2);line-height:1.7;margin-bottom:24px">Réordonnez, pivotez et supprimez les pages d'un PDF — le tout par glisser-déposer, directement dans votre navigateur. Rien n'est envoyé.</p>
+    <a href="/tools/organize" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:700;font-size:15px;margin-bottom:48px">🗂 Ouvrir l'outil — gratuit</a>
+    <article>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Pourquoi organiser un PDF ?</h2>
+      <p style="color:var(--tx2);line-height:1.8">Parfois un PDF a des pages dans le mauvais ordre, une page scannée à l'envers, ou une page blanche à retirer. Plutôt que de ré-exporter depuis le document d'origine, vous pouvez tout réarranger visuellement : remettre les pages dans le bon ordre, pivoter celles qui en ont besoin, et retirer celles dont vous ne voulez pas — puis exporter un PDF propre.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Local et privé</h2>
+      <p style="color:var(--tx2);line-height:1.8">Comme tous les outils iWorkPDF, Organiser s'exécute entièrement dans votre navigateur. Votre fichier est lu localement et n'est jamais envoyé à un serveur — sûr même pour des documents confidentiels.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 24px">Guide étape par étape</h2>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">1</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Ouvrez votre PDF</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Déposez votre PDF dans l'outil Organiser. Vous voyez une miniature de chaque page.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">2</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Réordonnez, pivotez, retirez</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Faites glisser les pages pour les réordonner (ou utilisez les flèches ‹ › sur écran tactile). Cliquez sur ↻ pour pivoter une page, ou ✕ pour la retirer du document.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">3</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Exportez votre PDF propre</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Cliquez pour générer le nouveau PDF dans l'ordre choisi, avec vos rotations appliquées — téléchargé immédiatement.</p></div></div>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Conseils</h2>
+      <ul style="padding-left:0;list-style:none"><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Sur ordinateur, le glisser-déposer est le plus rapide pour réordonner ; sur mobile, utilisez les flèches ‹ ›.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Besoin uniquement de supprimer des pages ? L'outil dédié Supprimer des pages préserve les signets et liens internes.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Réordonner reconstruit le document ; le plan/les signets peuvent ne pas être conservés — normal pour un réarrangement.</li></ul>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">FAQ</h2>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Mon fichier est-il envoyé ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Non. Tout se passe localement dans votre navigateur ; votre PDF ne quitte jamais votre appareil.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Puis-je pivoter une seule page ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Oui — chaque page a son propre bouton ↻ de rotation, pour ne corriger que les pages concernées.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Est-ce gratuit ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Oui, entièrement gratuit. Aucun compte requis, aucun filigrane, aucune limite.</p></details>
+    </article>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#00B4D810,#0077FF10);border:1px solid #00B4D830;border-radius:16px;padding:28px;text-align:center;margin:40px 0">
+    <div style="font-size:32px;margin-bottom:12px">🗂</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:8px" id="cta-h">Ready to try it?</h3>
+    <p style="font-size:14px;color:var(--tx2);margin-bottom:20px" id="cta-p">100% free · No account · Nothing uploaded</p>
+    <a href="/tools/organize" style="display:inline-block;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 32px;border-radius:10px;font-weight:700;font-size:15px" id="cta-b">Open 🗂 — free</a>
+  </div>
+
   <section style="margin-top:56px">
-    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">Other free PDF tools</h2>
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px" id="related-h">Other free PDF tools</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
       <a href="/tools/organize" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🗂 Organize PDF</a>
       <a href="/tools/ocr" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🔎 OCR PDF</a>
@@ -74,6 +106,19 @@
 </footer>
 <script>
 try{var s=localStorage.getItem('iworkpdf_theme');if(s==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){}
+(function(){
+  var en=document.getElementById('post-en'),fr=document.getElementById('post-fr'),btn=document.getElementById('lang-toggle');
+  var T={en:{crumb:'How to Organize PDF Pages for Free',ctaNav:'Try it free',ctaH:'Ready to try it?',ctaP:'100% free · No account · Nothing uploaded',ctaB:'Open 🗂 — free',rel:'Other free PDF tools',btn:'🌐 FR'},
+         fr:{crumb:'Comment organiser les pages d’un PDF',ctaNav:'Essayer',ctaH:'Prêt à essayer ?',ctaP:'100% gratuit · Sans compte · Rien n’est envoyé',ctaB:'Ouvrir 🗂 — gratuit',rel:'Autres outils PDF gratuits',btn:'🌐 EN'}};
+  function set(l){var isFr=l==='fr',d=T[l];en.style.display=isFr?'none':'';fr.style.display=isFr?'':'none';
+    document.getElementById('crumb').textContent=d.crumb;document.getElementById('cta-nav').textContent=d.ctaNav;
+    document.getElementById('cta-h').textContent=d.ctaH;document.getElementById('cta-p').textContent=d.ctaP;
+    document.getElementById('cta-b').textContent=d.ctaB;document.getElementById('related-h').textContent=d.rel;
+    btn.textContent=d.btn;document.documentElement.lang=isFr?'fr':'en';}
+  var start='en';try{if((navigator.language||'').toLowerCase().indexOf('fr')===0)start='fr';}catch(e){}
+  set(start);
+  btn.addEventListener('click',function(){set(fr.style.display==='none'?'fr':'en');});
+})();
 </script>
 </body>
 </html>
