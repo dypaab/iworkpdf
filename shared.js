@@ -486,8 +486,21 @@ async function doRegister(){
     if(!strength.ok)throw new Error(lang==='fr'?'Mot de passe trop faible.':'Password too weak (8+ chars, uppercase, number).');
     const pwd2=document.getElementById('r-pwd2')?.value||'';
     if(pwd!==pwd2)throw new Error(lang==='fr'?'Les mots de passe ne correspondent pas.':'Passwords do not match.');
-    st.className='status-box info';st.textContent=t('creatingacc');
     btn.disabled=true;
+    // Détection email invalide (domaine jetable / sans MX) AVANT création.
+    // Fail-open : si le service est indisponible, on n'empêche pas l'inscription.
+    st.className='status-box info';st.textContent=lang==='fr'?'Vérification de l’email…':'Checking email…';
+    let emailInvalid=null;
+    try{
+      const vr=await fetch(`${SUPABASE_URL}/functions/v1/validate-email`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({email})});
+      if(vr.ok){const vj=await vr.json();if(vj&&vj.valid===false)emailInvalid=vj.reason;}
+    }catch(_){/* réseau indisponible → fail-open */}
+    if(emailInvalid){
+      throw new Error(emailInvalid==='disposable'
+        ?(lang==='fr'?'Les adresses email jetables ne sont pas acceptées.':'Disposable email addresses are not accepted.')
+        :(lang==='fr'?'Cette adresse email n’a pas l’air valide (domaine introuvable). Vérifiez l’orthographe.':'This email doesn’t look valid (domain not found). Check the spelling.'));
+    }
+    st.className='status-box info';st.textContent=t('creatingacc');
     const{error}=await sb.auth.signUp({email,password:pwd,options:{data:{name},emailRedirectTo:window.location.origin+'/confirmed.html'}});
     if(error)throw new Error(error.message);
     st.className='status-box ok';st.textContent=t('accreated');
