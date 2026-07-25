@@ -42,7 +42,7 @@ if(sb)sb.auth.onAuthStateChange(async(event,session)=>{
     closeAuth();
   }
   if(event==='SIGNED_OUT'&&prevUserId){
-    try{ await sb.from('audit_logs').insert({user_id:prevUserId,action:'logout',metadata:{ua:navigator.userAgent.substring(0,80)}}); }catch(_){}
+    try{ await sb.from('audit_logs').insert({user_id:prevUserId,action:'logout',metadata:{ua:_uaType()}}); }catch(_){}
   }
 });
 
@@ -462,7 +462,7 @@ async function doLogin(){
     const{error}=await sb.auth.signInWithPassword({email,password:pwd});
     if(error){
       // audit login_failed via function edge ou direct si policy le permet
-      try{ await sb.from('audit_logs').insert({user_id:null,action:'login_failed',metadata:{email,ua:navigator.userAgent.substring(0,80)}}); }catch(_){}
+      try{ await sb.from('audit_logs').insert({user_id:null,action:'login_failed',metadata:{ua:_uaType()}}); }catch(_){}
       throw new Error(error.message);
     }
     Security.resetRateLimit(email);
@@ -506,9 +506,14 @@ async function doRegister(){
 
 async function doLogout(){if(sb)await sb.auth.signOut();closeHistory();}
 
+// Type d'appareil grossier (pas de fingerprint / pas d'UA complet).
+function _uaType(){return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'mobile':'desktop';}
 async function audit(action,resourceId=null,meta={}){
   if(!user||!sb)return;
-  try{await sb.from('audit_logs').insert({user_id:user.id,action,resource_id:resourceId,metadata:{...meta,ua:navigator.userAgent.substring(0,80)}});}
+  // Confidentialité : ne JAMAIS journaliser de données personnelles
+  // (nom de fichier, email, nom). On garde l'action, l'outil, la taille.
+  const {filename,email,name,...safe}=meta||{};
+  try{await sb.from('audit_logs').insert({user_id:user.id,action,resource_id:resourceId,metadata:{...safe,ua:_uaType()}});}
   catch(e){console.warn('Audit:',e.message);}
 }
 
