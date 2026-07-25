@@ -32,9 +32,9 @@ function buildSignUI(){
       </div>
       <label style="font-size:12px;color:var(--tx2);display:block;margin-bottom:6px">${lang==='fr'?'Position:':'Position:'}</label>
       <div class="radio-group" id="rg-sign-pos" style="margin:0 0 8px;display:flex;gap:8px">
-        <button class="rbn active" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas droite':'Bottom right'}</button>
-        <button class="rbn" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas centre':'Bottom center'}</button>
         <button class="rbn" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'bl','signpos')">${lang==='fr'?'Bas gauche':'Bottom left'}</button>
+        <button class="rbn" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas centre':'Bottom center'}</button>
+        <button class="rbn active" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas droite':'Bottom right'}</button>
       </div>
       <label class="chk-line"><input type="checkbox" id="sign-all-pages"/><span>${lang==='fr'?'Signer toutes les pages':'Sign every page'}</span></label>
       <div style="font-size:11px;color:var(--tx3)">
