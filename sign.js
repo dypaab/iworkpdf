@@ -24,17 +24,17 @@ function buildSignUI(){
           ${lang==='fr'?'Effacer':'Clear'}
         </button>
       </div>
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
         <label style="font-size:12px;color:var(--tx2)">${lang==='fr'?'Couleur:':'Color:'}</label>
         <input type="color" id="sign-color" value="#000080" style="width:40px;height:32px;border:1px solid var(--bd);border-radius:var(--r2);cursor:pointer"/>
         <label style="font-size:12px;color:var(--tx2)">${lang==='fr'?'Épaisseur:':'Thickness:'}</label>
-        <input type="range" id="sign-size" min="1" max="8" value="2" style="width:80px"/>
-        <label style="font-size:12px;color:var(--tx2)">${lang==='fr'?'Position:':'Position:'}</label>
-        <div class="radio-group" id="rg-sign-pos" style="margin:0">
-          <button class="rbn active" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas droite':'Bottom right'}</button>
-          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas centre':'Bottom center'}</button>
-          <button class="rbn" onclick="setRbn('rg-sign-pos',this,'bl','signpos')">${lang==='fr'?'Bas gauche':'Bottom left'}</button>
-        </div>
+        <input type="range" id="sign-size" min="1" max="8" value="2" style="flex:1;min-width:100px;max-width:160px"/>
+      </div>
+      <label style="font-size:12px;color:var(--tx2);display:block;margin-bottom:6px">${lang==='fr'?'Position:':'Position:'}</label>
+      <div class="radio-group" id="rg-sign-pos" style="margin:0 0 8px;display:flex;gap:8px">
+        <button class="rbn active" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'br','signpos')">${lang==='fr'?'Bas droite':'Bottom right'}</button>
+        <button class="rbn" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'bc','signpos')">${lang==='fr'?'Bas centre':'Bottom center'}</button>
+        <button class="rbn" style="flex:1;text-align:center" onclick="setRbn('rg-sign-pos',this,'bl','signpos')">${lang==='fr'?'Bas gauche':'Bottom left'}</button>
       </div>
       <label class="chk-line"><input type="checkbox" id="sign-all-pages"/><span>${lang==='fr'?'Signer toutes les pages':'Sign every page'}</span></label>
       <div style="font-size:11px;color:var(--tx3)">
