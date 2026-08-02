@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://iworkpdf.yendyx.com/</loc>
     <lastmod>2025-06-28</lastmod>
@@ -8,96 +8,144 @@
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/compress</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/compress"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/compresser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/compress"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/delete</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/delete"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/supprimer-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/delete"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/rotate</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/rotate"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/pivoter-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/rotate"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/security</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/security"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/proteger-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/security"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/watermark</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/watermark"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/filigrane-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/watermark"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/split</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/split"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/diviser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/split"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/merge</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/merge"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/fusionner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/merge"/>
     <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/organize</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/organize"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/organiser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/organize"/>
     <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/img2pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/img2pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/images-en-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/img2pdf"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/pagenums</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/pagenums"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/numeroter-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/pagenums"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/pdf2jpg</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/pdf2jpg"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/pdf-en-jpg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/pdf2jpg"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/ocr</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/ocr"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/ocr"/>
     <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/repair</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/repair"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/reparer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/repair"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/crop</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/crop"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/rogner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/crop"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/sign</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/sign"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/signer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/sign"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/tools/extract</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/extract"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/extraire-images-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/extract"/>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -203,5 +251,149 @@
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/fusionner-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/merge"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/fusionner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/merge"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/supprimer-pages-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/delete"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/supprimer-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/delete"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/diviser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/split"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/diviser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/split"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/organiser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/organize"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/organiser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/organize"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/compresser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/compress"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/compresser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/compress"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/pivoter-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/rotate"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/pivoter-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/rotate"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/proteger-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/security"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/proteger-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/security"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/filigrane-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/watermark"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/filigrane-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/watermark"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/images-en-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/img2pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/images-en-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/img2pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/pdf-en-jpg</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/pdf2jpg"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/pdf-en-jpg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/pdf2jpg"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/numeroter-pages-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/pagenums"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/numeroter-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/pagenums"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/ocr-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/ocr"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/ocr"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/signer-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/sign"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/signer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/sign"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/rogner-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/crop"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/rogner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/crop"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/reparer-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/repair"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/reparer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/repair"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/outils/extraire-images-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/tools/extract"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/outils/extraire-images-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/tools/extract"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>
