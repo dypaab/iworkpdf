@@ -169,7 +169,7 @@ const _thumbPdfCache = new WeakMap();
 const TRUST_I18N = {
   en:{
     tb1:"Zero upload", tb1s:"by default", tb2:"compliant",
-    tb3:"Open architecture", tb4:"Auto-delete 48h", tb5:"No ads, no cookies",
+    tb3:"Open architecture", tb5:"No ads, no cookies",
     privacy_btn:"Privacy Policy",
     sb1:"Your files stay on your device", sb2:"No account required",
     sb3:"No ads, no cookies", sb4:"Free forever", sb5:"Open and transparent",
@@ -202,7 +202,7 @@ const TRUST_I18N = {
   },
   fr:{
     tb1:"Zero envoi", tb1s:"par defaut", tb2:"conforme",
-    tb3:"Architecture ouverte", tb4:"Suppression auto 48h", tb5:"Sans pub, sans cookie",
+    tb3:"Architecture ouverte", tb5:"Sans pub, sans cookie",
     privacy_btn:"Politique de confidentialite",
     sb1:"Vos fichiers restent sur votre appareil", sb2:"Sans compte requis",
     sb3:"Sans pub, sans cookie", sb4:"Gratuit pour toujours", sb5:"Ouvert et transparent",
@@ -1611,7 +1611,7 @@ function applyTrustLang(){
   const T = TRUST_I18N[lang] || TRUST_I18N.en;
   const ids = {
     'tb1':T.tb1, 'tb1s':T.tb1s, 'tb2':T.tb2,
-    'tb3':T.tb3, 'tb4':T.tb4, 'tb5':T.tb5,
+    'tb3':T.tb3, 'tb5':T.tb5,
     'sb1':T.sb1, 'sb2':T.sb2, 'sb3':T.sb3, 'sb4':T.sb4, 'sb5':T.sb5,
     'pr1':T.pr1, 'pr1s':T.pr1s, 'pr2':T.pr2, 'pr2s':T.pr2s,
     'pr3':T.pr3, 'pr3s':T.pr3s, 'pr4':T.pr4, 'pr4s':T.pr4s,
