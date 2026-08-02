@@ -2196,7 +2196,7 @@ function initExtras(){
   }
   // Mobile : Pricing/Blog masqués dans la nav (≤480px) → toujours accessibles au footer
   if(fp && !document.getElementById('footer-pricing-link')){
-    const mk=(id,href,txt)=>{const a=document.createElement('a');a.id=id;a.href=href;a.textContent=txt;a.style.cssText='margin-left:10px;font-size:12px;color:var(--cy);text-decoration:none';return a;};
+    const mk=(id,href,txt)=>{const a=document.createElement('a');a.id=id;a.href=href;a.textContent=txt;a.style.cssText='color:var(--tx2);font-size:13px;text-decoration:none;transition:color .2s';a.addEventListener('mouseover',()=>a.style.color='#00B4D8');a.addEventListener('mouseout',()=>a.style.color='');return a;};
     const last=document.getElementById('contact-link')||fp;
     last.insertAdjacentElement('afterend',mk('footer-blog-link','/blog/','Blog'));
     last.insertAdjacentElement('afterend',mk('footer-pricing-link','/pricing','Pricing'));
