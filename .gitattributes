@@ -1,0 +1,8 @@
+# Bibliothèques auto-hébergées : octets figés, jamais de conversion.
+#
+# Ces fichiers sont protégés par une empreinte SRI codée dans les balises
+# <script>. Toute conversion de fin de ligne (LF <-> CRLF) modifierait leurs
+# octets, donc leur empreinte : le navigateur bloquerait alors le script et
+# le site deviendrait entièrement blanc. `-text` désactive toute conversion,
+# `-diff` évite de déverser du minifié dans les diffs.
+vendor/** -text -diff
