@@ -25,10 +25,16 @@ const STATIC_ASSETS = [
   ...TOOL_IDS.map(id => `/${id}.js`),
   '/manifest.json', '/logo_seul_sans_fond.png', '/icon-192.png', '/icon-512.png',
   ...TOOL_IDS.flatMap(id => [`/tools/${id}`, `/tools/${id}.html`]),
+  // Moteurs PDF auto-hébergés : same-origin, donc réponses NON opaques —
+  // elles se mettent réellement en cache (`r.ok` est vrai), contrairement aux
+  // anciennes URL CDN. C'est ce qui rend le hors-ligne réellement fiable.
+  '/vendor/pdf-lib/pdf-lib.min.js',
+  '/vendor/pdfjs/pdf.min.js', '/vendor/pdfjs/pdf.worker.min.js',
+  '/vendor/jszip/jszip.min.js',
+  '/vendor/qpdf/qpdf.js', '/vendor/qpdf/qpdf.wasm',
 ];
 
 const CDN_ASSETS = [
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
 ];
 
@@ -110,7 +116,7 @@ self.addEventListener('fetch', e => {
 
   // Polices Google + CDN JS → cache-first (immuables), réseau sinon
   if (url.hostname.includes('fonts.gstatic.com') || url.hostname.includes('fonts.googleapis.com') ||
-      url.hostname.includes('cdnjs.cloudflare.com') || url.hostname.includes('cdn.jsdelivr.net')) {
+      url.hostname.includes('cdn.jsdelivr.net')) {
     e.respondWith((async () => {
       const cached = await caches.match(e.request);
       if (cached) return cached;

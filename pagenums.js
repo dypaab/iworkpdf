@@ -187,15 +187,9 @@ async function runPageNums(activeFiles, pnPos, pnFmt){
       } else if(ext==='pptx'){
         // ── PPTX: numérotation via manipulation XML ─────────
         setProgress(30,'Reading PPTX…');
-        // Charger JSZip si absent
-        if(!window.JSZip){
-          await new Promise((res,rej)=>{
-            const s=document.createElement('script');
-            s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-            s.onload=res;s.onerror=rej;
-            document.head.appendChild(s);
-          });
-        }
+        // Charger JSZip si absent (chargeur mutualisé de shared.js :
+        // version auto-hébergée + SRI, une seule URL à maintenir)
+        await ensureJSZip();
         const buf=await file.arrayBuffer();
         const zip=await JSZip.loadAsync(buf);
         // Lire presentation.xml pour connaître le nombre de slides

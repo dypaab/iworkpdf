@@ -1177,12 +1177,17 @@ function resetToolUI(id){
 
 function hideProg(){document.getElementById('tp')?.classList.remove('show');}
 
+// PDF.js AUTO-HÉBERGÉ (comme qpdf) : aucun tiers n'exécute de code sur les
+// fichiers de l'utilisateur, et le site reste utilisable hors ligne.
+// L'intégrité (SRI) fige la version 3.11.174 telle que publiée par cdnjs.
+const PDFJS_SRI='sha512-q+4liFwdPC/bNdhUpZx6aXDx/h77yEQtn4I1slHydcbZK34nLaR3cAeYSJshoxIOq3mjEf7xJE8YWIUHMn+oCQ==';
 async function ensurePdfJs(){
   if(window.pdfjsLib) return;
   await new Promise((res,rej)=>{
     const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';res();}
+    s.src='/vendor/pdfjs/pdf.min.js';
+    s.integrity=PDFJS_SRI;
+    s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='/vendor/pdfjs/pdf.worker.min.js';res();}
     s.onerror=rej;document.head.appendChild(s);
   });
 }
@@ -1388,6 +1393,10 @@ function initTheme(){
 function classifyNet(url, method){
   if(!url || url.startsWith('blob:') || url.startsWith('data:')) return null;
   if(/fonts\.|cdn\.jsdelivr|cdnjs\.cloud/.test(url)) return 'lib';
+  // Moteurs auto-hébergés (/vendor/…) : c'est un chargement de bibliothèque,
+  // pas un envoi de données. Les classer 'api' ferait grimper le compteur du
+  // moniteur et alarmerait l'utilisateur pour l'exact contraire d'une fuite.
+  if(/(^|\/)vendor\//.test(url)) return 'lib';
   const m = (method||'GET').toUpperCase();
   if(/supabase\.(co|io)\/storage\//.test(url) && (m==='POST'||m==='PUT')) return 'upload';
   return 'api';
@@ -2070,11 +2079,13 @@ async function dlBytes(bytes, filename){
 // ── EXPORT ZIP (sorties multiples → un seul téléchargement) ──
 // Indispensable sur mobile : les navigateurs bloquent souvent les
 // téléchargements multiples successifs.
+const JSZIP_SRI='sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==';
 async function ensureJSZip(){
   if(window.JSZip)return;
   await new Promise((res,rej)=>{
     const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    s.src='/vendor/jszip/jszip.min.js';
+    s.integrity=JSZIP_SRI;
     s.onload=res;s.onerror=()=>rej(new Error('JSZip load failed'));
     document.head.appendChild(s);
   });
