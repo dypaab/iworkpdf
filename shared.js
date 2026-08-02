@@ -298,7 +298,7 @@ function renderTools(){
     const realIdx=TOOLS.indexOf(tool);
     const kbdNum=''; // numéros de raccourci retirés des cartes (désactivés pour le moment)
     c.innerHTML=`${toolIconHTML(tool.id,58)}<div class="tool-name">${t(tool.nk)}</div><div class="tool-desc">${t(tool.dk)}</div><span class="tool-badge">LOCAL</span>${kbdNum}`;
-    const go=()=>{ if(tool.migrated){ window.location.href=`/tools/${tool.id}`; } else { openTool(tool.id); } };
+    const go=()=>{ if(tool.migrated){ window.location.href=toolUrl(tool.id); } else { openTool(tool.id); } };
     c.onclick=go;
     c.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go();};
     grid.appendChild(c);
@@ -323,9 +323,9 @@ function renderToolsNav(){
   const links=list.map(id=>{
     const tl=TOOLS.find(x=>x.id===id);
     if(!tl)return'';
-    return `<a class="tn-link${id===curId?' active':''}" href="/tools/${id}">${t(tl.nk)}</a>`;
+    return `<a class="tn-link${id===curId?' active':''}" href="${toolUrl(id)}">${t(tl.nk)}</a>`;
   }).join('');
-  const items=TOOLS.map(tl=>`<a class="tn-item" href="/tools/${tl.id}">${toolIconHTML(tl.id,30)}${t(tl.nk)}</a>`).join('');
+  const items=TOOLS.map(tl=>`<a class="tn-item" href="${toolUrl(tl.id)}">${toolIconHTML(tl.id,30)}${t(tl.nk)}</a>`).join('');
   const bar=document.createElement('div');
   bar.id='tools-nav';bar.className='tools-nav'+(home?' tools-nav--home':'');
   bar.innerHTML=`<div class="tn-links">${links}</div>`+
@@ -373,7 +373,7 @@ function initShortcuts(){
       const tool=TOOLS[parseInt(e.key,10)-1];
       if(tool){
         e.preventDefault();
-        if(tool.migrated){ window.location.href=`/tools/${tool.id}`; }
+        if(tool.migrated){ window.location.href=toolUrl(tool.id); }
         else if(typeof openTool==='function'){ openTool(tool.id); }
       }
     }
@@ -421,6 +421,13 @@ const TOOL_FR_SLUG={merge:'fusionner-pdf',delete:'supprimer-pages-pdf',split:'di
   security:'proteger-pdf',watermark:'filigrane-pdf',img2pdf:'images-en-pdf',
   pdf2jpg:'pdf-en-jpg',pagenums:'numeroter-pages-pdf',ocr:'ocr-pdf',
   sign:'signer-pdf',crop:'rogner-pdf',repair:'reparer-pdf',extract:'extraire-images-pdf'};
+
+// URL d'un outil dans la langue courante. Sans ça, une page française renvoie
+// vers les pages anglaises (grille d'accueil, menu « tous les outils »), ce qui
+// casse le maillage interne FR et envoie l'utilisateur hors de sa langue.
+function toolUrl(id){
+  return (lang==='fr' && TOOL_FR_SLUG[id]) ? '/fr/outils/'+TOOL_FR_SLUG[id] : '/tools/'+id;
+}
 
 function langCounterpartUrl(target){
   const p=location.pathname;

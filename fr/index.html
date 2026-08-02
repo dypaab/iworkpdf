@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="fr" class="light">
 <head>
 <meta charset="UTF-8"/>
 <link rel="manifest" href="/manifest.json"/>
@@ -10,23 +10,23 @@
 <meta http-equiv="X-Frame-Options" content="DENY"/>
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
 <meta http-equiv="Permissions-Policy" content="camera=(),microphone=(),geolocation=()"/>
-<title>iWorkPDF — Privacy-first PDF Tools</title>
-<meta name="description" content="iWorkPDF — free online PDF tools to merge, split, compress, sign and more. 100% local processing, nothing uploaded, no account required."/>
-<meta property="og:title" content="iWorkPDF — Free & Private PDF Tools by Yendyx"/>
-<meta property="og:description" content="All your PDF tools. 100% local processing. Your files never leave your device. Free forever."/>
+<title>Outils PDF gratuits en ligne — sans envoi de fichier | iWorkPDF</title>
+<meta name="description" content="Fusionner, diviser, compresser, protéger vos PDF gratuitement et sans inscription. Tout est traité dans votre navigateur : vos fichiers ne sont jamais envoyés sur un serveur."/>
+<meta property="og:title" content="Outils PDF gratuits en ligne — sans envoi de fichier | iWorkPDF"/>
+<meta property="og:description" content="Fusionner, diviser, compresser, protéger vos PDF gratuitement et sans inscription. Tout est traité dans votre navigateur : vos fichiers ne sont jamais envoyés sur un serveur."/>
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://iworkpdf.yendyx.com"/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com/fr/"/>
 <meta property="og:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
-<meta property="og:locale" content="en_US"/>
-<meta property="og:locale:alternate" content="fr_FR"/>
+<meta property="og:locale" content="fr_FR"/>
+<meta property="og:locale:alternate" content="en_US"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="iWorkPDF — Free & Private PDF Tools"/>
-<meta name="twitter:description" content="All your PDF tools. 100% local. No upload. No tracking. Free."/>
+<meta name="twitter:title" content="Outils PDF gratuits en ligne — sans envoi de fichier | iWorkPDF"/>
+<meta name="twitter:description" content="Fusionner, diviser, compresser, protéger vos PDF gratuitement et sans inscription. Tout est traité dans votre navigateur : vos fichiers ne sont jamais envoyés sur un serveur."/>
 <meta name="twitter:image" content="https://iworkpdf.yendyx.com/og-image.png"/>
 <meta name="theme-color" content="#0D1117"/>
-<link rel="canonical" href="https://iworkpdf.yendyx.com"/>
-<link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com/fr/"/>
 <link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/"/>
+<link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/"/>
 <link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/"/>
 <!-- CSP pour tests locaux - en production Vercel remplace par vercel.json headers -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co https://*.supabase.io https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: blob:; worker-src blob: 'self'; object-src 'none'; base-uri 'self';"/>
@@ -53,7 +53,7 @@
     <button id="theme-btn" title="Toggle theme" style="background:none;border:1px solid var(--bd);color:var(--tx2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;transition:all .2s">🌙</button>
     <button class="btn-auth" id="auth-btn"><span id="auth-btn-txt">Sign in</span></button>
     <a href="/pricing" style="font-size:13px;color:var(--tx2);text-decoration:none">Pricing</a>
-  <a href="/blog/" style="font-size:13px;color:var(--tx2);text-decoration:none">Blog</a>
+  <a href="/fr/blog/" style="font-size:13px;color:var(--tx2);text-decoration:none">Blog</a>
 </div>
 </nav>
 
@@ -76,8 +76,8 @@
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <h1><span id="h-title1">All your PDF tools,</span> <span class="grad" id="h-title2">in your browser.</span></h1>
-      <p id="h-sub"><strong>iWorkPDF</strong> — free online PDF tools, all processed locally in your browser.</p>
+      <h1><span id="h-title1">Tous vos outils PDF,</span> <span class="grad" id="h-title2">dans votre navigateur.</span></h1>
+      <p id="h-sub"><strong>iWorkPDF</strong> — outils PDF gratuits, tout est traité localement dans votre navigateur. Aucun fichier envoyé.</p>
     </div>
     <div class="hero-illu" aria-hidden="true">
       <!-- Diagramme "100% local" — formes vectorielles (pas d'emoji) -->
@@ -343,7 +343,7 @@
 <div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true">
   <div class="modal" style="max-width:700px">
     <div class="modal-head">
-      <h3 class="modal-title" id="privacy-title">🔒 Privacy Policy</h3>
+      <h3 class="modal-title" id="privacy-title">🔒 Politique de confidentialité</h3>
       <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
     </div>
     <div class="modal-body" id="privacy-body"></div>
@@ -356,54 +356,54 @@
       <!-- Brand -->
       <div>
         <div class="footer-brand" style="font-size:22px;margin-bottom:12px">i<span>Work</span>PDF</div>
-        <p style="font-size:13px;color:var(--tx2);line-height:1.7;max-width:220px" id="footer-desc">Free PDF tools. 100% local processing. Your files never leave your device.</p>
+        <p style="font-size:13px;color:var(--tx2);line-height:1.7;max-width:220px" id="footer-desc">Outils PDF gratuits. Traitement 100 % local. Vos fichiers ne quittent jamais votre appareil.</p>
         <div style="display:flex;gap:8px;margin-top:16px">
           <a href="https://yendyx.com" target="_blank" rel="noopener noreferrer" style="background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--tx2);text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='#00B4D8'" onmouseout="this.style.borderColor=''">Yendyx.com ↗</a>
         </div>
       </div>
       <!-- Tools -->
       <div>
-        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-tools-title">PDF Tools</h4>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-tools-title">Outils PDF</h4>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="/tools/compress" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗜 Compress PDF</a>
-          <a href="/tools/merge" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔀 Merge PDFs</a>
-          <a href="/tools/split" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂️ Split PDF</a>
-          <a href="/tools/sign" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✍️ Sign PDF</a>
-          <a href="/tools/pdf2jpg" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 PDF to JPG</a>
-          <a href="/tools/watermark" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">💧 Watermark</a>
+          <a href="/fr/outils/compresser-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗜 Compresser PDF</a>
+          <a href="/fr/outils/fusionner-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔀 Fusionner PDF</a>
+          <a href="/fr/outils/diviser-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂️ Diviser PDF</a>
+          <a href="/fr/outils/signer-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✍️ Signer PDF</a>
+          <a href="/fr/outils/pdf-en-jpg" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 PDF en JPG</a>
+          <a href="/fr/outils/filigrane-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">💧 Filigrane</a>
         </div>
       </div>
       <!-- More tools -->
       <div>
-        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-more-title">More Tools</h4>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-more-title">Autres outils</h4>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="/tools/rotate" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔄 Rotate PDF</a>
-          <a href="/tools/delete" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗑 Delete Pages</a>
-          <a href="/tools/security" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 PDF Security</a>
-          <a href="/tools/img2pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Images to PDF</a>
-          <a href="/tools/crop" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂ Crop PDF</a>
-          <a href="/tools/extract" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Extract Images</a>
+          <a href="/fr/outils/pivoter-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔄 Pivoter PDF</a>
+          <a href="/fr/outils/supprimer-pages-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🗑 Supprimer des pages</a>
+          <a href="/fr/outils/proteger-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 Protéger PDF</a>
+          <a href="/fr/outils/images-en-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Images en PDF</a>
+          <a href="/fr/outils/rogner-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">✂ Rogner PDF</a>
+          <a href="/fr/outils/extraire-images-pdf" style="font-size:13px;color:var(--tx2);text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🖼 Extraire les images</a>
         </div>
       </div>
       <!-- Legal -->
       <div>
-        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-legal-title">Legal & Trust</h4>
+        <h4 style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px" id="footer-legal-title">Mentions & Confiance</h4>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="/privacy" id="footer-privacy-link" style="background:none;border:none;color:var(--tx2);font-size:13px;cursor:pointer;font-family:inherit;padding:0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 Privacy Policy</a>
-          <a href="/terms" style="color:var(--tx2);font-size:13px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">📜 Terms of Service</a>
-          <span style="font-size:13px;color:var(--tx2)">🇪🇺 RGPD Compliant</span>
-          <span style="font-size:13px;color:var(--tx2)">📜 No data sold</span>
-          <span style="font-size:13px;color:var(--tx2)">🔓 Open architecture</span>
+          <a href="/privacy" id="footer-privacy-link" style="background:none;border:none;color:var(--tx2);font-size:13px;cursor:pointer;font-family:inherit;padding:0;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">🔒 Politique de confidentialité</a>
+          <a href="/terms" style="color:var(--tx2);font-size:13px;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#00B4D8'" onmouseout="this.style.color=''">📜 Conditions d’utilisation</a>
+          <span style="font-size:13px;color:var(--tx2)">🇪🇺 Conforme RGPD</span>
+          <span style="font-size:13px;color:var(--tx2)">📜 Aucune donnée revendue</span>
+          <span style="font-size:13px;color:var(--tx2)">🔓 Architecture ouverte</span>
         </div>
         <div style="margin-top:24px;padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:10px">
-          <div style="font-size:11px;color:var(--tx3);margin-bottom:4px" id="footer-built">Built with</div>
+          <div style="font-size:11px;color:var(--tx3);margin-bottom:4px" id="footer-built">Construit avec</div>
           <div style="font-size:12px;color:var(--tx2)">pdf-lib.js · PDF.js<br>Supabase · Cloudflare</div>
         </div>
       </div>
     </div>
     <!-- Bottom bar -->
     <div style="border-top:1px solid var(--bd);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-      <p style="font-size:12px;color:var(--tx3)" id="footer-copy">© 2025–2026 Yendyx · iWorkPDF · All rights reserved</p>
+      <p style="font-size:12px;color:var(--tx3)" id="footer-copy">© 2025–2026 Yendyx · iWorkPDF · Tous droits réservés</p>
       <p style="font-size:12px;color:var(--tx3)" id="footer-made">Made with ❤️ in France by Yendyx</p>
     </div>
   </div>
@@ -415,6 +415,7 @@
 <script src="/shared.js?v20260722a"></script>
 <script src="/legacy-tools.js?v20260722a"></script>
 <script>
+lang='fr'; // page FR : fixer la langue avant toute construction d'UI
 // ── Initialisation page d'accueil (modal multi-outils + grille) ──
 renderTools();
 
@@ -503,6 +504,8 @@ if(stTools) stTools.textContent=TOOLS.length;
 
 // Init
 applyLang();
+document.getElementById('lang-lbl').textContent='FR';
+document.querySelectorAll('.lang-opt').forEach(b=>b.classList.toggle('active',b.dataset.lang==='fr'));
 initStats();
 initTheme();
 initTrust();

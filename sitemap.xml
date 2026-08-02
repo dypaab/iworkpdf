@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://iworkpdf.yendyx.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/"/>
     <lastmod>2025-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
@@ -170,84 +173,126 @@
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/compress-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/compress-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-compresser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/compress-pdf"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/merge-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/merge-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-fusionner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/merge-pdf"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/split-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/split-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-diviser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/split-pdf"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/sign-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/sign-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-signer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/sign-pdf"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/pdf-to-jpg</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/pdf-to-jpg"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-convertir-pdf-en-jpg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/pdf-to-jpg"/>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/ocr-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
     <lastmod>2026-07-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/organize-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/organize-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-organiser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/organize-pdf"/>
     <lastmod>2026-07-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/rotate-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/rotate-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-pivoter-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/rotate-pdf"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/delete-pdf-pages</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/delete-pdf-pages"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-supprimer-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/delete-pdf-pages"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/protect-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/protect-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-proteger-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/protect-pdf"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/images-to-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/images-to-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-convertir-images-en-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/images-to-pdf"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/add-page-numbers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/add-page-numbers"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-numeroter-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/add-page-numbers"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://iworkpdf.yendyx.com/blog/crop-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/crop-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-rogner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/crop-pdf"/>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -395,5 +440,140 @@
     <lastmod>2026-08-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-fusionner-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/merge-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-fusionner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/merge-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-supprimer-pages-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/delete-pdf-pages"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-supprimer-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/delete-pdf-pages"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-diviser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/split-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-diviser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/split-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-compresser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/compress-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-compresser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/compress-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-pivoter-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/rotate-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-pivoter-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/rotate-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-proteger-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/protect-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-proteger-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/protect-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-signer-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/sign-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-signer-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/sign-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-rogner-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/crop-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-rogner-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/crop-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-organiser-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/organize-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-organiser-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/organize-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-convertir-pdf-en-jpg</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/pdf-to-jpg"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-convertir-pdf-en-jpg"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/pdf-to-jpg"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-convertir-images-en-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/images-to-pdf"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-convertir-images-en-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/images-to-pdf"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://iworkpdf.yendyx.com/fr/blog/comment-numeroter-pages-pdf</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/add-page-numbers"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-numeroter-pages-pdf"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/add-page-numbers"/>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

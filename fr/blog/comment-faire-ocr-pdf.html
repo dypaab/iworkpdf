@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link rel="icon" type="image/png" href="/logo_seul_sans_fond.png"/>
+<title>Comment faire l'OCR d'un PDF gratuitement — 100% dans votre navigateur | iWorkPDF</title>
+<meta name="description" content="Transformez un PDF scanné (ou une photo de document) en PDF cherchable et copiable — gratuitement, sans rien envoyer. La reconnaissance de texte s'exécute entièrement sur votre appareil."/>
+<meta name="keywords" content="OCR PDF free, scanned PDF to text, searchable PDF, ocr pdf gratuit, pdf scanné en texte"/>
+<meta property="og:title" content="Comment faire l'OCR d'un PDF gratuitement — 100% dans votre navigateur"/>
+<meta property="og:description" content="Transformez un PDF scanné (ou une photo de document) en PDF cherchable et copiable — gratuitement, sans rien envoyer. La reconnaissance de texte s'exécute entièrement sur votre appareil."/>
+<meta property="og:url" content="https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf"/>
+<link rel="canonical" href="https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf"/>
+<link rel="alternate" hreflang="fr" href="https://iworkpdf.yendyx.com/fr/blog/comment-faire-ocr-pdf"/>
+<link rel="alternate" hreflang="en" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
+<link rel="alternate" hreflang="x-default" href="https://iworkpdf.yendyx.com/blog/ocr-pdf"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https:; worker-src blob: 'self';"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/shared.css?v20260722a"/>
+<link rel="stylesheet" href="/tool-theme.css?v20260722a"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Mon document est-il envoyé quelque part ?","acceptedAnswer":{"@type":"Answer","text":"Non. L'OCR s'exécute à 100% dans votre navigateur. Seuls le moteur open-source et le modèle de langue sont récupérés depuis un CDN — votre fichier reste sur votre appareil."}},{"@type":"Question","name":"Quelles langues sont prises en charge ?","acceptedAnswer":{"@type":"Answer","text":"L'anglais et le français, plus un mode Auto qui gère les deux à la fois."}},{"@type":"Question","name":"Pourquoi la première exécution est-elle plus longue ?","acceptedAnswer":{"@type":"Answer","text":"La première fois, votre navigateur télécharge le modèle de langue (quelques Mo). Ensuite il est mis en cache, donc les OCR suivants sont plus rapides."}}]}</script>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <img src="/logo_seul_sans_fond.png" alt="YENDYX" width="40" height="40" style="display:block"/>
+    <span class="nav-brand">i<span>Work</span>PDF</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button id="lang-toggle" style="background:none;border:1px solid var(--bd);color:var(--tx2);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit">🌐 EN</button>
+    <a href="/fr/outils/ocr-pdf" style="background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600">🔎 <span id="cta-nav">Essayer</span></a>
+  </div>
+</nav>
+<main style="max-width:740px;margin:100px auto 80px;padding:0 24px">
+  <nav aria-label="breadcrumb" style="font-size:12px;color:var(--tx3);margin-bottom:24px">
+    <a href="/" style="color:var(--tx2);text-decoration:none">iWorkPDF</a> › <a href="/fr/blog/" style="color:var(--tx2);text-decoration:none">Blog</a> › <span id="crumb">Comment faire l’OCR d’un PDF</span>
+  </nav>
+  <div style="font-size:48px;margin-bottom:16px">🔎</div>
+
+  <!-- FR -->
+  <div id="post-fr">
+    <h1 style="font-size:36px;font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:16px">Comment faire l'OCR d'un PDF gratuitement — 100% dans votre navigateur</h1>
+    <p style="font-size:17px;color:var(--tx2);line-height:1.7;margin-bottom:24px">Transformez un PDF scanné (ou une photo de document) en PDF cherchable et copiable — gratuitement, sans rien envoyer. La reconnaissance de texte s'exécute entièrement sur votre appareil.</p>
+    <a href="/fr/outils/ocr-pdf" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 28px;border-radius:10px;font-weight:700;font-size:15px;margin-bottom:48px">🔎 Ouvrir l'outil — gratuit</a>
+    <article>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Qu'est-ce que l'OCR, et pourquoi en a-t-on besoin ?</h2>
+      <p style="color:var(--tx2);line-height:1.8">Un PDF scanné n'est en réalité qu'une image de la page — vous voyez le texte, mais vous ne pouvez pas le sélectionner, le chercher ni le copier. L'OCR (reconnaissance optique de caractères) lit ces pixels et reconstruit le vrai texte sous l'image. Le résultat est un PDF identique visuellement, mais désormais cherchable, copiable et compatible avec les lecteurs d'écran.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Pourquoi le faire dans le navigateur ?</h2>
+      <p style="color:var(--tx2);line-height:1.8">La plupart des services d'OCR en ligne envoient votre document sur leurs serveurs — problématique pour un contrat, une pièce d'identité ou tout document privé. iWorkPDF exécute le moteur d'OCR (le logiciel open-source tesseract.js) localement dans votre navigateur. Votre fichier ne quitte jamais votre appareil. Seuls le moteur et le modèle de langue sont téléchargés, comme n'importe quelle application web.</p>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 24px">Guide étape par étape</h2>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">1</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Déposez votre PDF scanné ou votre image</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Ouvrez l'outil OCR et déposez un PDF scanné, ou une photo (JPG/PNG) d'un document.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">2</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Choisissez la langue</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Sélectionnez la langue du document — Auto (anglais + français), anglais ou français. La bonne langue améliore nettement la précision.</p></div></div>
+      <div style="display:flex;gap:16px;margin-bottom:24px"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0">3</div><div><h3 style="font-size:15px;font-weight:700;margin-bottom:6px">Lancez et téléchargez</h3><p style="font-size:13px;color:var(--tx2);line-height:1.7">Cliquez sur « Lancer l'OCR ». La première fois, un petit modèle de langue se télécharge ; ensuite, il faut quelques secondes par page. Vous obtenez un PDF cherchable et un score de confiance de lecture.</p></div></div>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">Conseils pour de meilleurs résultats</h2>
+      <ul style="padding-left:0;list-style:none"><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Utilisez le scan de meilleure qualité possible — des pages nettes, bien éclairées et droites se reconnaissent le mieux.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Sélectionnez la bonne langue plutôt qu'Auto quand vous la connaissez.</li><li style="font-size:13px;color:var(--tx2);margin-bottom:8px;line-height:1.6">Les polices très stylisées ou l'écriture manuscrite sont plus difficiles à reconnaître que le texte imprimé.</li></ul>
+      <h2 style="font-size:24px;font-weight:700;margin:40px 0 16px">FAQ</h2>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Mon document est-il envoyé quelque part ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">Non. L'OCR s'exécute à 100% dans votre navigateur. Seuls le moteur open-source et le modèle de langue sont récupérés depuis un CDN — votre fichier reste sur votre appareil.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Quelles langues sont prises en charge ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">L'anglais et le français, plus un mode Auto qui gère les deux à la fois.</p></details>
+      <details style="background:var(--il-bg-card);border:1px solid var(--il-bd-card);border-radius:12px;padding:16px 20px;margin-bottom:10px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Pourquoi la première exécution est-elle plus longue ?</summary><p style="margin-top:10px;font-size:13px;color:var(--tx2);line-height:1.7">La première fois, votre navigateur télécharge le modèle de langue (quelques Mo). Ensuite il est mis en cache, donc les OCR suivants sont plus rapides.</p></details>
+    </article>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#00B4D810,#0077FF10);border:1px solid #00B4D830;border-radius:16px;padding:28px;text-align:center;margin:40px 0">
+    <div style="font-size:32px;margin-bottom:12px">🔎</div>
+    <h3 style="font-size:20px;font-weight:700;margin-bottom:8px" id="cta-h">Prêt à essayer ?</h3>
+    <p style="font-size:14px;color:var(--tx2);margin-bottom:20px" id="cta-p">100% gratuit · Sans compte · Rien n’est envoyé</p>
+    <a href="/fr/outils/ocr-pdf" style="display:inline-block;background:linear-gradient(135deg,#00B4D8,#0077FF);color:#fff;text-decoration:none;padding:13px 32px;border-radius:10px;font-weight:700;font-size:15px" id="cta-b">Ouvrir 🔎 — gratuit</a>
+  </div>
+
+  <section style="margin-top:56px">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:20px" id="related-h">Autres outils PDF gratuits</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+      <a href="/fr/outils/ocr-pdf" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🔎 OCR PDF</a>
+      <a href="/fr/outils/organiser-pdf" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🗂 Organize PDF</a>
+      <a href="/fr/outils/compresser-pdf" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🗜 Compress PDF</a>
+      <a href="/fr/outils/fusionner-pdf" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🔀 Merge PDFs</a>
+      <a href="/fr/outils/diviser-pdf" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">✂️ Split PDF</a>
+      <a href="/fr/outils/pdf-en-jpg" style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;text-decoration:none;color:var(--tx);font-size:13px">🖼 PDF to JPG</a>
+    </div>
+  </section>
+</main>
+<footer style="border-top:1px solid var(--bd);padding:24px;text-align:center;margin-top:40px">
+  <p style="font-size:13px;color:var(--tx2)"><a href="/" style="color:var(--cy);text-decoration:none">← iWorkPDF</a> · <a href="/fr/blog/" style="color:var(--tx2);text-decoration:none">Blog</a> · <a href="/pricing" style="color:var(--tx2);text-decoration:none">Pricing</a></p>
+  <p style="font-size:12px;color:var(--tx3);margin-top:8px">© 2025–2026 Yendyx · Made with ❤️ in France</p>
+</footer>
+<script>
+try{var s=localStorage.getItem('iworkpdf_theme');if(s==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){}
+// La langue est portee par l'URL : le bouton navigue vers l'autre version,
+// ce qui donne a Google une page indexable par langue.
+document.getElementById('lang-toggle').addEventListener('click',function(){location.href='/blog/ocr-pdf';});
+</script>
+</body>
+</html>
