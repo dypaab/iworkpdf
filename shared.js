@@ -23,6 +23,10 @@ let isProcessing=false;
 let _lastUserId=null;
 let isDark=false; // mode clair par défaut
 let netRequestCount=0,netIsActive=false,netTimer=null;
+// Journal réseau : liste réelle des requêtes, affichée à l'utilisateur.
+// Plafonné pour ne pas grossir indéfiniment sur une session longue.
+let netLog=[];
+const NET_LOG_MAX=60;
 let privacyMode=false;
 
 // Listener global d'état d'auth — enregistré une seule fois au chargement de shared.js.
@@ -181,6 +185,13 @@ const TRUST_I18N = {
     faq_title:"Questions about your privacy",
     faq_sub:"Honest answers, no marketing speak",
     net_safe:"No network activity", net_active:"Sending data...",
+    net_title:"Network log", net_close:"Close",
+    net_ok:"0 files sent from this device",
+    net_warn:n=>`${n} file${n>1?'s':''} sent (cloud share you requested)`,
+    net_sub:"Every request made by this page is listed below — including library loading. Nothing is hidden.",
+    net_empty:"No request recorded since this page was opened.",
+    net_lib:"library", net_api:"api", net_upload:"file",
+    net_verify:"Verify it yourself: open your browser dev tools (F12) → Network tab. You will see exactly the same list. Or cut your internet connection: the tools keep working.",
     cert_title:"Your file never left your device",
     cert_sub:"This operation was 100% local. Nothing was uploaded.",
     pm_label:"Maximum Privacy Mode", pm_sub:"Cloud features disabled. No auth. Local only.",
@@ -214,6 +225,13 @@ const TRUST_I18N = {
     faq_title:"Questions sur votre confidentialite",
     faq_sub:"Des reponses honnetes, sans marketing",
     net_safe:"Aucune activite reseau", net_active:"Envoi de donnees...",
+    net_title:"Journal reseau", net_close:"Fermer",
+    net_ok:"0 fichier envoye depuis cet appareil",
+    net_warn:n=>`${n} fichier${n>1?'s':''} envoye${n>1?'s':''} (partage cloud demande par vous)`,
+    net_sub:"Toutes les requetes faites par cette page sont listees ci-dessous, y compris le chargement des bibliotheques. Rien n'est masque.",
+    net_empty:"Aucune requete enregistree depuis l'ouverture de la page.",
+    net_lib:"librairie", net_api:"api", net_upload:"fichier",
+    net_verify:"Verifiez vous-meme : ouvrez les outils de developpement (F12) → onglet Reseau. Vous verrez exactement la meme liste. Ou coupez votre connexion : les outils continuent de fonctionner.",
     cert_title:"Votre fichier est reste sur votre appareil",
     cert_sub:"Cette operation etait 100% locale. Rien ne fut envoye.",
     pm_label:"Mode Confidentialite Maximale", pm_sub:"Cloud desactive. Sans auth. Local uniquement.",
@@ -861,7 +879,10 @@ function openTool(id){
   if(isProcessing)return;
   resetToolState();
   // BUG 3 FIX: reset compteur réseau à chaque outil
+  // Le journal suit le compteur : les deux portent sur l'opération en cours,
+  // sinon la liste affichée ne correspondrait plus au « N req » du moniteur.
   netRequestCount=0;
+  netLog=[];
   setNetActive(false);
   const tool=TOOLS.find(x=>x.id===id);
   if(!tool)return;
@@ -1360,36 +1381,65 @@ function initTheme(){
   }catch{}
 }
 
+// Classe une requête. `null` = purement locale (blob:/data:), donc PAS du réseau.
+// 'lib'    = chargement d'une bibliothèque ou d'une police (CDN)
+// 'upload' = envoi d'un fichier vers le stockage cloud (partage explicite)
+// 'api'    = tout le reste (auth, statistiques anonymes…)
+function classifyNet(url, method){
+  if(!url || url.startsWith('blob:') || url.startsWith('data:')) return null;
+  if(/fonts\.|cdn\.jsdelivr|cdnjs\.cloud/.test(url)) return 'lib';
+  const m = (method||'GET').toUpperCase();
+  if(/supabase\.(co|io)\/storage\//.test(url) && (m==='POST'||m==='PUT')) return 'upload';
+  return 'api';
+}
+
+function recordNet(url, method){
+  const kind = classifyNet(url, method);
+  if(!kind) return null;
+  netLog.push({url:String(url), method:(method||'GET').toUpperCase(), kind, t:Date.now()});
+  if(netLog.length > NET_LOG_MAX) netLog.shift();
+  if(document.getElementById('net-panel')?.classList.contains('open')) renderNetPanel();
+  return kind;
+}
+
 function initNetworkMonitor(){
-  // Intercepter fetch
-  const originalFetch = window.fetch;
   // BUG 8 FIX: ignorer les requêtes init (fonts, CDN scripts) pendant les 3 premières secondes
   const initTime = Date.now();
+  const isInit = () => Date.now() - initTime < 3000;
+  // Une requête « compte » si elle n'est ni locale, ni un chargement de
+  // bibliothèque, ni dans la fenêtre d'initialisation. Elle est enregistrée
+  // dans le journal DANS TOUS LES CAS (sauf blob:/data:), pour que la liste
+  // affichée corresponde exactement à celle des devtools.
+  const bump = kind => {
+    if(kind==='lib' || isInit()) return;
+    netRequestCount++;
+    setNetActive(true);
+    clearTimeout(netTimer);
+    netTimer = setTimeout(()=>setNetActive(false), 2000);
+  };
+
+  // Intercepter fetch
+  const originalFetch = window.fetch;
   window.fetch = function(...args){
-    const url = typeof args[0]==='string' ? args[0] : args[0]?.url || '';
-    const isInit = Date.now() - initTime < 3000;
-    const isLocal = url.startsWith('blob:') || url.startsWith('data:');
-    const isCdn = url.includes('fonts.') || url.includes('cdn.jsdelivr') || url.includes('cdnjs.cloud');
-    if(!isLocal && !isInit && !isCdn){
-      netRequestCount++;
-      setNetActive(true);
-    }
+    const req = args[0];
+    const url = typeof req==='string' ? req : (req?.url || '');
+    const method = args[1]?.method || (typeof req!=='string' ? req?.method : null) || 'GET';
+    bump(recordNet(url, method));
     return originalFetch.apply(this, args).finally(()=>{
-      // Revenir à safe après 2s sans activité
       clearTimeout(netTimer);
       netTimer = setTimeout(()=>setNetActive(false), 2000);
     });
   };
 
-  // Intercepter XHR
+  // Intercepter XHR — mêmes règles que fetch (avant : comptait aussi les CDN
+  // et l'init, ce qui gonflait le compteur sans raison).
   const origOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(...args){
-    netRequestCount++;
-    setNetActive(true);
-    clearTimeout(netTimer);
-    netTimer = setTimeout(()=>setNetActive(false), 2000);
+    bump(recordNet(String(args[1]||''), args[0]));
     return origOpen.apply(this, args);
   };
+
+  buildNetPanel();
 }
 
 function setNetActive(active){
@@ -1412,6 +1462,89 @@ function setNetActive(active){
     if(text) text.textContent = T.net_safe;
   }
   if(count) count.textContent = `${netRequestCount} req`;
+  if(document.getElementById('net-panel')?.classList.contains('open')) renderNetPanel();
+}
+
+// Le bandeau cookies occupe le bas de l'écran à la première visite — soit
+// exactement le moment où la preuve « zéro envoi » compte le plus. On remonte
+// le moniteur au-dessus plutôt que de le laisser masqué. La hauteur est mesurée
+// (elle varie selon la langue et le retour à la ligne) plutôt que codée en dur.
+function syncNetOffset(){
+  const b = document.getElementById('cookie-banner');
+  const shown = b && b.classList.contains('show');
+  const h = shown ? Math.ceil(b.getBoundingClientRect().height) + 10 : 0;
+  document.documentElement.style.setProperty('--net-offset', h+'px');
+}
+
+// Le moniteur devient cliquable : il ouvre le journal détaillé des requêtes.
+// Un compteur seul est une affirmation ; la liste réelle est une preuve.
+function buildNetPanel(){
+  const monitor = document.getElementById('net-monitor');
+  if(!monitor || document.getElementById('net-panel')) return;
+  const p = document.createElement('div');
+  p.id = 'net-panel';
+  document.body.appendChild(p);
+
+  monitor.setAttribute('role','button');
+  monitor.setAttribute('tabindex','0');
+  monitor.setAttribute('aria-expanded','false');
+  if(!monitor.querySelector('.nm-caret')){
+    const c = document.createElement('span');
+    c.className = 'nm-caret'; c.textContent = '▲';
+    monitor.appendChild(c);
+  }
+  monitor.addEventListener('click', toggleNetPanel);
+  monitor.addEventListener('keydown', e=>{
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleNetPanel(); }
+  });
+  document.addEventListener('click', e=>{
+    if(!p.classList.contains('open')) return;
+    if(p.contains(e.target) || monitor.contains(e.target)) return;
+    closeNetPanel();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeNetPanel(); });
+  syncNetOffset();
+  window.addEventListener('resize', syncNetOffset);
+}
+
+function toggleNetPanel(){
+  const p = document.getElementById('net-panel');
+  if(!p) return;
+  if(p.classList.contains('open')){ closeNetPanel(); return; }
+  p.classList.add('open');
+  document.getElementById('net-monitor')?.setAttribute('aria-expanded','true');
+  renderNetPanel();
+}
+
+function closeNetPanel(){
+  const p = document.getElementById('net-panel');
+  if(!p || !p.classList.contains('open')) return;
+  p.classList.remove('open');
+  document.getElementById('net-monitor')?.setAttribute('aria-expanded','false');
+}
+
+function renderNetPanel(){
+  const p = document.getElementById('net-panel');
+  if(!p) return;
+  const T = TRUST_I18N[lang] || TRUST_I18N.en;
+  const esc = s => Security.escHtml(String(s));
+  const uploads = netLog.filter(e=>e.kind==='upload').length;
+  const rows = netLog.length
+    ? [...netLog].reverse().map(e=>{
+        const label = e.kind==='lib' ? T.net_lib : e.kind==='upload' ? T.net_upload : T.net_api;
+        return `<div class="np-row"><span class="np-kind ${esc(e.kind)}">${esc(label)}</span><span class="np-url">${esc(e.method)} ${esc(e.url)}</span></div>`;
+      }).join('')
+    : `<div class="np-empty">${esc(T.net_empty)}</div>`;
+  p.innerHTML = `
+    <div class="np-head">
+      <span class="np-title">${esc(T.net_title)}</span>
+      <button class="np-close" type="button" aria-label="${esc(T.net_close)}">✕</button>
+    </div>
+    <div class="np-headline${uploads?' warn':''}">${esc(uploads ? T.net_warn(uploads) : T.net_ok)}</div>
+    <div class="np-sub">${esc(T.net_sub)}</div>
+    ${rows}
+    <div class="np-verify">${esc(T.net_verify)}</div>`;
+  p.querySelector('.np-close')?.addEventListener('click', closeNetPanel);
 }
 
 function showLocalCert(){
@@ -1673,13 +1806,17 @@ function initCookieBanner(){
     </div>`;
   document.body.appendChild(banner);
   // Animate in
-  requestAnimationFrame(()=>requestAnimationFrame(()=>banner.classList.add('show')));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    banner.classList.add('show');
+    syncNetOffset();
+  }));
 }
 
 function acceptCookies(){
   try{ localStorage.setItem('iworkpdf_cookie_ok','1'); }catch{}
   const b = document.getElementById('cookie-banner');
-  if(b){ b.classList.remove('show'); setTimeout(()=>b.remove(), 400); }
+  if(b){ b.classList.remove('show'); setTimeout(()=>{ b.remove(); syncNetOffset(); }, 400); }
+  syncNetOffset();
 }
 
 function initTrust(){
