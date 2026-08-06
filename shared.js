@@ -52,7 +52,7 @@ if(sb)sb.auth.onAuthStateChange(async(event,session)=>{
 
 const T={
   en:{illu_pc:'Your computer',illu_local:'Local processing',illu_dl:'Download',illu_nosrv:'No server',demo_drop:'Drop a PDF here to try',demo_pick:'Now pick a tool for your PDF 👇',why:'Why iWorkPDF?',cmp:'iWorkPDF vs other tools',badge:'Privacy-first',h1:'All your PDF tools,',h2:'in your browser.',sub:'iWorkPDF — free online PDF tools, all processed locally in your browser.',cta1:'Choose a tool',cta2:'Create account',hproof:'✓ {N} tools · ✓ 100% local · ✓ No install · ✓ Free forever',hoss:'Open-source engine · pdf-lib · PDF.js',sb1:'Encrypted in transit',sb2:'Signed URLs (1h)',sb3:'Auto-delete 48h',sb4:'Audit logs',sb5:'RLS isolation',st1:'PDF Tools',st2:'Local by default',st3:'Cloud: auto-deleted 48h',st4:'Files processed',ttl:'What do you want to do?',tsub:'Click a tool to get started',signin:'Sign in',register:'Register',logout:'Sign out',myacc:'My account',myfiles:'My files',actlog:'Activity log',histtitle:'My account',vfy:'Check your email to activate your account.',logininfo:'Your credentials are encrypted and never stored in plain text.',reginfo:'A confirmation email will be sent. Your account will be active after verification.',firstname:'First name',password:'Password',pwdmin:'Password (8 chars min.)',confirmpwd:'Confirm password',loading:'Loading…',nofiles:'No shared files',noactivity:'No activity yet',expiresin:'Expires in',deleteon:'File deleted on',linkvalid:'Link valid until',signedlink:'Secure link (valid 1h):',copylink:'Copy',linkcopied:'Link copied!',localmode:'Local',savemode:'Save file',cloudsub:'Saved 48h in your account',footer:'100% local processing · Signed URLs · Audit logs',merge:'Merge PDFs',delete:'Delete pages',split:'Split PDF',organize:'Organize',ocr:'OCR PDF',rotate:'Rotate',compress:'Compress',security:'Security',watermark:'Watermark',img2pdf:'Images → PDF',dmerge:'Combine multiple PDFs',ddelete:'Remove specific pages',dsplit:'Export each page as PDF',dorganize:'Reorder, rotate & remove pages',docr:'Make scanned PDFs searchable',drotate:'Rotate pages 90°, 180°…',dcompress:'Reduce PDF file size',dsecurity:'Protect or unlock a PDF',dwatermark:'Add diagonal watermark',dimg2pdf:'Convert JPG/PNG to PDF',drop:'Drag your PDFs here',dropimg:'Drag your images here',browse:'or click to browse',max:'Max 50 MB per file',pagesdel:'Pages to delete (e.g. 1,3,5-8):',pwdlbl:'Password:',wmlbl:'Watermark text:',angle:'Angle:',dest:'Destination:',direct:'Direct download',merge_btn:'🔀 Merge',org_btn:'🗂 Organize',del_btn:'🗑 Delete',split_btn:'✂️ Split',rot_btn:'🔄 Apply',comp_btn:'🗜 Compress',comp_quality:'Compression level',comp_low:'⚡ Max compression',comp_med:'✅ Recommended',comp_high:'💎 Light',comp_scanning:'Analyzing PDF…',comp_est_title:'Estimate before compressing',comp_est_max:'Max possible',comp_est_rec:'Recommended (quality kept)',comp_est_images:'images detected',comp_est_none:'No compressible images found — gain will be limited.',comp_optimizing:'Recompressing images…',sec_btn:'Apply',wm_btn:'💧 Apply',img_btn:'🖼 Convert',protect:'🔒 Protect',unlock:'🔓 Unlock',processing:'Processing…',reading:'Reading…',done:'Done! File downloaded.',uploading:'Secure upload…',uploaded:'File uploaded successfully.',splitinfo:'Each page will be downloaded separately.',secnote:'🔒 Real AES-256 encryption — runs 100% in your browser.',nofile:'Please add a file.',nopages:'Enter page numbers.',nopwd:'Enter a password.',nowm:'Enter watermark text.',alldeleted:'Cannot delete all pages.',signedin:'Signing in…',creatingacc:'Creating account…',accreated:'✅ Account created! Check your email to activate it.',download:'⬇ Download',
-    sign:'Sign PDF',dsign:'Add handwritten signature to PDF',extract:'Extract Images',dextract:'Extract embedded photos at original resolution',
+    sign:'Sign PDF',dsign:'Add handwritten signature to PDF',extract:'Extract Images',dextract:'Extract embedded photos at original resolution',pages:'Extract Pages',dpages:'Keep only the pages you choose',pages_lbl:'Pages to extract (e.g. 1,3,5-8):',pages_hint:'Use commas for single pages and a dash for ranges.',pages_btn:'📑 Extract',pages_total:'pages in this document',pages_selected:'pages will be extracted',
     repair:'Repair PDF',drepair:'Fix corrupted or damaged PDF files',
     crop:'Crop PDF',dcrop:'Remove margins or crop pages to a specific area',
     crop_margin:'Margin to remove (mm)',crop_all:'Apply to all pages',
@@ -77,7 +77,7 @@ const T={
     pdf2jpg_done:'JPG files saved',
 },
   fr:{illu_pc:'Votre ordinateur',illu_local:'Traitement local',illu_dl:'Téléchargement',illu_nosrv:'Aucun serveur',demo_drop:'Déposez un PDF ici pour essayer',demo_pick:'Choisissez maintenant un outil pour votre PDF 👇',why:'Pourquoi iWorkPDF ?',cmp:'iWorkPDF face aux autres',badge:'Privacy-first',h1:'Tous vos outils PDF,',h2:'dans votre navigateur.',sub:'iWorkPDF — outils PDF gratuits, tout est traité localement dans votre navigateur.',cta1:'Choisir un outil',cta2:'Créer un compte',hproof:'✓ {N} outils · ✓ 100% local · ✓ Sans installation · ✓ Gratuit à vie',hoss:'Moteur open-source · pdf-lib · PDF.js',sb1:'Chiffrement en transit',sb2:'URLs signées (1h)',sb3:'Suppression auto 48h',sb4:'Audit logs',sb5:'Isolation RLS',st1:'Outils PDF',st2:'Local par défaut',st3:'Cloud: supprimé après 48h',st4:'Fichiers traités',ttl:'Que voulez-vous faire ?',tsub:'Cliquez sur un outil pour commencer',signin:'Connexion',register:'Inscription',logout:'Se déconnecter',myacc:'Mon compte',myfiles:'Mes fichiers',actlog:"Journal d'activité",histtitle:'Mon compte',vfy:'Vérifiez votre email pour activer votre compte.',logininfo:'Vos identifiants sont chiffrés et jamais stockés en clair.',reginfo:'Un email de confirmation vous sera envoyé. Votre compte sera actif après vérification.',firstname:'Prénom',password:'Mot de passe',pwdmin:'Mot de passe (8 car. min.)',confirmpwd:'Confirmer le mot de passe',loading:'Chargement…',nofiles:'Aucun fichier partagé',noactivity:'Aucune activité',expiresin:'Expire dans',deleteon:'Fichier supprimé le',linkvalid:"Lien valide jusqu'à",signedlink:'Lien sécurisé (valide 1h) :',copylink:'Copier',linkcopied:'Lien copié !',localmode:'Local',savemode:'Sauvegarder',cloudsub:'Enregistré 48h dans votre compte',footer:'Traitement 100% local · URLs signées · Audit logs',merge:'Fusionner',delete:'Supprimer pages',split:'Diviser',organize:'Organiser',ocr:'OCR PDF',rotate:'Rotation',compress:'Compresser',security:'Sécurité',watermark:'Filigrane',img2pdf:'Images → PDF',dmerge:'Combinez plusieurs PDFs',ddelete:'Supprimez des pages précises',dsplit:'Exportez chaque page en PDF',dorganize:'Réordonnez, pivotez et retirez des pages',docr:'Rendez vos scans cherchables',drotate:'Pivotez les pages à 90°, 180°…',dcompress:'Réduisez la taille du PDF',dsecurity:'Protégez ou déverrouillez un PDF',dwatermark:'Ajoutez un filigrane diagonal',dimg2pdf:'Convertissez JPG/PNG en PDF',drop:'Glissez vos PDFs ici',dropimg:'Glissez vos images ici',browse:'ou cliquez pour parcourir',max:'Max 50 Mo par fichier',pagesdel:'Pages à supprimer (ex: 1,3,5-8) :',pwdlbl:'Mot de passe :',wmlbl:'Texte du filigrane :',angle:'Angle :',dest:'Destination :',direct:'Téléchargement direct',merge_btn:'🔀 Fusionner',org_btn:'🗂 Organiser',del_btn:'🗑 Supprimer',split_btn:'✂️ Diviser',rot_btn:'🔄 Appliquer',comp_btn:'🗜 Compresser',comp_quality:'Niveau de compression',comp_low:'⚡ Compression max',comp_med:'✅ Recommandé',comp_high:'💎 Léger',comp_scanning:'Analyse du PDF…',comp_est_title:'Estimation avant compression',comp_est_max:'Maximum possible',comp_est_rec:'Recommandé (qualité préservée)',comp_est_images:'images détectées',comp_est_none:'Aucune image compressible détectée — le gain sera limité.',comp_optimizing:'Recompression des images…',sec_btn:'Appliquer',wm_btn:'💧 Appliquer',img_btn:'🖼 Convertir',protect:'🔒 Protéger',unlock:'🔓 Déverrouiller',processing:'Traitement…',reading:'Lecture…',done:'Terminé ! Fichier téléchargé.',uploading:'Upload sécurisé…',uploaded:'Fichier uploadé avec succès.',splitinfo:'Chaque page sera téléchargée séparément en local.',secnote:'🔒 Chiffrement AES-256 réel — 100% dans votre navigateur.',nofile:'Ajoutez un fichier.',nopages:'Entrez les numéros de pages.',nopwd:'Entrez un mot de passe.',nowm:'Entrez le texte du filigrane.',alldeleted:'Impossible de supprimer toutes les pages.',signedin:'Connexion…',creatingacc:'Création du compte…',accreated:'✅ Compte créé ! Vérifiez votre email pour l\'activer.',download:'⬇ Télécharger',
-    sign:'Signer PDF',dsign:'Ajoutez une signature manuscrite au PDF',extract:'Extraire Images',dextract:'Extrait les photos intégrées en résolution d\'origine',
+    sign:'Signer PDF',dsign:'Ajoutez une signature manuscrite au PDF',pages:'Extraire des pages',dpages:'Ne gardez que les pages de votre choix',pages_lbl:'Pages a extraire (ex: 1,3,5-8) :',pages_hint:'Virgule pour des pages seules, tiret pour un intervalle.',pages_btn:'📑 Extraire',pages_total:'pages dans ce document',pages_selected:'pages seront extraites',extract:'Extraire Images',dextract:'Extrait les photos intégrées en résolution d\'origine',
     repair:'Réparer PDF',drepair:'Réparez un fichier PDF corrompu ou endommagé',
     crop:'Rogner PDF',dcrop:'Supprimez les marges ou rognez les pages',
     crop_margin:'Marge à supprimer (mm)',crop_all:'Appliquer à toutes les pages',
@@ -120,6 +120,7 @@ const TOOLS=[
   {id:'crop',     icon:'✂',nk:'crop',     dk:'dcrop', migrated:true},
   {id:'sign',     icon:'✍️',nk:'sign',     dk:'dsign', migrated:true},
   {id:'extract',  icon:'🖼',nk:'extract',  dk:'dextract', migrated:true},
+  {id:'pages',    icon:'📑',nk:'pages',    dk:'dpages', migrated:true},
 ];
 // Compteur d'outils DYNAMIQUE : les libellés utilisent les jetons {N} (nombre
 // d'outils) et {N3} (N-3, pour « … et X autres ») remplacés dans t().
@@ -130,7 +131,7 @@ const TOOL_COUNT = TOOLS.length;
 // currentColor, l'action en currentColor. La couleur vient de la CATÉGORIE
 // (une seule table CAT_COLORS ci-dessous) → changer une couleur = 1 modif.
 const CAT_COLORS={org:'#E1483A',opt:'#12965A',conv:'#1E7BE0',edit:'#6D53E0',sec:'#1A5FD0'};
-const TOOL_CAT={merge:'org',split:'org',delete:'org',organize:'org',extract:'org',compress:'opt',repair:'opt',img2pdf:'conv',pdf2jpg:'conv',ocr:'conv',rotate:'edit',watermark:'edit',sign:'edit',crop:'edit',pagenums:'edit',security:'sec'};
+const TOOL_CAT={merge:'org',split:'org',delete:'org',organize:'org',extract:'org',pages:'org',compress:'opt',repair:'opt',img2pdf:'conv',pdf2jpg:'conv',ocr:'conv',rotate:'edit',watermark:'edit',sign:'edit',crop:'edit',pagenums:'edit',security:'sec'};
 // Style "duo solide" (variante B validée) : aplats pleins sans contour,
 // action en creux couleur du fond (var(--sf)), glyphes fins (1.5-1.7).
 const TOOL_ICONS={
@@ -420,7 +421,7 @@ const TOOL_FR_SLUG={merge:'fusionner-pdf',delete:'supprimer-pages-pdf',split:'di
   organize:'organiser-pdf',compress:'compresser-pdf',rotate:'pivoter-pdf',
   security:'proteger-pdf',watermark:'filigrane-pdf',img2pdf:'images-en-pdf',
   pdf2jpg:'pdf-en-jpg',pagenums:'numeroter-pages-pdf',ocr:'ocr-pdf',
-  sign:'signer-pdf',crop:'rogner-pdf',repair:'reparer-pdf',extract:'extraire-images-pdf'};
+  sign:'signer-pdf',crop:'rogner-pdf',repair:'reparer-pdf',extract:'extraire-images-pdf',pages:'extraire-pages-pdf'};
 
 // URL d'un outil dans la langue courante. Sans ça, une page française renvoie
 // vers les pages anglaises (grille d'accueil, menu « tous les outils »), ce qui
@@ -964,6 +965,7 @@ function buildUI(id){
     case 'crop': body=typeof buildCropUI==='function'?buildCropUI():''; break;
     case 'sign': body=typeof buildSignUI==='function'?buildSignUI():''; break;
     case 'extract': body=typeof buildExtractUI==='function'?buildExtractUI():''; break;
+    case 'pages': body=typeof buildPagesUI==='function'?buildPagesUI():''; break;
   }
   // La barre "Privacy Mode" passe SOUS l'action (info secondaire, comme iLovePDF)
   // pour que la zone de dépôt + le bouton restent visibles d'un coup d'œil.
@@ -1086,6 +1088,7 @@ async function handleFiles(files,id){
   else if(id==='img2pdf') renderImgGrid();
   else if(id==='compress'){renderFiles();await renderCompressEstimate();}
   else if(id==='crop'){renderFiles();await renderCropPagePreview();}
+  else if(id==='pages'){renderFiles();await updatePagesInfo();}
   else renderFiles();
   syncHasFiles();
 }
@@ -1921,6 +1924,11 @@ async function run(id){
     else if(id==='delete'){
       const r=await runDelete(activeFiles, deleteSelectedPages);
       if(!r)return; // earlyReturn déjà géré dans runDelete
+      result=r.result; filename=r.filename;
+    }
+    else if(id==='pages'){
+      const r=await runPages(activeFiles);
+      if(!r)return; // earlyReturn déjà géré dans runPages
       result=r.result; filename=r.filename;
     }
     else if(id==='organize'){
