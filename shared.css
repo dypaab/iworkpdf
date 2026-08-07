@@ -230,6 +230,13 @@ footer a{color:var(--cy);text-decoration:none}
 .pn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .pn-field{display:flex;flex-direction:column;gap:4px}
 .pn-field label{font-size:12px;color:var(--tx2)}
+/* Sur mobile, deux colonnes donnent des champs de ~147px : libellés sur deux
+   lignes et saisie illisible dès que la valeur dépasse quelques caractères.
+   Une seule colonne en dessous de 600px. */
+@media(max-width:600px){
+  .pn-grid{grid-template-columns:1fr;gap:10px}
+  .pn-field label{font-size:13px}
+}
 .pn-pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
 .pn-pos-btn{background:var(--sf2);border:1px solid var(--bd);color:var(--tx2);padding:8px 4px;border-radius:var(--r2);font-size:11px;cursor:pointer;transition:all .2s;text-align:center}
 .pn-pos-btn.active{background:var(--gr);border-color:transparent;color:#fff}
